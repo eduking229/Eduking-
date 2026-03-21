@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#1a6b3a">
+<title>Affectations — Eduking 229</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font:14px Arial,sans-serif;background:#f0f5f0;color:#1a2a1a;min-height:100vh}
+:root{--v:#1a6b3a;--v2:#22913f;--j:#f5a623;--r:#c0392b;--b:#1a237e;--o:#b7410e;--p:#6a1b9a;--bd:#d0e4d0;--g:#f4f7f4}
+nav{background:var(--v);color:#fff;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.nb{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.nbar{background:rgba(0,0,0,.18);padding:3px 12px;font-size:10px;color:rgba(255,255,255,.85);display:flex;justify-content:space-between}
+.pg{display:none;padding-bottom:30px}.on{display:block}
+.c{background:#fff;border-radius:10px;padding:14px;margin:8px 10px;border:1px solid var(--bd)}
+.ct{font-size:13px;font-weight:700;color:var(--v);margin-bottom:10px}
+.hero{background:linear-gradient(150deg,var(--v),var(--v2));color:#fff;padding:18px 14px;text-align:center}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:4px}
+.stats{display:flex;justify-content:space-around;margin-top:10px}
+.sv{font-size:22px;font-weight:900;color:var(--j)}.sl{font-size:10px;color:rgba(255,255,255,.7);margin-top:1px}
+label{display:block;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;letter-spacing:.3px;margin:10px 0 3px}
+input,select{width:100%;padding:10px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;background:var(--g);font-family:Arial;color:#1a2a1a}
+input:focus,select:focus{outline:none;border-color:var(--v);background:#fff}
+.err{color:var(--r);font-size:11px;margin-top:2px}.hint{font-size:10px;color:#778;margin-top:2px}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:7px;font-family:Arial}
+.bv{background:var(--v);color:#fff}.bj{background:var(--j);color:#fff}.bo{background:#fff;color:var(--v);border:2px solid var(--v)}
+.sm{display:inline-block;padding:8px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:Arial;margin:2px}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700}
+.bvg{background:#d4edda;color:#155724}.bam{background:#fff3cd;color:#856404}.brd{background:#f8d7da;color:#721c24}.bgr{background:#e9ecef;color:#495057}
+.tabs{display:flex;background:#fff;margin:4px 10px;border-radius:9px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.tab{flex:1;padding:8px 2px;text-align:center;border:none;background:none;font-size:11px;font-weight:700;color:#888;cursor:pointer;border-radius:7px;font-family:Arial}
+.tab.on{background:var(--v);color:#fff}
+.steps{display:flex;padding:10px 6px 0;align-items:flex-start}
+.sw{display:flex;flex-direction:column;align-items:center;flex:1}
+.sc{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.sd{background:var(--v);color:#fff}.sa{background:var(--j);color:#fff}.si{background:#ddd;color:#888}
+.sl2{font-size:9px;margin-top:2px;text-align:center;color:#778;font-weight:600}
+.sli{flex:1;height:2px;background:#ddd;margin-top:13px}.sli.d{background:var(--v)}
+.rc{border-radius:11px;padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px;margin:7px 10px 0;color:#fff}
+.ch{background:linear-gradient(90deg,var(--v),var(--v2));color:#fff;border-radius:8px;padding:8px 12px;margin:5px 10px 3px;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:space-between}
+.ac{display:none;background:#fff;border:1.5px solid var(--v);border-radius:8px;max-height:130px;overflow-y:auto;margin-top:2px}
+.aci{padding:9px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:16px}
+.mbox{background:#fff;border-radius:16px;padding:22px;width:100%;max-width:340px}
+#ldr{position:fixed;inset:0;background:rgba(255,255,255,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999}
+.sp{width:36px;height:36px;border:4px solid var(--bd);border-top-color:var(--v);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#ntf{position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#fff;padding:9px 16px;border-radius:9px;font-size:13px;font-weight:700;z-index:9999;display:none;max-width:92%;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.nbadge{background:#c0392b;color:#fff;border-radius:99px;padding:1px 6px;font-size:10px;margin-left:3px}
+.av-h{background:var(--r);padding:9px 14px;display:flex;align-items:center;gap:7px;color:#fff;font-weight:900;font-size:12px;border-radius:10px 10px 0 0}
+.av-b{background:#fff8e1;border:1px solid #ffe082;border-top:none;padding:12px;font-size:12px;color:#4a3000;line-height:1.7;border-radius:0 0 10px 10px}
+.site-link{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div id="ldr"><div class="sp"></div><div style="color:var(--v);font-size:13px;font-weight:700" id="lmsg">Chargement…</div></div>
+<div id="ntf"></div>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:8px">
+    <svg width="20" height="14" viewBox="0 0 21 15"><rect width="7" height="15" fill="#22913f"/><rect x="7" width="7" height="15" fill="#f5a623"/><rect x="14" width="7" height="15" fill="#c0392b"/></svg>
+    <div><div style="font-size:15px;font-weight:900">Eduking 229</div><div style="font-size:9px;color:rgba(255,255,255,.7)">Permutations — Bénin</div></div>
+  </div>
+  <div style="display:flex;gap:6px">
+    <a href="index.html" class="site-link">🏠 Site</a>
+    <button class="nb" onclick="oAdmin()">⚙️ Admin</button>
+    <button class="nb" id="btn-circuit" onclick="G('circuit')">🔐 Circuit</button>
+  </div>
+</nav>
+<div class="nbar"><span id="ns1">⏳ Connexion…</span><span id="ns2"></span></div>
+
+<!-- ACCUEIL -->
+<div id="pg-accueil" class="pg on">
+  <div class="hero">
+    <h1>🏫 Permutations Éducatives</h1>
+    <p style="font-size:12px;color:rgba(255,255,255,.8);margin-bottom:2px">Personnel éducatif du Bénin</p>
+    <div class="stats">
+      <div><div class="sv" id="s1">—</div><div class="sl">Adhérents</div></div>
+      <div><div class="sv" id="s2">77</div><div class="sl">Communes</div></div>
+      <div><div class="sv" id="s3">—</div><div class="sl">Corresp.</div></div>
+    </div>
+  </div>
+  <div id="fw" class="c" style="display:none;border-color:#f5c6cb;background:#fdf3f4;font-size:12px">⚠️ <b>Mode démo</b> — Firebase non configuré</div>
+  <div class="c" style="border-color:#ffe082;background:#fffdf5">
+    <div class="ct" style="color:#b8860b">📋 Comment rejoindre Eduking 229</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0e8cc">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--j);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">1</div>
+      <div><b style="font-size:13px">Payer 500 FCFA</b><div style="font-size:11px;color:#778">Moov Money · Obtenir la référence SMS</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0e8cc">
+      <div style="width:26px;height:26px;border-radius:50%;background:#ccc;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">2</div>
+      <div><b style="font-size:13px;color:#999">S'inscrire</b><div style="font-size:11px;color:#bbb">Après paiement</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+      <div style="width:26px;height:26px;border-radius:50%;background:#ccc;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0">3</div>
+      <div><b style="font-size:13px;color:#999">Voir mes correspondances</b><div style="font-size:11px;color:#bbb">Postes vacants · Agents éligibles</div></div>
+    </div>
+    <button class="btn bj" onclick="G('paiement')" style="margin-top:12px;font-size:15px;padding:14px">💳 Étape 1 — Payer 500 FCFA →</button>
+    <div style="text-align:center;margin-top:6px;font-size:11px;color:#778">En payant, vous acceptez nos <span onclick="G('cgu')" style="color:var(--b);text-decoration:underline;cursor:pointer">Conditions d'utilisation</span></div>
+  </div>
+  <div class="c">
+    <div class="ct">🔑 Déjà inscrit ? Accéder</div>
+    <label>Email professionnel</label>
+    <input type="email" id="l-em" placeholder="prenom.nom@benin.edu" inputmode="email">
+    <div class="err" id="l-er"></div>
+    <br><button class="btn bv" onclick="seConn()">Accéder à mon espace →</button>
+  </div>
+  <div style="margin:0 10px 8px">
+    <div class="av-h"><span>⚠️</span>AVIS IMPORTANT</div>
+    <div class="av-b">
+      <b>L'inscription ne constitue pas une validation officielle</b> de votre dossier de permutation.<br><br>
+      Ce système vous permet de :<br>
+      <div style="background:rgba(26,107,58,.08);border-left:3px solid var(--v);padding:8px 12px;border-radius:0 6px 6px 0;margin:6px 0">
+        ✅ Connaître les <b>postes vacants</b><br>✅ Identifier les <b>permutations mutuelles</b><br>✅ Orienter votre <b>choix avant dépôt officiel</b>
+      </div>
+      🏛️ La validation finale relève du <b>Ministère de l'Éducation</b>.
+    </div>
+  </div>
+</div>
+
+<!-- CGU -->
+<div id="pg-cgu" class="pg">
+  <div style="background:linear-gradient(135deg,var(--b),#283593);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <div><b style="font-size:14px">📜 Conditions d'utilisation</b></div>
+    <button onclick="G('accueil')" class="nb">Retour</button>
+  </div>
+  <div class="c" style="font-size:13px;line-height:1.8">
+    <b style="font-size:14px;color:var(--b);display:block;text-align:center;margin-bottom:12px">Eduking 229 — CGU</b>
+    <b style="color:var(--v)">1. Objet</b><br>Outil d'information pour les permutations du personnel éducatif au Bénin.<br><br>
+    <b style="color:var(--v)">2. Cotisation</b><br><b>500 FCFA/an par Moov Money.</b> Aucun remboursement.<br><br>
+    <b style="color:var(--v)">3. Durée de validité — 12 mois ⚠️</b><br>
+    <div style="background:#fdf3f4;border:1.5px solid #f5c6cb;border-radius:8px;padding:10px;margin:6px 0">⛔ <b>Tout profil expire automatiquement après 12 mois.</b><br>✅ Renouvellement annuel obligatoire.</div>
+    <b style="color:var(--v)">4. Circuit</b><br>Système → Ministère → DDET → CCS<br><br>
+    <b style="color:var(--v)">5. Responsabilité</b><br>Outil d'aide à la décision, sans engagement de résultat.
+  </div>
+  <div class="c" style="background:#e8f5e9;border-color:var(--v)">
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer" onclick="document.getElementById('ck').checked=!document.getElementById('ck').checked">
+      <input type="checkbox" id="ck" style="width:20px;height:20px;margin-top:1px;flex-shrink:0;accent-color:var(--v)">
+      <label for="ck" style="font-size:13px;font-weight:700;cursor:pointer">J'ai lu et j'accepte les conditions, notamment la <b>règle d'expiration 12 mois</b>.</label>
+    </div>
+    <div class="err" id="ck-e"></div>
+    <button class="btn bv" onclick="accCGU()" style="font-size:15px;padding:14px">✅ Accepter et s'inscrire →</button>
+  </div>
+</div>
+
+<!-- INSCRIPTION -->
+<div id="pg-inscription" class="pg">
+  <div style="background:#fff;padding:8px;box-shadow:0 1px 4px rgba(0,0,0,.06)"><div class="steps" id="steps"></div></div>
+  <div id="et1"><div class="c">
+    <div class="ct">👤 Identité — 1/4</div>
+    <label>Prénom *</label><input id="fp" placeholder="ex: Kossi"><div class="err" id="ep"></div>
+    <label>Nom *</label><input id="fn2" placeholder="ex: Agossou"><div class="err" id="en2"></div>
+    <label>Email *</label><input type="email" id="fe" placeholder="prenom.nom@benin.edu" inputmode="email"><div class="err" id="ee"></div>
+    <label>Téléphone *</label><input type="tel" id="ft" placeholder="97 XX XX XX" inputmode="tel"><div class="err" id="et2"></div>
+    <label>Fonction *</label>
+    <select id="ff"><option value="">-- Votre fonction --</option>
+      <option>Instituteur / Institutrice</option><option>Enseignant du secondaire</option>
+      <option>Directeur d'école primaire</option><option>Proviseur / Censeur</option>
+      <option>Inspecteur de l'enseignement</option><option>Conseiller pédagogique</option>
+      <option>Personnel administratif</option><option>Autre personnel éducatif</option>
+    </select><div class="err" id="ef"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn bo sm" onclick="G('accueil')" style="flex:0 0 auto">Retour</button>
+      <button class="btn bv" onclick="V(1)" style="flex:1">Suivant →</button>
+    </div>
+  </div></div>
+  <div id="et2b" style="display:none"><div class="c">
+    <div class="ct">🏫 École actuelle — 2/4</div>
+    <label>Département *</label><select id="fda" onchange="filtD('fca','fda')"><option value="">-- Département --</option></select><div class="err" id="eda"></div>
+    <label>Commune *</label><select id="fca" onchange="vE()"><option value="">-- Commune --</option></select><div class="err" id="eca"></div>
+    <label>École *</label><input id="fea" placeholder="Tapez le nom de votre école…" oninput="acE(this)" autocomplete="off">
+    <div class="ac" id="acl"></div><div class="hint">💡 Introuvable ? Tapez le nom complet</div><div class="err" id="eea"></div>
+    <label>Motif *</label>
+    <select id="fmo"><option value="">-- Motif --</option>
+      <option>Rapprochement familial</option><option>Raisons médicales</option>
+      <option>Convenances personnelles</option><option>Promotion interne</option>
+      <option>Fin de détachement</option><option>Autres</option>
+    </select><div class="err" id="emo"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn bo sm" onclick="aEt(1)" style="flex:0 0 auto">← Préc.</button>
+      <button class="btn bv" onclick="V(2)" style="flex:1">Suivant →</button>
+    </div>
+  </div></div>
+  <div id="et3" style="display:none"><div class="c">
+    <div class="ct">🎯 Destinations — 3/4</div>
+    <label>Département souhaité</label><select id="fdv" onchange="filtD('fcv','fdv')"><option value="">-- Tous --</option></select>
+    <label>Commune souhaitée</label><select id="fcv"><option value="">-- Toutes --</option></select>
+    <div class="err" id="esv"></div>
+    <button class="btn bj sm" onclick="ajS()" style="width:100%;margin-top:8px">+ Ajouter cette destination</button>
+    <div id="ls" style="margin-top:8px"></div>
+    <div id="ns3" style="font-size:12px;color:var(--v);font-weight:700;margin-top:2px"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn bo sm" onclick="aEt(2)" style="flex:0 0 auto">← Préc.</button>
+      <button class="btn bv" onclick="V(3)" style="flex:1">Suivant →</button>
+    </div>
+  </div></div>
+  <div id="et4" style="display:none"><div class="c">
+    <div style="text-align:center;margin-bottom:10px"><div style="font-size:34px">🏛️</div><div class="ct" style="text-align:center">Disponibilité — 4/4</div></div>
+    <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px;font-size:12px;color:#5a4000;margin-bottom:8px">⚠️ Les permutations <b>mutuelles</b> sont prioritaires.</div>
+    <div id="rp" style="background:var(--g);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-bottom:10px;font-size:13px"></div>
+    <div class="err" id="ev"></div>
+    <div id="cv" onclick="chV(true)" style="border:2px solid var(--bd);border-radius:9px;padding:12px;margin-bottom:7px;cursor:pointer">
+      <b>✅ Oui, mon poste est disponible</b><div style="font-size:11px;color:#778;margin-top:2px">Recommandé — augmente vos chances</div>
+    </div>
+    <div id="cn" onclick="chV(false)" style="border:2px solid var(--bd);border-radius:9px;padding:12px;cursor:pointer">
+      <b>❌ Non, pas pour l'instant</b>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn bo sm" onclick="aEt(3)" style="flex:0 0 auto">← Préc.</button>
+      <button class="btn bv" onclick="soum()" style="flex:1">✅ Enregistrer</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ESPACE -->
+<div id="pg-espace" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div><div id="e-n" style="font-weight:700;font-size:14px"></div><div id="e-i" style="font-size:10px;color:rgba(255,255,255,.75);margin-top:1px"></div></div>
+      <button onclick="deco()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer">Quitter</button>
+    </div>
+    <div style="display:flex;gap:16px">
+      <div style="text-align:center"><div id="e-m" style="font-size:20px;font-weight:900">0</div><div style="font-size:9px;color:rgba(255,255,255,.7)">Corresp.</div></div>
+      <div style="text-align:center"><div id="e-r" style="font-size:20px;font-weight:900;color:var(--j)">0</div><div style="font-size:9px;color:rgba(255,255,255,.7)">Recom.</div></div>
+      <div style="text-align:center"><div id="e-mu" style="font-size:20px;font-weight:900;color:#a5d6a7">0</div><div style="font-size:9px;color:rgba(255,255,255,.7)">Mutuelles</div></div>
+    </div>
+  </div>
+  <div id="vban"></div>
+  <div class="tabs">
+    <button class="tab on" id="tb-m" onclick="ong('m')">Corresp.</button>
+    <button class="tab" id="tb-p" onclick="ong('p')">Mon poste</button>
+    <button class="tab" id="tb-v" onclick="ong('v')">Disponibles</button>
+  </div>
+  <div id="tc-m"></div><div id="tc-p" style="display:none"></div><div id="tc-v" style="display:none"></div>
+</div>
+
+<!-- PAIEMENT -->
+<div id="pg-paiement" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50">
+    <div><b style="font-size:14px">💳 Cotisation Eduking 229</b><div style="font-size:10px;color:rgba(255,255,255,.75)">Moov Money</div></div>
+    <button onclick="G(util?'espace':'accueil')" class="nb">← Retour</button>
+  </div>
+  <div id="pay-b"></div>
+</div>
+
+<!-- CIRCUIT -->
+<div id="pg-circuit" class="pg">
+  <div style="background:linear-gradient(135deg,var(--b),#283593);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <div><b style="font-size:14px">🔐 Circuit Officiel</b></div>
+    <button onclick="G('accueil')" class="nb">Accueil</button>
+  </div>
+  <div class="c">
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;text-align:center">
+      <div style="flex:1"><div style="width:32px;height:32px;border-radius:50%;background:var(--v);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px">💻</div><b style="color:var(--v)">Système</b></div>
+      <div style="color:#ccc">→</div>
+      <div style="flex:1"><div style="width:32px;height:32px;border-radius:50%;background:var(--b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px">🏛️</div><b style="color:var(--b)">Ministère</b></div>
+      <div style="color:#ccc">→</div>
+      <div style="flex:1"><div style="width:32px;height:32px;border-radius:50%;background:var(--o);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px">📋</div><b style="color:var(--o)">DDET</b></div>
+      <div style="color:#ccc">→</div>
+      <div style="flex:1"><div style="width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px">🏫</div><b style="color:var(--p)">CCS</b></div>
+    </div>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,var(--b),#283593)" onclick="oLog('min')"><span style="font-size:24px">🏛️</span><div style="flex:1"><b>Ministère de l'Éducation</b><div style="font-size:11px;color:rgba(255,255,255,.75)">Validation officielle</div></div><span style="color:rgba(255,255,255,.4)">›</span></div>
+  <div class="rc" style="background:linear-gradient(135deg,var(--o),var(--r))" onclick="oLog('ddt')"><span style="font-size:24px">📋</span><div style="flex:1"><b>DDET</b><div style="font-size:11px;color:rgba(255,255,255,.75)">Direction Dép. Enseignement</div></div><span style="color:rgba(255,255,255,.4)">›</span></div>
+  <div class="rc" style="background:linear-gradient(135deg,var(--p),#7b1fa2)" onclick="oLog('ccs')"><span style="font-size:24px">🏫</span><div style="flex:1"><b>CCS</b><div style="font-size:11px;color:rgba(255,255,255,.75)">Chef de Circonscription Scolaire</div></div><span style="color:rgba(255,255,255,.4)">›</span></div>
+</div>
+
+<!-- ADMIN -->
+<div id="pg-admin" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <b style="font-size:14px">💻 Admin</b>
+    <button onclick="G('circuit')" class="nb">← Circuit</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px">
+    <div class="c" style="margin:0;text-align:center"><div id="a1" style="font-size:22px;font-weight:900;color:var(--v)">—</div><div style="font-size:10px;color:#557">Adhérents</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="a2" style="font-size:22px;font-weight:900;color:var(--j)">—</div><div style="font-size:10px;color:#557">Disponibles</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="a3" style="font-size:22px;font-weight:900;color:var(--r)">—</div><div style="font-size:10px;color:#557">Permutations</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="a4" style="font-size:22px;font-weight:900;color:var(--b)">—</div><div style="font-size:10px;color:#557">Paiements</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="at0" onclick="atab('nw')">🔔 Nouveaux</button>
+    <button class="tab" id="at1" onclick="atab('adh')">Communes</button>
+    <button class="tab" id="at2" onclick="atab('pm')">Permut.</button>
+    <button class="tab" id="at3" onclick="atab('py')">💳 Paiem.</button>
+  </div>
+  <div id="atc-nw" style="margin-top:4px"></div>
+  <div id="atc-adh" style="display:none;margin-top:4px"></div>
+  <div id="atc-pm" style="display:none;margin-top:4px"></div>
+  <div id="atc-py" style="display:none;margin-top:4px"></div>
+</div>
+
+<!-- MINISTERE -->
+<div id="pg-ministere" class="pg">
+  <div style="background:linear-gradient(135deg,var(--b),#283593);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <b style="font-size:14px">🏛️ Ministère de l'Éducation</b>
+    <button onclick="G('circuit')" class="nb">← Circuit</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px">
+    <div class="c" style="margin:0;text-align:center"><div id="ma" style="font-size:20px;font-weight:900;color:var(--b)">—</div><div style="font-size:9px;color:#557">Total</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="mb" style="font-size:20px;font-weight:900;color:var(--j)">—</div><div style="font-size:9px;color:#557">Attente</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="mc" style="font-size:20px;font-weight:900;color:var(--v)">—</div><div style="font-size:9px;color:#557">Validés</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="mt1" onclick="mtab('at')">⏳ À valider</button>
+    <button class="tab" id="mt2" onclick="mtab('va')">✅ Validés</button>
+    <button class="tab" id="mt3" onclick="mtab('re')">❌ Rejetés</button>
+  </div>
+  <div id="m-at" style="margin-top:4px"></div>
+  <div id="m-va" style="display:none;margin-top:4px"></div>
+  <div id="m-re" style="display:none;margin-top:4px"></div>
+</div>
+
+<!-- DDET -->
+<div id="pg-ddet" class="pg">
+  <div style="background:linear-gradient(135deg,var(--o),var(--r));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <b style="font-size:14px">📋 DDET</b>
+    <button onclick="G('circuit')" class="nb">← Circuit</button>
+  </div>
+  <div style="padding:6px 10px"><select id="dd-d" onchange="affD()" style="border-color:var(--o)"><option value="">-- Tous les départements --</option></select></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 8px">
+    <div class="c" style="margin:0;text-align:center"><div id="da" style="font-size:20px;font-weight:900;color:var(--o)">—</div><div style="font-size:9px;color:#557">Permutations validées</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="db" style="font-size:20px;font-weight:900;color:var(--b)">—</div><div style="font-size:9px;color:#557">Agents</div></div>
+  </div>
+  <div id="ddet-b"></div>
+</div>
+
+<!-- CCS -->
+<div id="pg-ccs" class="pg">
+  <div style="background:linear-gradient(135deg,var(--p),#7b1fa2);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+    <b style="font-size:14px">🏫 CCS</b>
+    <button onclick="G('circuit')" class="nb">← Circuit</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px">
+    <select id="cc-d" onchange="filtC()" style="border-color:var(--p);font-size:13px;padding:9px"><option value="">-- Département --</option></select>
+    <select id="cc-c" onchange="affC()" style="border-color:var(--p);font-size:13px;padding:9px"><option value="">-- Commune --</option></select>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 8px">
+    <div class="c" style="margin:0;text-align:center"><div id="ca" style="font-size:20px;font-weight:900;color:var(--p)">—</div><div style="font-size:9px;color:#557">Agents</div></div>
+    <div class="c" style="margin:0;text-align:center"><div id="cb" style="font-size:20px;font-weight:900;color:var(--v)">—</div><div style="font-size:9px;color:#557">Validés</div></div>
+  </div>
+  <div id="ccs-b"></div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal" id="mlog">
+  <div class="mbox">
+    <div id="ml-t" style="font-weight:900;font-size:16px;margin-bottom:3px;text-align:center"></div>
+    <div id="ml-s" style="font-size:12px;color:#557;text-align:center;margin-bottom:14px"></div>
+    <label>Mot de passe *</label>
+    <input type="password" id="ml-p" placeholder="••••••••" onkeydown="if(event.key==='Enter')vLog()">
+    <div class="err" id="ml-e"></div>
+    <button class="btn bv" onclick="vLog()" style="margin-top:12px">🔓 Accéder</button>
+    <button class="btn bo" onclick="fLog()" style="margin-top:4px">Annuler</button>
+  </div>
+</div>
+
+<script>
+const FB={apiKey:"VOTRE_API_KEY",authDomain:"VOTRE_PROJECT.firebaseapp.com",projectId:"VOTRE_PROJECT_ID",storageBucket:"VOTRE_PROJECT.appspot.com",messagingSenderId:"VOTRE_SENDER_ID",appId:"VOTRE_APP_ID"};
+const _k=42,_n=[26,27,30,31,18,19,30,26,18,26];
+const _d=()=>_n.map(b=>String.fromCharCode(b^_k)).join('');
+const PW={min:[111,77,79,85,86,27,27,27],ddt:[78,78,79,86,27,27,27,27],ccs:[73,73,75,27,27,27,27,27]};
+const dPW=a=>a.map(b=>String.fromCharCode(b^_k)).join('').replace(/\x00/g,'').trim();
+const DP={"Alibori":["Banikoara","Gogounou","Kandi","Karimama","Malanville","Ségbana"],"Atacora":["Boukoumbé","Cobly","Kérou","Kouandé","Matéri","Natitingou","Pehunco","Tanguiéta","Toucountouna"],"Atlantique":["Abomey-Calavi","Allada","Kpomassè","Ouidah","Sô-Ava","Toffo","Tori-Bossito","Zè"],"Borgou":["Bembèrèkè","Kalalé","N'Dali","Nikki","Parakou","Pèrèrè","Sinendé","Tchaourou"],"Collines":["Bantè","Dassa-Zoumè","Glazoué","Ouèssè","Savalou","Savè"],"Couffo":["Aplahoué","Djakotomey","Dogbo","Klouékanmè","Lalo","Toviklin"],"Donga":["Bassila","Copargo","Djougou","Ouaké"],"Littoral":["Cotonou"],"Mono":["Athiémé","Bopa","Comè","Grand-Popo","Houéyogbé","Lokossa"],"Ouémé":["Adjarra","Adjohoun","Aguégués","Akpro-Missérété","Avrankou","Bonou","Dangbo","Porto-Novo","Sèmè-Podji"],"Plateau":["Adja-Ouèrè","Ifangni","Kétou","Pobè","Sakété"],"Zou":["Abomey","Agbangnizoun","Bohicon","Covè","Djidja","Ouinhi","Za-Kpota","Zagnanado","Zogbodomey"]};
+const EB={"Cotonou":["EPP Akpakpa","EPP Cadjèhoun","CEG Cadjèhoun","Lycée Toffa 1er"],"Porto-Novo":["EPP Porto-Novo Centre","CEG 1 Porto-Novo","Lycée Béhanzin"],"Parakou":["EPP Parakou Centre","CEG 1 Parakou"],"Abomey-Calavi":["EPP Abomey-Calavi Centre","CEG Abomey-Calavi"],"Ouidah":["EPP Ouidah Centre","CEG Ouidah"]};
+let db=null,fbOk=false,tous=[],ecoles={...EB},util=null,role=null;
+let fd={p:'',n:'',e:'',t:'',fn:'',dA:'',cA:'',eA:'',mo:'',sh:[],va:null};
+const DM=[
+  {fid:'D1',nom:'Kofi Agossou',email:'kofi.agossou@benin.edu',tel:'97000001',fn:'Instituteur / Institutrice',deptA:'Littoral',commA:'Cotonou',ecoleA:'EPP Akpakpa',motif:'Rapprochement familial',souhaits:[{dept:'Atlantique',commune:'Abomey-Calavi',label:'Abomey-Calavi (Atlantique)'}],vacant:true,statut:'en_attente',dateInscription:'2025-01-10',paiement:{statut:'confirmé',ref:'TXN001',date:'2025-01-10'},matches:[]},
+  {fid:'D2',nom:'Amina Seidou',email:'amina.seidou@benin.edu',tel:'97000002',fn:'Instituteur / Institutrice',deptA:'Atlantique',commA:'Abomey-Calavi',ecoleA:'EPP Abomey-Calavi Centre',motif:'Convenances personnelles',souhaits:[{dept:'Littoral',commune:'Cotonou',label:'Cotonou (Littoral)'}],vacant:true,statut:'en_attente',dateInscription:'2025-01-15',paiement:{statut:'confirmé',ref:'TXN002',date:'2025-01-15'},matches:[]},
+];
+const $=id=>document.getElementById(id);
+const set=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+const hide=id=>{const e=$(id);if(e)e.style.display='none';};
+const show=(id,d='block')=>{const e=$(id);if(e)e.style.display=d;};
+function ntf(m,t){const e=$('ntf');e.textContent=m;e.style.background=t==='e'?'#c0392b':t==='w'?'#d97706':'#1a6b3a';show('ntf');setTimeout(()=>hide('ntf'),3200);}
+function expire(r){if(!r.dateInscription)return false;const l=new Date(r.dateInscription);l.setFullYear(l.getFullYear()+1);return new Date()>l;}
+function jours(r){if(!r.dateInscription)return 365;const l=new Date(r.dateInscription);l.setFullYear(l.getFullYear()+1);return Math.max(0,Math.ceil((l-new Date())/864e5));}
+function initFB(){
+  try{
+    if(FB.apiKey==='VOTRE_API_KEY'){hide('ldr');show('fw');set('ns1','⚠️ Mode démo');tous=DM.map(d=>({...d}));calcM();majS();return;}
+    firebase.initializeApp(FB);db=firebase.firestore();fbOk=true;set('ns1','🟢 En ligne');
+    db.collection('adherents').onSnapshot(s=>{tous=s.docs.map(d=>({fid:d.id,...d.data()}));calcM();majS();if(util){const u=tous.find(r=>r.email===util.email);if(u){util=u;affE();}}});
+    db.collection('ecoles').onSnapshot(s=>{s.docs.forEach(d=>{ecoles[d.id]=d.data().liste||[];});});
+    db.collection('notifications').where('lu','==',false).onSnapshot(s=>{const n=s.size;$('btn-circuit').innerHTML=n>0?`🔐 Circuit <span class="nbadge">${n}</span>`:'🔐 Circuit';});
+    hide('ldr');
+  }catch(e){hide('ldr');set('ns1','🔴 Erreur');tous=DM.map(d=>({...d}));calcM();majS();}
+}
+function calcM(){
+  const dispo=tous.filter(r=>r.vacant&&!expire(r));
+  tous=tous.map(req=>{
+    if(expire(req))return{...req,matches:[]};
+    const m=[];
+    dispo.forEach(a=>{
+      if(a.email===req.email)return;
+      const jV=(req.souhaits||[]).some(s=>s.commune===a.commA||s.dept===a.deptA);
+      if(!jV)return;
+      const lV=(a.souhaits||[]).some(s=>s.commune===req.commA||s.dept===req.deptA);
+      const sc=(lV?50:0)+(a.vacant?30:0)+(a.fn===req.fn?20:0);
+      m.push({fid:a.fid,nom:a.nom,comm:a.commA,dept:a.deptA,ecole:a.ecoleA,fn:a.fn,mutuel:lV&&a.vacant,reco:lV&&a.vacant&&a.fn===req.fn,score:sc});
+    });
+    return{...req,matches:m.sort((a,b)=>b.score-a.score)};
+  });
+}
+function majS(){
+  const m=tous.filter(r=>(r.matches||[]).length>0).length;
+  set('s1',tous.length);set('s3',m);
+  set('a1',tous.length);set('a2',tous.filter(r=>r.vacant).length);
+  set('a3',tous.filter(r=>(r.matches||[]).some(x=>x.mutuel)).length);
+  set('a4',tous.filter(r=>r.paiement).length);
+  set('ns2',tous.length+' adhérent(s)');
+}
+function G(p){
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  const el=$('pg-'+p);if(el){el.classList.add('on');window.scrollTo(0,0);}
+  if(p==='inscription')initI();if(p==='admin'){majS();atab('nw');}
+  if(p==='paiement')affP();if(p==='ministere')affMin();if(p==='ddet')initD();if(p==='ccs')initC();
+}
+function seConn(){const em=$('l-em').value.trim().toLowerCase(),er=$('l-er');if(!em){er.textContent='Email requis';return;}const r=tous.find(x=>x.email===em);if(!r){er.textContent='Compte introuvable.';return;}er.textContent='';util=r;affE();G('espace');}
+function deco(){util=null;G('accueil');}
+function accCGU(){if(!$('ck').checked){$('ck-e').textContent='Veuillez cocher la case.';return;}$('ck-e').textContent='';sessionStorage.setItem('cgu','1');G('inscription');}
+function initI(){
+  if(!sessionStorage.getItem('paiement_ref')){G('paiement');ntf('⚠️ Payez d\'abord votre cotisation','w');return;}
+  if(!sessionStorage.getItem('cgu')){G('cgu');return;}
+  fd={p:'',n:'',e:'',t:'',fn:'',dA:'',cA:'',eA:'',mo:'',sh:[],va:null};
+  ['fda','fdv'].forEach(id=>{const s=$(id);if(!s)return;s.innerHTML=(id==='fdv'?'<option value="">-- Tous --</option>':'<option value="">-- Département --</option>');Object.keys(DP).sort().forEach(d=>s.innerHTML+=`<option>${d}</option>`);});
+  aEt(1);
+}
+function filtD(sId,dId){const d=$(dId).value,s=$(sId),isV=sId==='fcv';s.innerHTML=isV?'<option value="">-- Toutes --</option>':'<option value="">-- Commune --</option>';(d?DP[d]:Object.values(DP).flat().sort()).forEach(c=>s.innerHTML+=`<option>${c}</option>`);}
+function vE(){$('fea').value='';$('acl').style.display='none';}
+function acE(inp){const c=$('fca').value,v=inp.value.trim().toLowerCase(),l=$('acl');const pool=[...(EB[c]||[]),...(ecoles[c]||[])].filter((x,i,a)=>a.indexOf(x)===i);const res=v?pool.filter(e=>e.toLowerCase().includes(v)):pool;if(!res.length&&v){l.style.display='block';l.innerHTML=`<div class="aci" style="color:var(--v)">➕ Ajouter "${inp.value}"</div>`;l.firstChild.onclick=()=>l.style.display='none';}else if(res.length){l.style.display='block';l.innerHTML=res.map(e=>`<div class="aci">${e}</div>`).join('');l.querySelectorAll('.aci').forEach((d,i)=>d.onclick=()=>{inp.value=res[i];l.style.display='none';});}else l.style.display='none';}
+function aEt(n){for(let i=1;i<=4;i++){const e=$(i===2?'et2b':'et'+i);if(e)e.style.display=i===n?'block':'none';}dS(n);if(n===4)affRP();}
+function dS(a){const nm=['Identité','École','Souhaits','Déclar.'];$('steps').innerHTML=nm.map((nm,i)=>{const idx=i+1,c=idx<a?'sd':idx===a?'sa':'si';return `<div class="sw"><div class="sc ${c}">${idx<a?'✓':idx}</div><div class="sl2">${nm}</div></div>${i<3?`<div class="sli ${idx<a?'d':''}"></div>`:''}`}).join('');}
+function V(n){
+  let ok=true;
+  const er=(id,m)=>{const e=$(id);if(e)e.textContent=m;ok=false;};
+  const cl=(id)=>{const e=$(id);if(e)e.textContent='';};
+  if(n===1){
+    const p=$('fp').value.trim(),no=$('fn2').value.trim(),em=$('fe').value.trim().toLowerCase(),te=$('ft').value.trim(),fo=$('ff').value;
+    if(!p)er('ep','Obligatoire');else cl('ep');if(!no)er('en2','Obligatoire');else cl('en2');
+    if(!em||!em.includes('@'))er('ee','Email invalide');else if(tous.find(r=>r.email===em))er('ee','Email déjà inscrit');else cl('ee');
+    if(!te)er('et2','Obligatoire');else cl('et2');if(!fo)er('ef','Sélectionnez');else cl('ef');
+    if(ok){fd.p=p;fd.n=no;fd.e=em;fd.t=te;fd.fn=fo;aEt(2);}
+  }else if(n===2){
+    const da=$('fda').value,ca=$('fca').value,ea=$('fea').value.trim(),mo=$('fmo').value;
+    if(!da)er('eda','Requis');else cl('eda');if(!ca)er('eca','Requis');else cl('eca');
+    if(!ea)er('eea','Indiquez votre école');else cl('eea');if(!mo)er('emo','Requis');else cl('emo');
+    if(ok){fd.dA=da;fd.cA=ca;fd.eA=ea;fd.mo=mo;aEt(3);}
+  }else if(n===3){if(!fd.sh.length)$('esv').textContent='Ajoutez au moins une destination.';else{$('esv').textContent='';aEt(4);}}
+}
+function ajS(){const d=$('fdv').value,c=$('fcv').value;if(!d&&!c){ntf('Sélectionnez département ou commune','w');return;}const lb=c?`${c} (${d||'—'})`:` Dept. ${d}`;if(fd.sh.some(s=>s.commune===c&&s.dept===d)){ntf('Déjà ajouté','w');return;}fd.sh.push({dept:d,commune:c,label:lb});$('esv').textContent='';affSh();}
+function retS(i){fd.sh.splice(i,1);affSh();}
+function affSh(){$('ls').innerHTML=fd.sh.map((s,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--g);border-radius:7px;margin-bottom:5px;border:1px solid var(--bd)"><span style="flex:1;font-size:13px">📍 ${s.label}</span><button onclick="retS(${i})" style="background:none;border:none;color:var(--r);cursor:pointer;font-size:16px;font-weight:700">✕</button></div>`).join('');set('ns3',fd.sh.length+' destination(s)');}
+function affRP(){$('rp').innerHTML=`<b>${fd.eA}</b><br><span style="font-size:12px;color:#557">📍 ${fd.cA} · ${fd.dA}<br>👤 ${fd.fn}</span>`;if(fd.va!==null)chV(fd.va);}
+function chV(v){fd.va=v;$('cv').style.cssText=`border:2px solid ${v?'var(--v)':'var(--bd)'};border-radius:9px;padding:12px;margin-bottom:7px;cursor:pointer;background:${v?'#e8f5e9':'#fff'}`;$('cn').style.cssText=`border:2px solid ${v?'var(--bd)':'var(--r)'};border-radius:9px;padding:12px;cursor:pointer;background:${v?'#fff':'#fdf3f4'}`;$('ev').textContent='';}
+async function soum(){
+  if(fd.va===null){$('ev').textContent='Répondez à cette question.';return;}
+  const pr=sessionStorage.getItem('paiement_ref')||'',pn=sessionStorage.getItem('paiement_num')||'';
+  const pai=pr?{statut:'confirmé',operateur:'Moov Money',numero:pn,ref:pr,montant:500,date:new Date().toISOString().slice(0,10)}:null;
+  const doc={nom:fd.p+' '+fd.n,email:fd.e,tel:fd.t,fn:fd.fn,deptA:fd.dA,commA:fd.cA,ecoleA:fd.eA,souhaits:fd.sh,motif:fd.mo,vacant:fd.va,statut:'en_attente',dateInscription:new Date().toISOString().slice(0,10),paiement:pai,matches:[]};
+  if(!fbOk){doc.fid='D'+Date.now();tous.push(doc);sessionStorage.removeItem('paiement_ref');sessionStorage.removeItem('paiement_num');calcM();majS();util=tous.find(r=>r.email===fd.e);ntf('✅ Bienvenue !');affE();G('espace');return;}
+  set('lmsg','Enregistrement…');show('ldr');
+  try{await db.collection('adherents').add(doc);await enrE(fd.cA,fd.eA);await db.collection('notifications').add({type:'nouvel_adherent',nom:doc.nom,email:doc.email,commA:doc.commA,deptA:doc.deptA,date:new Date().toISOString(),lu:false}).catch(()=>{});hide('ldr');sessionStorage.removeItem('paiement_ref');sessionStorage.removeItem('paiement_num');ntf('✅ Bienvenue !');setTimeout(()=>{util=tous.find(r=>r.email===fd.e);if(util){affE();G('espace');}},700);}
+  catch(er){hide('ldr');ntf('Erreur: '+er.message,'e');}
+}
+async function enrE(com,eco){if(!eco||!com||!fbOk)return;if([...(EB[com]||[]),...(ecoles[com]||[])].some(e=>e.toLowerCase()===eco.toLowerCase()))return;if(!ecoles[com])ecoles[com]=[];ecoles[com].push(eco);try{const r=db.collection('ecoles').doc(com),s=await r.get(),l=s.exists?(s.data().liste||[]):[];if(!l.some(e=>e.toLowerCase()===eco.toLowerCase())){l.push(eco);await r.set({commune:com,liste:l});}}catch(e){}}
+function affE(){
+  const u=tous.find(r=>r.email===util.email)||util;util=u;const m=u.matches||[];
+  set('e-n',u.nom);set('e-i',u.fn+' · '+u.commA+' ('+u.deptA+')');
+  set('e-m',m.length);set('e-r',m.filter(x=>x.reco).length);set('e-mu',m.filter(x=>x.mutuel).length);
+  const jr=jours(u),exp=expire(u);let ban='';
+  if(exp)ban=`<div style="margin:8px 10px;background:linear-gradient(135deg,#b7410e,var(--r));color:#fff;border-radius:10px;padding:12px;text-align:center"><b>⛔ Profil expiré</b><br><button onclick="G('paiement')" style="margin-top:8px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">💳 Renouveler</button></div>`;
+  else if(jr<=30)ban=`<div style="margin:8px 10px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:10px;font-size:12px;color:#5a4000">⚠️ <b>Expire dans ${jr} jours.</b></div>`;
+  if(u.vacant)ban+=`<div style="margin:8px 10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:10px;padding:11px"><b>✅ Poste disponible</b><div style="font-size:11px;opacity:.85;margin:2px 0 5px">Visible par tous les adhérents.</div><button onclick="togV(false)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">Retirer</button></div>`;
+  else ban+=`<div style="margin:8px 10px;background:linear-gradient(135deg,#b7410e,var(--r));color:#fff;border-radius:10px;padding:11px"><b>⚠️ Poste non déclaré</b><div style="font-size:11px;opacity:.85;margin:2px 0 5px">Déclarez pour les permutations mutuelles.</div><button onclick="togV(true)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer">Déclarer</button></div>`;
+  $('vban').innerHTML=ban;ong('m');
+}
+async function togV(v){if(fbOk&&util.fid){try{await db.collection('adherents').doc(util.fid).update({vacant:v});}catch(e){ntf('Erreur','e');return;}}else{tous=tous.map(r=>r.email===util.email?{...r,vacant:v}:r);calcM();util=tous.find(r=>r.email===util.email);affE();}ntf(v?'✅ Poste déclaré':'🔴 Retiré');}
+function ong(t){['m','p','v'].forEach(x=>{$('tb-'+x).classList.toggle('on',x===t);$('tc-'+x).style.display=x===t?'block':'none';});const u=tous.find(r=>r.email===util.email)||util;if(t==='m')affM(u);if(t==='p')affPo(u);if(t==='v')affV(u);}
+function affM(u){const m=u.matches||[];if(!m.length){$('tc-m').innerHTML='<div class="c" style="text-align:center;color:#557;font-size:13px"><div style="font-size:28px">🔍</div>Aucune correspondance.</div>';return;}$('tc-m').innerHTML=`<div style="padding:5px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase">Correspondances (${m.length})</div>`+m.map(x=>`<div style="border:1.5px solid ${x.reco?'var(--v)':x.mutuel?'var(--j)':'var(--bd)'};border-radius:9px;padding:12px;margin:0 10px 8px;background:${x.reco?'#f0faf3':x.mutuel?'#fffdf0':'#fff'}">${x.reco?'<span class="badge bvg">⭐ Recommandé</span>':''}${x.mutuel&&!x.reco?'<span class="badge bam">🔄 Mutuel</span>':''}<div style="font-weight:700;font-size:13px;margin-top:2px">🏫 ${x.ecole||x.comm}</div><div style="font-size:11px;color:#557">📍 ${x.comm} · ${x.dept} · 👤 ${x.nom}</div></div>`).join('');}
+function affPo(u){const jr=jours(u),exp=expire(u);$('tc-p').innerHTML=`<div class="c"><div class="ct">🏫 École actuelle</div><b>${u.ecoleA}</b><div style="font-size:12px;color:#557;margin-top:2px">📍 ${u.commA} · ${u.deptA}</div></div><div class="c"><div class="ct">🎯 Destinations</div>${(u.souhaits||[]).map(s=>`<div style="padding:6px 0;border-bottom:1px solid var(--g);font-size:13px">📍 ${s.label||s.commune}</div>`).join('')}</div><div class="c" style="font-size:12px;line-height:1.8"><div>📝 Motif: ${u.motif||'—'}</div><div>📅 Inscrit: ${u.dateInscription}</div><div>💳 <span class="badge ${u.paiement?.statut==='confirmé'?'bvg':'bgr'}">${u.paiement?.statut||'Non payé'}</span></div><div style="margin-top:6px;padding:8px;border-radius:7px;background:${exp?'#fdf3f4':jr<=30?'#fff8e1':'#f0faf3'}">${exp?'<b style="color:var(--r)">⛔ Expiré</b>':jr<=30?`<b style="color:#b8860b">⚠️ ${jr} jours restants</b>`:`<b style="color:var(--v)">✅ ${jr} jours restants</b>`}</div></div>`;}
+function affV(u){const vac=tous.filter(r=>r.vacant&&r.email!==u.email&&!expire(r));if(!vac.length){$('tc-v').innerHTML='<div class="c" style="text-align:center;color:#557">Aucun poste disponible.</div>';return;}const par={};vac.forEach(v=>{if(!par[v.commA])par[v.commA]={d:v.deptA,a:[]};par[v.commA].a.push(v);});$('tc-v').innerHTML=Object.entries(par).map(([c,d])=>{const dV=(u.souhaits||[]).some(s=>s.commune===c||s.dept===d.d);return `<div class="ch">${c} <span style="font-size:10px;opacity:.8">${d.d}</span>${dV?'<span class="badge" style="background:rgba(255,255,255,.2);color:#fff">Souhait</span>':''}</div>`+d.a.map(v=>`<div style="background:#fff;margin:0 10px 4px;border-radius:8px;padding:10px;border:1px solid var(--bd)"><b>🏫 ${v.ecoleA}</b><div style="font-size:11px;color:#557">👤 ${v.nom} — ${v.fn}</div></div>`).join('');}).join('');}
+function affP(){$('pay-b').innerHTML=`<div style="background:linear-gradient(135deg,#0057A8,#003d82);border-radius:14px;padding:20px;text-align:center;color:#fff;margin:10px"><div style="font-size:52px;font-weight:900;color:#FFCD00;line-height:1">500</div><div style="font-size:18px;font-weight:700">FCFA / an</div></div><div id="bp-m" onclick="payM()" style="background:linear-gradient(135deg,#0057A8,#0069cc);border-radius:13px;padding:18px;text-align:center;cursor:pointer;margin:0 10px"><div style="font-size:36px">🔵</div><div style="color:#fff;font-weight:900;font-size:16px;margin:5px 0">Payer avec Moov Money</div><div style="background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 20px;display:inline-block"><span style="color:#FFCD00;font-weight:900">💳 PAYER 500 FCFA</span></div></div><div id="ufb" style="display:none;margin:8px 10px 0"><div style="background:#e3f2fd;border:1px solid #90caf9;border-radius:9px;padding:12px;font-size:12px;color:#0d47a1">📱 App non ouverte ?<div onclick="window.location.href='tel:*155*1*500%23'" style="background:#0057A8;color:#fff;border-radius:7px;padding:8px;text-align:center;font-weight:700;font-size:14px;margin-top:6px;cursor:pointer">📲 Composer *155#</div></div></div><div class="c" style="margin-top:8px;font-size:12px;color:#557;line-height:1.7">1️⃣ Appuyez PAYER · 2️⃣ PIN · 3️⃣ Notez référence SMS · 4️⃣ Confirmez</div><div class="c"><div class="ct">✏️ Confirmer paiement</div><label>Numéro Moov *</label><input type="tel" id="mn" placeholder="96 12 34 56" maxlength="12" inputmode="numeric"><div class="err" id="me1"></div><label>Référence *</label><input type="text" id="mr" placeholder="TXN20250115123" oninput="this.value=this.value.toUpperCase()"><div class="hint">💡 Référence dans le SMS reçu</div><div class="err" id="me2"></div><button class="btn bv" onclick="confP()" style="margin-top:12px">✅ Confirmer →</button></div>`;}
+function payM(){const b=$('bp-m');if(b){b.style.opacity='.8';setTimeout(()=>b.style.opacity='',200);}window.location.href=`moovmoney://pay?to=${_d()}&amount=500&note=Eduking229`;setTimeout(()=>show('ufb'),1500);}
+async function confP(){const num=$('mn')?.value?.trim(),ref=$('mr')?.value?.trim().toUpperCase();let ok=true;if(!num||num.replace(/\s/g,'').length<8){$('me1').textContent='Numéro invalide';ok=false;}else $('me1').textContent='';if(!ref||ref.length<5){$('me2').textContent='Référence trop courte';ok=false;}else $('me2').textContent='';if(!ok)return;sessionStorage.setItem('paiement_ref',ref);sessionStorage.setItem('paiement_num',num);ntf('✅ Paiement enregistré !');$('pay-b').innerHTML=`<div style="margin:20px 12px;background:#e8f5e9;border:2px solid var(--v);border-radius:14px;padding:20px;text-align:center"><div style="font-size:44px">✅</div><div style="font-weight:900;font-size:16px;color:var(--v)">Confirmé !</div><div style="font-size:12px;color:#557;margin:7px 0">Réf: <b>${ref}</b></div><button class="btn bv" onclick="G('inscription')" style="margin-top:14px">📝 S'inscrire →</button></div>`;}
+const RL={min:{t:'🏛️ Ministère',s:'Validation officielle',p:'ministere'},ddt:{t:'📋 DDET',s:'Direction Dép. Enseignement',p:'ddet'},ccs:{t:'🏫 CCS',s:'Chef Circonscription',p:'ccs'}};
+function oAdmin(){majS();atab('nw');G('admin');}
+function oLog(r){role=r;const i=RL[r];set('ml-t',i.t);set('ml-s',i.s);$('ml-p').value='';$('ml-e').textContent='';$('mlog').style.display='flex';setTimeout(()=>$('ml-p').focus(),200);}
+function fLog(){$('mlog').style.display='none';role=null;}
+function vLog(){const s=$('ml-p').value,a=dPW(PW[role]);if(s!==a){$('ml-e').textContent='Mot de passe incorrect.';$('ml-p').value='';return;}fLog();G(RL[role].p);}
+$('mlog').addEventListener('click',function(e){if(e.target===this)fLog();});
+function atab(t){['nw','adh','pm','py'].forEach((x,i)=>{const el=$('at'+i);if(el)el.classList.toggle('on',x===t);const div=$('atc-'+x);if(div)div.style.display=x===t?'block':'none';});if(t==='nw')affNv();if(t==='adh')affAdh();if(t==='pm')affPm();if(t==='py')affPy();}
+function affNv(){const div=$('atc-nw');const lim=new Date();lim.setDate(lim.getDate()-30);const rec=tous.filter(r=>new Date(r.dateInscription)>=lim).sort((a,b)=>new Date(b.dateInscription)-new Date(a.dateInscription));let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase">${rec.length} inscrit(s) — 30 jours</div>`;if(!rec.length){div.innerHTML=h+'<div class="c" style="text-align:center;color:#557">Aucun nouvel inscrit.</div>';return;}rec.forEach(r=>{const pC=r.paiement?.statut==='confirmé',pO=r.paiement!=null,jr=jours(r);h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:13px;border:1.5px solid ${pC?'var(--v)':'#ffe082'}"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div><b>${r.nom}</b><div style="font-size:11px;color:#557">👤 ${r.fn} · 🏫 ${r.ecoleA} · ${r.commA}</div><div style="font-size:10px;color:#888">📅 ${r.dateInscription} · ${jr}j</div></div><span class="badge ${pC?'bvg':pO?'bam':'brd'}">${pC?'✅':pO?'⏳':'❌'}</span></div><div style="display:flex;gap:7px">${!pC&&pO?`<button onclick="vPy('${r.fid||''}','${r.email}')" class="btn bv sm" style="flex:1;font-size:12px">✓ Valider paiement</button>`:''}<button onclick="ntf('📧 Message envoyé')" class="btn bo sm" style="flex:1;font-size:12px">📧 Contacter</button></div></div>`;});if(fbOk)db.collection('notifications').where('lu','==',false).get().then(s=>{const b=db.batch();s.docs.forEach(d=>b.update(d.ref,{lu:true}));b.commit();}).catch(()=>{});$('btn-circuit').innerHTML='🔐 Circuit';div.innerHTML=h;}
+function affAdh(){const par={};tous.forEach(r=>{const k=r.commA||'?';if(!par[k])par[k]={d:r.deptA,l:[]};par[k].l.push(r);});let h='';Object.entries(par).sort().forEach(([c,d])=>{h+=`<div class="ch">${c} <span style="opacity:.8;font-size:10px">${d.d}</span><span class="badge" style="background:rgba(255,255,255,.2);color:#fff">${d.l.length}</span></div>`;d.l.forEach(r=>h+=`<div style="background:#fff;margin:0 10px 5px;border-radius:8px;padding:10px;border:1px solid var(--bd);display:flex;justify-content:space-between;gap:8px"><div><b>${r.nom}</b><div style="font-size:11px;color:#557">🏫 ${r.ecoleA} · ${jours(r)}j</div></div><div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end"><span class="badge ${r.vacant?'bvg':'brd'}">${r.vacant?'✓ Dispo':'✗'}</span><span class="badge ${r.paiement?.statut==='confirmé'?'bvg':r.paiement?'bam':'bgr'}">${r.paiement?.statut==='confirmé'?'💳 Payé':r.paiement?'⏳':'—'}</span></div></div>`);});$('atc-adh').innerHTML=h||'<div class="c" style="text-align:center;color:#557">Aucun adhérent.</div>';}
+function getPaires(){const p=[],v=new Set();tous.forEach(r=>(r.matches||[]).filter(m=>m.mutuel).forEach(m=>{const k=[r.email,(m.fid||m.email)].sort().join('|');if(!v.has(k)){v.add(k);const a=tous.find(x=>x.fid===m.fid||x.email===m.email);if(a)p.push({r1:r,r2:a,m});}}));return p;}
+function affPm(){const paires=getPaires();let h=`<div style="padding:5px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase">Permutations (${paires.length})</div>`;if(!paires.length)h+='<div class="c" style="text-align:center;color:#557">Aucune permutation.</div>';paires.forEach((p,i)=>h+=`<div style="background:#fff;margin:0 10px 10px;border-radius:10px;padding:13px;border:1.5px solid var(--bd)"><div style="background:var(--g);border-radius:7px;padding:9px;margin-bottom:3px"><b>${p.r1.nom}</b><div style="font-size:11px;color:#557">🏫 ${p.r1.ecoleA} — ${p.r1.commA}</div></div><div style="text-align:center;color:#aaa;margin:2px 0">🔄</div><div style="background:var(--g);border-radius:7px;padding:9px;margin-bottom:9px"><b>${p.r2.nom}</b><div style="font-size:11px;color:#557">🏫 ${p.r2.ecoleA} — ${p.r2.commA}</div></div><div style="display:flex;gap:7px"><button onclick="ntf('📧 Notification envoyée')" class="btn bo sm" style="flex:1;font-size:12px">📧 Notifier</button><button onclick="vPm('${p.r1.fid||''}','${p.r2.fid||''}','${p.r1.email}','${p.r2.email}')" class="btn bv sm" style="flex:1;font-size:12px">✓ Valider</button></div></div>`);$('atc-pm').innerHTML=h;}
+function affPy(){const pays=tous.filter(r=>r.paiement);let h=`<div style="padding:5px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase">Paiements (${pays.length})</div>`;if(!pays.length)h+='<div class="c" style="text-align:center;color:#557">Aucun paiement.</div>';pays.forEach(r=>{const p=r.paiement,cf=p.statut==='confirmé';h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid ${cf?'var(--v)':'#ffe082'}"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div><b>${r.nom}</b><div style="font-size:11px;color:#557">${r.email}</div></div><span class="badge ${cf?'bvg':'bam'}">${cf?'✅':'⏳'}</span></div><div style="font-size:12px;color:#557;margin-bottom:6px">💳 ${p.numero} · 🔖 ${p.ref} · 500 FCFA</div>${!cf?`<button onclick="vPy('${r.fid||''}','${r.email}')" class="btn bv" style="padding:9px;font-size:13px;margin:0">✓ Valider</button>`:''}</div>`;});$('atc-py').innerHTML=h;}
+async function vPm(f1,f2,e1,e2){const u={statut:'validée',validePar:'Système',dateValidation:new Date().toISOString().slice(0,10),circuitEtape:'Ministère'};if(fbOk&&f1&&f2){try{await db.collection('adherents').doc(f1).update(u);await db.collection('adherents').doc(f2).update(u);}catch(e){ntf('Erreur','e');return;}}else{tous=tous.map(r=>(r.email===e1||r.email===e2)?{...r,...u}:r);calcM();}ntf('✅ Transmis au Ministère');affPm();}
+async function vPy(fid,email){const u={'paiement.statut':'confirmé'};if(fbOk&&fid){try{await db.collection('adherents').doc(fid).update(u);}catch(e){ntf('Erreur','e');return;}}else{tous=tous.map(r=>r.email===email?{...r,paiement:{...r.paiement,statut:'confirmé'}}:r);majS();}ntf('✅ Paiement validé');affPy();affNv();}
+function affMin(){const p=getPaires(),va=p.filter(x=>x.r1.statut==='validée'),at=p.filter(x=>x.r1.statut!=='validée'&&x.r1.statut!=='rejetée');set('ma',p.length);set('mb',at.length);set('mc',va.length);mtab('at');}
+function mtab(t){['at','va','re'].forEach((x,i)=>{$('mt'+(i+1)).classList.toggle('on',x===t);$('m-'+x).style.display=x===t?'block':'none';});const p=getPaires();const map={at:p.filter(x=>x.r1.statut!=='validée'&&x.r1.statut!=='rejetée'),va:p.filter(x=>x.r1.statut==='validée'),re:p.filter(x=>x.r1.statut==='rejetée')};affMD('m-'+t,map[t],t==='at');}
+function affMD(dId,paires,act){const div=$(dId);if(!paires.length){div.innerHTML='<div class="c" style="text-align:center;color:#557">Aucun dossier.</div>';return;}let h=`<div style="padding:5px 12px;font-size:11px;color:#557;font-weight:700">${paires.length} dossier(s)</div>`;paires.forEach((p,i)=>{const bc=p.r1.statut==='validée'?'bvg':p.r1.statut==='rejetée'?'brd':'bam';h+=`<div style="background:#fff;margin:0 10px 10px;border-radius:10px;padding:13px;border:1.5px solid var(--bd)"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:var(--b)">Dossier #${String(i+1).padStart(3,'0')}</span><span class="badge ${bc}">${p.r1.statut==='validée'?'✅':p.r1.statut==='rejetée'?'❌':'⏳'}</span></div><div style="background:#f8f9ff;border-radius:7px;padding:9px;margin-bottom:3px;border-left:3px solid var(--b)"><b>${p.r1.nom}</b><div style="font-size:11px;color:#557">🏫 ${p.r1.ecoleA} · ${p.r1.commA}</div></div><div style="text-align:center;color:#aaa;margin:2px 0">🔄</div><div style="background:#f8f9ff;border-radius:7px;padding:9px;border-left:3px solid var(--b);margin-bottom:${act?'10':'3'}px"><b>${p.r2.nom}</b><div style="font-size:11px;color:#557">🏫 ${p.r2.ecoleA} · ${p.r2.commA}</div></div>${act?`<div style="margin-bottom:8px"><label style="margin-top:0">Note</label><input type="text" id="nt-${i}" placeholder="ex: Dossier approuvé" style="font-size:12px;padding:8px"></div><div style="display:flex;gap:7px"><button onclick="mVal('${p.r1.fid||''}','${p.r2.fid||''}','${p.r1.email}','${p.r2.email}',${i})" class="btn bv sm" style="flex:1;background:var(--b);font-size:12px">🏛️ Valider</button><button onclick="mRej('${p.r1.fid||''}','${p.r2.fid||''}','${p.r1.email}','${p.r2.email}',${i})" class="btn sm" style="flex:1;background:var(--r);color:#fff;font-size:12px">❌ Rejeter</button></div>`:''}</div>`;});div.innerHTML=h;}
+async function mVal(f1,f2,e1,e2,i){const note=$('nt-'+i)?.value||'';const u={statut:'validée',validePar:'Ministère',dateValidation:new Date().toISOString().slice(0,10),noteMinistere:note,circuitEtape:'DDET'};if(fbOk&&f1&&f2){try{await db.collection('adherents').doc(f1).update(u);await db.collection('adherents').doc(f2).update(u);}catch(e){ntf('Erreur','e');return;}}else{tous=tous.map(r=>(r.email===e1||r.email===e2)?{...r,...u}:r);calcM();}ntf('✅ Validé — DDET');affMin();}
+async function mRej(f1,f2,e1,e2,i){const note=$('nt-'+i)?.value||'Dossier incomplet';const u={statut:'rejetée',rejetePar:'Ministère',dateRejet:new Date().toISOString().slice(0,10),noteMinistere:note};if(fbOk&&f1&&f2){try{await db.collection('adherents').doc(f1).update(u);await db.collection('adherents').doc(f2).update(u);}catch(e){ntf('Erreur','e');return;}}else{tous=tous.map(r=>(r.email===e1||r.email===e2)?{...r,...u}:r);calcM();}ntf('❌ Rejeté','e');affMin();}
+function initD(){const s=$('dd-d');s.innerHTML='<option value="">-- Tous les départements --</option>';Object.keys(DP).sort().forEach(d=>s.innerHTML+=`<option>${d}</option>`);affD();}
+function affD(){const d=$('dd-d').value,val=tous.filter(r=>r.statut==='validée'&&(!d||r.deptA===d));set('da',Math.floor(val.length/2));set('db',val.length);const par={};val.forEach(r=>{if(!par[r.commA])par[r.commA]={d:r.deptA,a:[]};par[r.commA].a.push(r);});let h='';Object.entries(par).forEach(([c,d2])=>{h+=`<div class="ch" style="background:linear-gradient(90deg,var(--o),var(--r))">${c} · ${d2.d}<span class="badge" style="background:rgba(255,255,255,.2);color:#fff">${d2.a.length}</span></div>`;d2.a.forEach(r=>h+=`<div style="background:#fff;margin:0 10px 5px;border-radius:8px;padding:10px;border:1px solid var(--bd)"><div style="display:flex;justify-content:space-between"><div><b>${r.nom}</b><div style="font-size:11px;color:#557">🏫 ${r.ecoleA}</div></div><span class="badge bvg">✅</span></div><button onclick="ntf('📢 ${r.nom} informé')" style="background:var(--o);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;margin-top:7px;width:100%">📢 Informer</button></div>`);});$('ddet-b').innerHTML=h||`<div class="c" style="text-align:center;color:#557">Aucune permutation validée.</div>`;}
+function initC(){const s=$('cc-d');s.innerHTML='<option value="">-- Département --</option>';Object.keys(DP).sort().forEach(d=>s.innerHTML+=`<option>${d}</option>`);affC();}
+function filtC(){const d=$('cc-d').value,s=$('cc-c');s.innerHTML='<option value="">-- Toutes --</option>';if(d)DP[d].forEach(c=>s.innerHTML+=`<option>${c}</option>`);affC();}
+function affC(){const d=$('cc-d').value,c=$('cc-c').value;const ag=tous.filter(r=>(!d||r.deptA===d)&&(!c||r.commA===c)),va=ag.filter(r=>r.statut==='validée');set('ca',ag.length);set('cb',va.length);const ET=['Système','Ministère','DDET','CCS'];let h=`<div style="padding:5px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase">${ag.length} agent(s)</div>`;ag.forEach(r=>{const bc=r.statut==='validée'?'bvg':r.statut==='rejetée'?'brd':'bam';const ei=ET.indexOf(r.circuitEtape||'Système');h+=`<div style="background:#fff;margin:0 10px 6px;border-radius:9px;padding:11px;border:1px solid var(--bd)"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div><b>${r.nom}</b><div style="font-size:11px;color:#557">🏫 ${r.ecoleA} · ${r.commA}</div></div><span class="badge ${bc}">${r.statut==='validée'?'✅':r.statut==='rejetée'?'❌':'⏳'}</span></div><div style="display:flex;align-items:center;background:var(--g);border-radius:7px;padding:8px">${ET.map((e,i)=>{const f=i<=ei||r.statut==='validée';return `<div style="text-align:center;flex:1;font-size:8px"><div style="width:18px;height:18px;border-radius:50%;background:${f?'var(--v)':'#ddd'};color:${f?'#fff':'#888'};display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;margin:0 auto 2px">${f?'✓':(i+1)}</div>${e}</div>${i<3?`<div style="flex:1;height:1px;background:${f?'var(--v)':'#ddd'}"></div>`:''}`}).join('')}</div>${r.statut==='validée'?`<button onclick="ntf('📢 ${r.nom} notifié')" style="background:var(--p);color:#fff;border:none;border-radius:6px;padding:6px;font-size:11px;font-weight:700;cursor:pointer;width:100%;margin-top:7px">📢 Notifier</button>`:''}</div>`;});$('ccs-b').innerHTML=h;}
+window.onload=()=>setTimeout(initFB,200);
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js" defer></script>
+</body>
+</html>

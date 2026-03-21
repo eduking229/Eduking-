@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bibliothèque Numérique — Eduking 229</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #1a6b3a; --vert-clair: #2d9a57; --jaune: #f5c518;
+    --rouge: #c0392b; --creme: #fdf8f0; --texte: #1a1a1a; --gris: #6b6b6b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texte); }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: var(--vert); padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .logo { font-family: 'Playfair Display', serif; color: var(--jaune); font-size: 1.4rem; font-weight: 900; text-decoration: none; }
+  .logo span { color: white; }
+  nav ul { list-style: none; display: flex; gap: 18px; }
+  nav ul li a { color: white; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+  nav ul li a:hover { color: var(--jaune); }
+  nav ul li a.active { color: var(--jaune); font-weight: 700; }
+
+  .page-header {
+    background: linear-gradient(160deg, #0d4a27 0%, #1a6b3a 100%);
+    padding: 110px 24px 50px; text-align: center;
+  }
+  .page-header h1 { font-family: 'Playfair Display', serif; color: white; font-size: 2.2rem; margin-bottom: 10px; }
+  .page-header p { color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+
+  /* ABONNEMENTS */
+  .abonnements-section { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--vert); margin-bottom: 10px; text-align: center; }
+  .section-sub { text-align: center; color: var(--gris); margin-bottom: 40px; font-size: 0.95rem; }
+
+  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 60px; }
+
+  .plan-card {
+    background: white; border-radius: 20px; padding: 32px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07); position: relative;
+    border: 2px solid transparent; transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+  .plan-card.populaire { border-color: var(--jaune); }
+
+  .badge-pop {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--jaune); color: var(--vert); padding: 4px 16px;
+    border-radius: 50px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+  }
+  .plan-icon { font-size: 2.2rem; margin-bottom: 14px; }
+  .plan-nom { font-weight: 700; font-size: 1rem; color: var(--gris); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .plan-prix { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--vert); margin-bottom: 4px; }
+  .plan-prix span { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--gris); }
+  .plan-periode { font-size: 0.8rem; color: var(--gris); margin-bottom: 20px; }
+  .plan-features { list-style: none; margin-bottom: 24px; flex: 1; }
+  .plan-features li { font-size: 0.85rem; color: var(--texte); padding: 6px 0; border-bottom: 1px solid #f5f5f5; display: flex; align-items: flex-start; gap: 8px; }
+  .plan-features li::before { content: '✓'; color: var(--vert-clair); font-weight: 700; flex-shrink: 0; }
+  .btn-souscrire {
+    width: 100%; padding: 13px; border-radius: 10px; border: none; font-size: 0.9rem;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+    background: var(--vert); color: white;
+  }
+  .btn-souscrire:hover { background: var(--vert-clair); }
+  .plan-card.populaire .btn-souscrire { background: var(--jaune); color: var(--vert); }
+  .plan-card.populaire .btn-souscrire:hover { background: #e8b800; }
+
+  /* CATALOGUE */
+  .catalogue-section { background: white; padding: 60px 24px; }
+  .catalogue-inner { max-width: 900px; margin: 0 auto; }
+  .catalogue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
+  .doc-card {
+    border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px;
+    transition: all 0.2s; cursor: default; position: relative; overflow: hidden;
+  }
+  .doc-card:hover { border-color: var(--vert); box-shadow: 0 4px 16px rgba(26,107,58,0.1); }
+  .doc-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .doc-card h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+  .doc-card .doc-meta { font-size: 0.72rem; color: var(--gris); }
+  .doc-lock {
+    position: absolute; top: 12px; right: 12px;
+    background: #f0f0f0; border-radius: 50%; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
+  }
+
+  /* FAQ */
+  .faq-section { max-width: 700px; margin: 0 auto; padding: 60px 24px; }
+  .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
+  .faq-q { font-weight: 700; font-size: 0.95rem; color: var(--vert); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { font-size: 0.85rem; color: var(--gris); line-height: 1.7; margin-top: 10px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-arrow { transition: transform 0.2s; font-size: 0.8rem; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: white; border-radius: 20px; padding: 32px 28px; max-width: 400px; width: 100%; position: relative; animation: popIn 0.3s ease; }
+  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: #f0f0f0; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
+  .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--vert); margin-bottom: 6px; }
+  .modal .plan-info { font-size: 0.85rem; color: var(--gris); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0; }
+  .mtn-box { background: #FFF8E1; border: 2px solid var(--jaune); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
+  .mtn-numero { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; margin: 10px 0; }
+  .mtn-montant { background: var(--vert); color: white; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; margin: 12px 0; }
+  .instructions { font-size: 0.82rem; color: var(--gris); line-height: 1.7; margin-bottom: 20px; }
+  .btn-confirmer { width: 100%; background: var(--vert); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+
+  footer { background: #0d1a12; color: rgba(255,255,255,0.6); padding: 30px 24px; text-align: center; }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  footer a:hover { color: var(--jaune); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Edu<span>king</span> 229</a>
+  <ul>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="bibliotheque.html" class="active">Bibliothèque</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>📚 Bibliothèque Numérique</h1>
+  <p>Accès illimité à toutes les ressources pédagogiques avec un abonnement adapté à votre besoin.</p>
+</div>
+
+<!-- PLANS -->
+<div class="abonnements-section">
+  <h2 class="section-title">Choisissez votre abonnement</h2>
+  <p class="section-sub">Paiement via MTN Mobile Money · Accès immédiat</p>
+
+  <div class="plans-grid">
+
+    <div class="plan-card">
+      <div class="plan-icon">🌙</div>
+      <div class="plan-nom">Mensuel</div>
+      <div class="plan-prix">2 000 <span>FCFA</span></div>
+      <div class="plan-periode">par mois</div>
+      <ul class="plan-features">
+        <li>Accès à tous les documents</li>
+        <li>6 niveaux (CI au CM2)</li>
+        <li>4 matières disponibles</li>
+        <li>Téléchargement illimité</li>
+        <li>Renouvellement mensuel</li>
+      </ul>
+      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement Mensuel', '2 000 FCFA')">S'abonner</button>
+    </div>
+
+    <div class="plan-card populaire">
+      <div class="badge-pop">⭐ Le plus populaire</div>
+      <div class="plan-icon">🌟</div>
+      <div class="plan-nom">Annuel</div>
+      <div class="plan-prix">15 000 <span>FCFA</span></div>
+      <div class="plan-periode">par an — économisez 9 000 FCFA</div>
+      <ul class="plan-features">
+        <li>Accès à tous les documents</li>
+        <li>6 niveaux (CI au CM2)</li>
+        <li>4 matières disponibles</li>
+        <li>Téléchargement illimité</li>
+        <li>Nouvelles ressources incluses</li>
+        <li>Support prioritaire</li>
+      </ul>
+      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement Annuel', '15 000 FCFA')">S'abonner</button>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-icon">🏫</div>
+      <div class="plan-nom">École</div>
+      <div class="plan-prix">50 000 <span>FCFA</span></div>
+      <div class="plan-periode">par an · jusqu'à 10 enseignants</div>
+      <ul class="plan-features">
+        <li>10 comptes enseignants</li>
+        <li>Accès complet partagé</li>
+        <li>Tous niveaux et matières</li>
+        <li>Ressources imprimables</li>
+        <li>Support dédié WhatsApp</li>
+        <li>Formation en ligne incluse</li>
+      </ul>
+      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement École', '50 000 FCFA')">Contacter</button>
+    </div>
+
+  </div>
+
+  <!-- COMPARAISON -->
+  <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+    <h3 style="font-family:'Playfair Display',serif;color:var(--vert);margin-bottom:16px;font-size:1.1rem;">💡 Pourquoi l'abonnement ?</h3>
+    <p style="font-size:0.85rem;color:var(--gris);line-height:1.7;">
+      Avec l'abonnement annuel à <strong>15 000 FCFA</strong>, vous accédez à <em>toutes</em> les ressources disponibles.
+      En achetant séparément à 500 FCFA, vous atteignez ce montant après seulement 30 documents.
+      L'abonnement est la solution idéale pour les enseignants actifs.
+    </p>
+  </div>
+</div>
+
+<!-- CATALOGUE APERÇU -->
+<div class="catalogue-section">
+  <div class="catalogue-inner">
+    <h2 class="section-title">Aperçu du catalogue</h2>
+    <p class="section-sub">Un extrait des ressources disponibles dans la bibliothèque</p>
+    <div class="catalogue-grid">
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">➕</div>
+        <h4>Calcul Mental CE1</h4>
+        <p class="doc-meta">Maths · 20 pages</p>
+      </div>
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">📝</div>
+        <h4>Dictée CM2</h4>
+        <p class="doc-meta">Français · 15 pages</p>
+      </div>
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">🔬</div>
+        <h4>Sciences CE2</h4>
+        <p class="doc-meta">Sciences · 18 pages</p>
+      </div>
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">🗺️</div>
+        <h4>Géo Bénin CM1</h4>
+        <p class="doc-meta">Histoire-Géo · 12 pages</p>
+      </div>
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">🔤</div>
+        <h4>Lecture CI</h4>
+        <p class="doc-meta">Français · 30 pages</p>
+      </div>
+      <div class="doc-card">
+        <div class="doc-lock">🔒</div>
+        <div class="doc-icon">🔢</div>
+        <h4>Numération CP</h4>
+        <p class="doc-meta">Maths · 22 pages</p>
+      </div>
+      <div class="doc-card" style="background:linear-gradient(135deg,var(--vert),#0d4a27);border:none;display:flex;align-items:center;justify-content:center;text-align:center;">
+        <div>
+          <div style="font-size:1.5rem;margin-bottom:8px;">📦</div>
+          <p style="color:white;font-size:0.8rem;font-weight:700;">+ 50 documents disponibles</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <h2 class="section-title">Questions fréquentes</h2>
+  <p class="section-sub">Tout ce que vous devez savoir sur la bibliothèque</p>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Comment accéder aux documents après paiement ?
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">Après confirmation de votre paiement MTN Mobile Money, vous recevrez un lien d'accès par SMS ou WhatsApp dans les 24 heures.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Puis-je imprimer les documents ?
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">Oui, tous les documents sont au format PDF prêts à imprimer. Vous pouvez les utiliser en classe sans restriction.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      L'abonnement se renouvelle-t-il automatiquement ?
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">Non. Votre abonnement n'est pas automatique. Vous recevrez un rappel avant l'expiration pour renouveler si vous le souhaitez.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Les programmes sont-ils conformes au Bénin ?
+      <span class="faq-arrow">▼</span>
+    </div>
+    <div class="faq-a">Absolument. Toutes les ressources sont alignées sur les programmes officiels du Ministère des Enseignements Primaire et Secondaire du Bénin.</div>
+  </div>
+</div>
+
+<!-- MODAL PAIEMENT -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="fermerModal()">✕</button>
+    <h2>📚 Abonnement</h2>
+    <p class="plan-info" id="modal-plan">—</p>
+    <div class="mtn-box">
+      <div style="font-size:2rem;margin-bottom:6px;">📱</div>
+      <strong style="color:#e65c00;">MTN Mobile Money</strong>
+      <div class="mtn-numero">+229 XX XX XX XX</div>
+      <div style="font-size:0.8rem;color:#666;">EDUKING RESSOURCES</div>
+      <div class="mtn-montant" id="modal-montant">—</div>
+    </div>
+    <ol class="instructions">
+      <li>Composez <strong>*880#</strong> sur votre téléphone MTN</li>
+      <li>Choisissez <strong>"Transfert"</strong></li>
+      <li>Entrez le numéro ci-dessus</li>
+      <li>Entrez le montant exact</li>
+      <li>Confirmez avec votre PIN</li>
+      <li>Envoyez votre reçu + nom complet par WhatsApp</li>
+    </ol>
+    <button class="btn-confirmer" onclick="confirmer()">✅ J'ai effectué le paiement</button>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <a href="index.html">Eduking 229</a> — 🇧🇯 Fait au Bénin avec ❤️</p>
+</footer>
+
+<script>
+function ouvrirModal(plan, montant) {
+  document.getElementById('modal-plan').textContent = plan;
+  document.getElementById('modal-montant').textContent = 'Montant : ' + montant;
+  document.getElementById('modal').classList.add('active');
+}
+function fermerModal() { document.getElementById('modal').classList.remove('active'); }
+function confirmer() { alert('Merci ! Votre abonnement sera activé après vérification du paiement. 🎉'); fermerModal(); }
+function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+document.getElementById('modal').addEventListener('click', function(e) { if(e.target===this) fermerModal(); });
+</script>
+</body>
+</html>
