@@ -1,0 +1,26 @@
+{
+  "name": "Eduking 229",
+  "short_name": "Eduking229",
+  "description": "Plateforme éducative béninoise — Permutations & Ressources pédagogiques CI-CM2",
+  "start_url": "/Eduking-/launcher-22.html",
+  "scope": "/Eduking-/",
+  "display": "standalone",
+  "background_color": "#0D1B2E",
+  "theme_color": "#F5C518",
+  "orientation": "portrait",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
