@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#1a6b3a"/>
+<title>Eduking 229 — Affectations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#f0f5f0;color:#1a2a1a;}
+:root{--v:#1a6b3a;--v2:#22913f;--j:#f5a623;--r:#c0392b;--b:#1a237e;--bd:#d0e4d0;--g:#f4f7f4;}
+
+/* NAV */
+nav{background:var(--v);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.nb{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* PAGES */
+.pg{display:none;padding-bottom:40px;}.on{display:block;}
+
+/* CARDS */
+.c{background:#fff;border-radius:10px;padding:16px;margin:10px;border:1px solid var(--bd);}
+.ct{font-size:14px;font-weight:700;color:var(--v);margin-bottom:12px;}
+
+/* HERO */
+.hero{background:linear-gradient(150deg,var(--v),var(--v2));color:#fff;padding:20px 16px;text-align:center;}
+.hero h1{font-size:22px;font-weight:900;margin-bottom:6px;}
+
+/* TARIFS */
+.tarifs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px;}
+.tarif{background:#fff;border:2px solid var(--j);border-radius:12px;padding:14px;text-align:center;cursor:pointer;}
+.tarif:active{background:#fffde7;}
+.tarif-label{font-size:10px;font-weight:700;color:var(--j);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.tarif-prix{font-size:28px;font-weight:900;color:#1a2a1a;font-family:monospace;}
+.tarif-unit{font-size:11px;color:#778;margin-top:4px;}
+.tarif-btn{margin-top:8px;background:var(--j);color:#1a2a1a;border:none;border-radius:7px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;width:100%;}
+
+/* INPUTS */
+label{display:block;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px;}
+input,select{width:100%;padding:11px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;background:var(--g);font-family:Arial;}
+input:focus,select:focus{outline:none;border-color:var(--v);}
+.err{color:var(--r);font-size:11px;margin-top:3px;}
+.hint{font-size:11px;color:#778;margin-top:4px;}
+.pw-note{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;padding:8px 12px;font-size:12px;color:#15803d;margin-top:5px;font-weight:700;}
+
+/* BOUTONS */
+.btn{display:block;width:100%;padding:13px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:8px;font-family:Arial;}
+.btn:active{opacity:.8;}
+.bv{background:var(--v);color:#fff;}
+.bj{background:var(--j);color:#1a2a1a;}
+.bo{background:#fff;color:var(--v);border:2px solid var(--v);}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;}
+.bvg{background:#d4edda;color:#155724;}
+.brd{background:#f8d7da;color:#721c24;}
+.bam{background:#fff3cd;color:#856404;}
+
+/* TABS */
+.tabs{display:flex;background:#fff;margin:6px 10px;border-radius:9px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.tab{flex:1;padding:9px 4px;text-align:center;border:none;background:none;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-radius:7px;font-family:Arial;}
+.tab.on{background:var(--v);color:#fff;}
+
+/* CIRCUIT */
+.rc{border-radius:11px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;margin:8px 10px 0;color:#fff;}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.mbox{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px;}
+
+/* NOTIF */
+#ntf{position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;z-index:9999;display:none;max-width:90%;text-align:center;}
+
+/* PAIEMENT */
+.pay-card{background:linear-gradient(135deg,#0057A8,#003d82);border-radius:14px;padding:20px;text-align:center;color:#fff;margin:10px;}
+.pay-ops{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px;}
+.pay-op{border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:none;color:#fff;font-family:Arial;}
+.pay-op:active{opacity:.8;}
+.moov{background:linear-gradient(135deg,#0057A8,#0069cc);}
+.mtn{background:linear-gradient(135deg,#e6a800,#cc7700);color:#1a2a1a!important;}
+.pay-op .ico{font-size:26px;margin-bottom:6px;}
+.pay-op .nm{font-size:13px;font-weight:700;}
+.pay-op .code{font-size:10px;opacity:.8;margin-top:3px;}
+
+/* STEPS */
+.steps{display:flex;padding:10px 6px 0;align-items:flex-start;}
+.sw{display:flex;flex-direction:column;align-items:center;flex:1;}
+.sc{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.sd{background:var(--v);color:#fff;}.sa{background:var(--j);color:#1a2a1a;}.si{background:#ddd;color:#888;}
+.slb{font-size:9px;margin-top:2px;text-align:center;color:#778;font-weight:600;}
+.sli{flex:1;height:2px;background:#ddd;margin-top:13px;}.sli.d{background:var(--v);}
+
+/* STATS */
+.stats{display:flex;justify-content:space-around;margin-top:10px;}
+.sv{font-size:22px;font-weight:900;color:var(--j);}.sl{font-size:10px;color:rgba(255,255,255,.7);}
+
+/* CORRESP */
+.match-card{background:#fff;border-radius:10px;padding:12px;margin:0 10px 8px;border:1.5px solid var(--bd);}
+.match-card.mutuel{border-color:var(--j);}
+.match-card.reco{border-color:var(--v);}
+.ch{background:linear-gradient(90deg,var(--v),var(--v2));color:#fff;border-radius:8px;padding:8px 12px;margin:6px 10px 3px;font-weight:700;font-size:12px;}
+</style>
+</head>
+<body>
+
+<div id="ntf"></div>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <svg width="18" height="12" viewBox="0 0 21 15"><rect width="7" height="15" fill="#22913f"/><rect x="7" width="7" height="15" fill="#f5a623"/><rect x="14" width="7" height="15" fill="#c0392b"/></svg>
+    <div>
+      <div style="font-size:15px;font-weight:900;">Eduking 229</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.7);">Affectations · Bénin</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;">
+    <button class="nb" onclick="goAdmin()">⚙️ Admin</button>
+    <button class="nb" onclick="G('circuit')">🔐 Circuit</button>
+  </div>
+</nav>
+
+<!-- ══ ACCUEIL ══ -->
+<div id="pg-accueil" class="pg on">
+  <div class="hero">
+    <h1>🏫 Gestion des Affectations</h1>
+    <p style="font-size:13px;color:rgba(255,255,255,.8);">Permutations du personnel éducatif · 77 communes</p>
+    <div class="stats">
+      <div><div class="sv" id="s1">—</div><div class="sl">Adhérents</div></div>
+      <div><div class="sv">77</div><div class="sl">Communes</div></div>
+      <div><div class="sv" id="s3">—</div><div class="sl">Corresp.</div></div>
+    </div>
+  </div>
+
+  <!-- TARIFS -->
+  <div class="tarifs">
+    <div class="tarif" onclick="G('paiement')">
+      <div class="tarif-label">📅 Mensuel</div>
+      <div class="tarif-prix">500</div>
+      <div class="tarif-unit">F CFA / mois</div>
+      <button class="tarif-btn">S'abonner →</button>
+    </div>
+    <div class="tarif" onclick="G('paiement')">
+      <div class="tarif-label">🏆 Annuel</div>
+      <div class="tarif-prix" style="color:var(--j);">1000</div>
+      <div class="tarif-unit">F CFA / an</div>
+      <button class="tarif-btn">Meilleur prix →</button>
+    </div>
+  </div>
+
+  <!-- CONNEXION -->
+  <div class="c">
+    <div class="ct">🔑 Déjà inscrit ? Accéder</div>
+    <label>Email ou numéro</label>
+    <input type="text" id="l-em" placeholder="email@benin.edu ou 0145894080"/>
+    <div class="err" id="l-er"></div>
+    <div class="pw-note">💡 Admin/Test : tapez votre numéro Moov <b>0145894080</b></div>
+    <br/>
+    <button class="btn bv" onclick="seConn()">Accéder à mon espace →</button>
+    <button class="btn bo" onclick="G('paiement')" style="margin-top:6px;">💳 Payer et s'inscrire</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="c" style="background:linear-gradient(135deg,#1a237e,#283593);cursor:pointer;" onclick="goAdmin()">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="color:#fff;font-size:14px;font-weight:700;">⚙️ Espace Administration</div>
+        <div style="color:rgba(255,255,255,.6);font-size:11px;margin-top:3px;">Membres · Paiements · Notifications</div>
+      </div>
+      <div style="color:rgba(255,255,255,.4);font-size:22px;">›</div>
+    </div>
+  </div>
+
+  <!-- AVIS -->
+  <div style="margin:0 10px 10px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px;font-size:12px;color:#5a4000;line-height:1.7;">
+    ⚠️ <b>Avis :</b> Ce système aide à identifier les permutations. La validation finale relève du <b>Ministère de l'Éducation</b>.
+  </div>
+</div>
+
+<!-- ══ PAIEMENT ══ -->
+<div id="pg-paiement" class="pg">
+  <div style="background:var(--v);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50;">
+    <div><b style="font-size:14px;">💳 Paiement</b><div style="font-size:10px;opacity:.7;">MTN MoMo · Moov Money</div></div>
+    <button class="nb" onclick="G('accueil')">← Retour</button>
+  </div>
+
+  <!-- TARIFS RECAP -->
+  <div class="tarifs" style="margin-top:10px;">
+    <div class="tarif" id="plan-mensuel" onclick="choisirPlan('mensuel',500)" style="border-width:3px;">
+      <div class="tarif-label">📅 Mensuel</div>
+      <div class="tarif-prix">500</div>
+      <div class="tarif-unit">F CFA / mois</div>
+    </div>
+    <div class="tarif" id="plan-annuel" onclick="choisirPlan('annuel',1000)" style="border-width:3px;background:#fffde7;">
+      <div class="tarif-label">🏆 Annuel ⭐</div>
+      <div class="tarif-prix" style="color:var(--j);">1000</div>
+      <div class="tarif-unit">F CFA / an</div>
+    </div>
+  </div>
+
+  <!-- BOUTONS PAIEMENT -->
+  <div class="pay-ops">
+    <button class="pay-op moov" onclick="payMoov()">
+      <div class="ico">🔵</div>
+      <div class="nm">Moov Money</div>
+      <div class="code" id="moov-code">*855*1*0145894080*500#</div>
+    </button>
+    <button class="pay-op mtn" onclick="payMTN()">
+      <div class="ico">📱</div>
+      <div class="nm">MTN MoMo</div>
+      <div class="code" id="mtn-code">*880*1*0167899473*500#</div>
+    </button>
+  </div>
+
+  <div class="c">
+    <div class="ct">✅ Confirmer votre paiement</div>
+    <div style="background:#e3f2fd;border-radius:8px;padding:10px;font-size:12px;color:#0d47a1;margin-bottom:12px;line-height:1.7;">
+      📋 <b>Étapes :</b><br>
+      1. Appuyez sur Moov ou MTN ci-dessus<br>
+      2. Validez avec votre PIN<br>
+      3. Notez la référence SMS reçue<br>
+      4. Remplissez le formulaire ci-dessous
+    </div>
+    <label>Votre numéro Mobile Money *</label>
+    <input type="tel" id="pay-tel" placeholder="97 XX XX XX"/>
+    <div class="err" id="pay-er1"></div>
+    <label>Référence transaction SMS *</label>
+    <input type="text" id="pay-ref" placeholder="Ex: TXN20260322..." style="text-transform:uppercase;"/>
+    <div class="hint">💡 Référence dans le SMS reçu après paiement</div>
+    <div class="err" id="pay-er2"></div>
+    <br/>
+    <button class="btn bj" onclick="confPaiement()">✅ Confirmer et s'inscrire →</button>
+  </div>
+</div>
+
+<!-- ══ INSCRIPTION ══ -->
+<div id="pg-inscription" class="pg">
+  <div style="background:#fff;padding:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+    <div class="steps" id="steps"></div>
+  </div>
+  <div id="et1">
+    <div class="c">
+      <div class="ct">👤 Vos informations</div>
+      <label>Prénom *</label><input id="fp" placeholder="ex: Kossi"/>
+      <label>Nom *</label><input id="fn2" placeholder="ex: Agossou"/>
+      <label>Email *</label><input type="email" id="fe" placeholder="prenom.nom@benin.edu"/>
+      <label>Téléphone *</label><input type="tel" id="ft" placeholder="97 XX XX XX"/>
+      <label>Fonction *</label>
+      <select id="ff">
+        <option value="">-- Votre fonction --</option>
+        <option>Instituteur / Institutrice</option>
+        <option>Directeur d'école primaire</option>
+        <option>Enseignant du secondaire</option>
+        <option>Conseiller pédagogique</option>
+        <option>Personnel administratif</option>
+      </select>
+      <br/>
+      <button class="btn bv" onclick="etape2()">Suivant →</button>
+    </div>
+  </div>
+  <div id="et2" style="display:none;">
+    <div class="c">
+      <div class="ct">🏫 Votre école actuelle</div>
+      <label>Département *</label>
+      <select id="fdept" onchange="filtCommune()">
+        <option value="">-- Département --</option>
+      </select>
+      <label>Commune *</label>
+      <select id="fcomm"><option value="">-- Commune --</option></select>
+      <label>École *</label>
+      <input id="fecole" placeholder="Nom de votre école"/>
+      <label>Motif de permutation *</label>
+      <select id="fmotif">
+        <option value="">-- Motif --</option>
+        <option>Rapprochement familial</option>
+        <option>Raisons médicales</option>
+        <option>Convenances personnelles</option>
+        <option>Autres</option>
+      </select>
+      <br/>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bo" onclick="document.getElementById('et1').style.display='block';document.getElementById('et2').style.display='none';" style="flex:0 0 auto;">← Retour</button>
+        <button class="btn bv" onclick="etape3()" style="flex:1;">Suivant →</button>
+      </div>
+    </div>
+  </div>
+  <div id="et3" style="display:none;">
+    <div class="c">
+      <div class="ct">🎯 Destination souhaitée</div>
+      <label>Département souhaité</label>
+      <select id="fdeptv" onchange="filtCommuneV()">
+        <option value="">-- Tous --</option>
+      </select>
+      <label>Commune souhaitée</label>
+      <select id="fcommv"><option value="">-- Toutes --</option></select>
+      <button class="btn bj" onclick="ajouterSouhait()" style="margin-top:8px;">+ Ajouter</button>
+      <div id="liste-souhaits" style="margin-top:8px;"></div>
+      <br/>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bo" onclick="document.getElementById('et2').style.display='block';document.getElementById('et3').style.display='none';" style="flex:0 0 auto;">← Retour</button>
+        <button class="btn bv" onclick="etape4()" style="flex:1;">Suivant →</button>
+      </div>
+    </div>
+  </div>
+  <div id="et4" style="display:none;">
+    <div class="c">
+      <div class="ct">✅ Mon poste est-il disponible ?</div>
+      <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px;font-size:12px;color:#5a4000;margin-bottom:12px;">
+        ⚠️ Déclarez votre poste disponible pour les <b>permutations mutuelles</b> (prioritaires).
+      </div>
+      <div id="cv" onclick="chV(true)" style="border:2px solid var(--bd);border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer;">
+        <b>✅ Oui, mon poste est disponible</b><br>
+        <small style="color:#778;">Recommandé — augmente vos chances</small>
+      </div>
+      <div id="cn" onclick="chV(false)" style="border:2px solid var(--bd);border-radius:9px;padding:12px;cursor:pointer;">
+        <b>❌ Non, pas pour l'instant</b>
+      </div>
+      <div class="err" id="ev" style="margin-top:8px;"></div>
+      <br/>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bo" onclick="document.getElementById('et3').style.display='block';document.getElementById('et4').style.display='none';" style="flex:0 0 auto;">← Retour</button>
+        <button class="btn bv" onclick="soumettre()" style="flex:1;">✅ Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ESPACE MEMBRE ══ -->
+<div id="pg-espace" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div>
+        <div id="e-n" style="font-weight:700;font-size:15px;"></div>
+        <div id="e-i" style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;"></div>
+      </div>
+      <button onclick="deco()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;">Quitter</button>
+    </div>
+    <div class="stats">
+      <div style="text-align:center;"><div id="e-m" style="font-size:20px;font-weight:900;">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Corresp.</div></div>
+      <div style="text-align:center;"><div id="e-r" style="font-size:20px;font-weight:900;color:var(--j);">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Recom.</div></div>
+      <div style="text-align:center;"><div id="e-mu" style="font-size:20px;font-weight:900;color:#a5d6a7;">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Mutuelles</div></div>
+    </div>
+  </div>
+  <div id="vban"></div>
+  <div class="tabs">
+    <button class="tab on" id="tb-m" onclick="ong('m')">Corresp.</button>
+    <button class="tab" id="tb-p" onclick="ong('p')">Mon poste</button>
+    <button class="tab" id="tb-v" onclick="ong('v')">Disponibles</button>
+  </div>
+  <div id="tc-m"></div>
+  <div id="tc-p" style="display:none;"></div>
+  <div id="tc-v" style="display:none;"></div>
+</div>
+
+<!-- ══ CIRCUIT ══ -->
+<div id="pg-circuit" class="pg">
+  <div style="background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+    <b style="font-size:14px;">🔐 Circuit Officiel</b>
+    <button class="nb" onclick="G('accueil')">Accueil</button>
+  </div>
+  <div class="c">
+    <div style="text-align:center;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;margin-bottom:12px;">Circuit de traitement</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;text-align:center;">
+      <div style="flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:var(--v);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">💻</div><b style="color:var(--v);">Système</b></div>
+      <div style="color:#ccc;">→</div>
+      <div style="flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:#1a237e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">🏛️</div><b style="color:#1a237e;">Ministère</b></div>
+      <div style="color:#ccc;">→</div>
+      <div style="flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:#b7410e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">📋</div><b style="color:#b7410e;">DDET</b></div>
+      <div style="color:#ccc;">→</div>
+      <div style="flex:1;"><div style="width:32px;height:32px;border-radius:50%;background:#6a1b9a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">🏫</div><b style="color:#6a1b9a;">CCS</b></div>
+    </div>
+  </div>
+  <div class="c" style="font-size:12px;color:#557;line-height:1.8;">
+    🔑 <b>Mots de passe :</b><br>
+    🏛️ Ministère : <b style="color:#1a237e;font-family:monospace;">MinEdu</b><br>
+    📋 DDET : <b style="color:#b7410e;font-family:monospace;">DDET</b><br>
+    🏫 CCS : <b style="color:#6a1b9a;font-family:monospace;">CCS</b>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#1a237e,#283593);" onclick="oLog('min')">
+    <span style="font-size:24px;">🏛️</span>
+    <div style="flex:1;"><b>Ministère de l'Éducation</b><div style="font-size:11px;color:rgba(255,255,255,.7);">Validation officielle</div></div>
+    <span style="color:rgba(255,255,255,.4);font-size:18px;">›</span>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#b7410e,#c0392b);margin-top:8px;" onclick="oLog('ddt')">
+    <span style="font-size:24px;">📋</span>
+    <div style="flex:1;"><b>DDET</b><div style="font-size:11px;color:rgba(255,255,255,.7);">Direction Dép. Enseignement</div></div>
+    <span style="color:rgba(255,255,255,.4);font-size:18px;">›</span>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#6a1b9a,#7b1fa2);margin-top:8px;" onclick="oLog('ccs')">
+    <span style="font-size:24px;">🏫</span>
+    <div style="flex:1;"><b>CCS</b><div style="font-size:11px;color:rgba(255,255,255,.7);">Chef Circonscription Scolaire</div></div>
+    <span style="color:rgba(255,255,255,.4);font-size:18px;">›</span>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="pg-admin" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+    <b style="font-size:14px;">⚙️ Administration</b>
+    <button class="nb" onclick="G('accueil')">← Accueil</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;">
+    <div class="c" style="margin:0;text-align:center;"><div id="a1" style="font-size:22px;font-weight:900;color:var(--v);">—</div><div style="font-size:10px;color:#557;">Adhérents</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a2" style="font-size:22px;font-weight:900;color:var(--j);">—</div><div style="font-size:10px;color:#557;">Disponibles</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a3" style="font-size:22px;font-weight:900;color:var(--r);">—</div><div style="font-size:10px;color:#557;">Permutations</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a4" style="font-size:22px;font-weight:900;color:#1a237e;">—</div><div style="font-size:10px;color:#557;">Paiements</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="at0" onclick="atab('nw')">🔔 Nouveaux</button>
+    <button class="tab" id="at1" onclick="atab('adh')">Membres</button>
+    <button class="tab" id="at2" onclick="atab('pm')">Permut.</button>
+    <button class="tab" id="at3" onclick="atab('py')">💳 Paiem.</button>
+  </div>
+  <div id="atc-nw" style="margin-top:4px;"></div>
+  <div id="atc-adh" style="display:none;margin-top:4px;"></div>
+  <div id="atc-pm" style="display:none;margin-top:4px;"></div>
+  <div id="atc-py" style="display:none;margin-top:4px;"></div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal" id="mlog">
+  <div class="mbox">
+    <div id="ml-t" style="font-weight:900;font-size:16px;margin-bottom:4px;text-align:center;"></div>
+    <div id="ml-s" style="font-size:12px;color:#557;text-align:center;margin-bottom:14px;"></div>
+    <label>Mot de passe *</label>
+    <input type="password" id="ml-p" placeholder="••••••••" onkeydown="if(event.key==='Enter')vLog()"/>
+    <div class="pw-note" id="ml-hint" style="margin-top:6px;"></div>
+    <div class="err" id="ml-e" style="margin-top:4px;"></div>
+    <button class="btn bv" onclick="vLog()" style="margin-top:12px;">🔓 Accéder</button>
+    <button class="btn bo" onclick="fLog()" style="margin-top:4px;">Annuler</button>
+  </div>
+</div>
+
+<script>
+// ══ DONNÉES ══
+const DP = {
+  "Alibori":["Banikoara","Gogounou","Kandi","Karimama","Malanville","Ségbana"],
+  "Atacora":["Boukoumbé","Cobly","Kérou","Kouandé","Matéri","Natitingou","Pehunco","Tanguiéta","Toucountouna"],
+  "Atlantique":["Abomey-Calavi","Allada","Kpomassè","Ouidah","Sô-Ava","Toffo","Tori-Bossito","Zè"],
+  "Borgou":["Bembèrèkè","Kalalé","N'Dali","Nikki","Parakou","Pèrèrè","Sinendé","Tchaourou"],
+  "Collines":["Bantè","Dassa-Zoumè","Glazoué","Ouèssè","Savalou","Savè"],
+  "Couffo":["Aplahoué","Djakotomey","Dogbo","Klouékanmè","Lalo","Toviklin"],
+  "Donga":["Bassila","Copargo","Djougou","Ouaké"],
+  "Littoral":["Cotonou"],
+  "Mono":["Athiémé","Bopa","Comè","Grand-Popo","Houéyogbé","Lokossa"],
+  "Ouémé":["Adjarra","Adjohoun","Aguégués","Akpro-Missérété","Avrankou","Bonou","Dangbo","Porto-Novo","Sèmè-Podji"],
+  "Plateau":["Adja-Ouèrè","Ifangni","Kétou","Pobè","Sakété"],
+  "Zou":["Abomey","Agbangnizoun","Bohicon","Covè","Djidja","Ouinhi","Za-Kpota","Zagnanado","Zogbodomey"]
+};
+
+const PW = {min:'MinEdu', ddt:'DDET', ccs:'CCS'};
+const ADMIN = '0145894080';
+const MTN_NUM = '0167899473';
+const MOOV_NUM = '0145894080';
+
+const DM = [
+  {fid:'D1',nom:'Kofi Agossou',email:'kofi.agossou@benin.edu',fn:'Instituteur',deptA:'Littoral',commA:'Cotonou',ecoleA:'EPP Akpakpa',souhaits:[{dept:'Atlantique',commune:'Abomey-Calavi'}],vacant:true,statut:'en_attente',paiement:{statut:'confirmé',ref:'TXN001'},matches:[]},
+  {fid:'D2',nom:'Amina Seidou',email:'amina.seidou@benin.edu',fn:'Instituteur',deptA:'Atlantique',commA:'Abomey-Calavi',ecoleA:'EPP Abomey-Calavi',souhaits:[{dept:'Littoral',commune:'Cotonou'}],vacant:true,statut:'en_attente',paiement:{statut:'confirmé',ref:'TXN002'},matches:[]},
+];
+
+let tous = DM.map(d=>({...d}));
+let util = null;
+let role = null;
+let payPlan = {nom:'Annuel', prix:1000};
+let fd = {p:'',n:'',e:'',t:'',fn:'',dA:'',cA:'',eA:'',mo:'',sh:[],va:null};
+
+const $ = id => document.getElementById(id);
+const set = (id,v) => { const e=$(id); if(e) e.textContent=v; };
+const show = (id,d='block') => { const e=$(id); if(e) e.style.display=d; };
+const hide = id => { const e=$(id); if(e) e.style.display='none'; };
+
+function ntf(m,t) {
+  const e=$('ntf'); e.textContent=m;
+  e.style.background = t==='e'?'#c0392b':t==='w'?'#d97706':'#1a6b3a';
+  show('ntf'); setTimeout(()=>hide('ntf'),3000);
+}
+
+// ══ NAVIGATION ══
+function G(p) {
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  const el=$('pg-'+p); if(el){el.classList.add('on');window.scrollTo(0,0);}
+  if(p==='admin') majAdmin();
+}
+
+function goAdmin() { majAdmin(); G('admin'); }
+
+// ══ MATCHING ══
+function calcM() {
+  const dispo = tous.filter(r=>r.vacant);
+  tous = tous.map(req=>{
+    const m=[];
+    dispo.forEach(a=>{
+      if(a.email===req.email) return;
+      const jV=(req.souhaits||[]).some(s=>s.commune===a.commA||s.dept===a.deptA);
+      if(!jV) return;
+      const lV=(a.souhaits||[]).some(s=>s.commune===req.commA||s.dept===req.deptA);
+      const sc=(lV?50:0)+(a.vacant?30:0)+(a.fn===req.fn?20:0);
+      m.push({fid:a.fid,nom:voilerNom(a.nom),comm:a.commA,dept:a.deptA,ecole:a.ecoleA,fn:a.fn,mutuel:lV&&a.vacant,reco:lV&&a.vacant&&a.fn===req.fn,score:sc});
+    });
+    return {...req, matches:m.sort((a,b)=>b.score-a.score)};
+  });
+}
+
+function majS() {
+  set('s1', tous.length);
+  set('s3', tous.filter(r=>(r.matches||[]).length>0).length);
+  set('a1', tous.length);
+  set('a2', tous.filter(r=>r.vacant).length);
+  set('a3', tous.filter(r=>(r.matches||[]).some(x=>x.mutuel)).length);
+  set('a4', tous.filter(r=>r.paiement).length);
+}
+
+// ══ MASQUAGE ══
+function voilerNom(n) {
+  if(!n) return '•••';
+  const p=n.split(' ');
+  return p.map(w=>w.slice(0,1)+'•••').join(' ');
+}
+function voilerTel(t) {
+  if(!t||t.length<4) return '••••••••';
+  return t.slice(0,2)+'••••'+t.slice(-2);
+}
+
+// ══ CONNEXION ══
+function seConn() {
+  const em=$('l-em').value.trim().toLowerCase();
+  const er=$('l-er');
+  if(!em){er.textContent='Champ requis';return;}
+  if(em===ADMIN||em==='admin'){
+    util={fid:'ADMIN',nom:'Janvier TOGBENON (Admin)',email:em,fn:'Administrateur',deptA:'Littoral',commA:'Cotonou',ecoleA:'Eduking 229',souhaits:[{dept:'Atlantique',commune:'Abomey-Calavi'}],vacant:true,statut:'en_attente',paiement:{statut:'confirmé',ref:'ADMIN'},matches:[]};
+    tous.push(util); calcM(); util=tous.find(r=>r.email===em);
+    er.textContent=''; affE(); G('espace');
+    ntf('✅ Accès Admin activé !'); return;
+  }
+  const r=tous.find(x=>x.email===em);
+  if(!r){er.textContent='Compte introuvable — inscrivez-vous.';return;}
+  er.textContent=''; util=r; affE(); G('espace');
+}
+
+function deco(){util=null;G('accueil');}
+
+// ══ PAIEMENT ══
+function choisirPlan(plan, prix) {
+  payPlan={nom:plan==='mensuel'?'Mensuel':'Annuel', prix:prix};
+  $('plan-mensuel').style.background = plan==='mensuel'?'#fffde7':'#fff';
+  $('plan-annuel').style.background = plan==='annuel'?'#fffde7':'#fff';
+  $('moov-code').textContent='*855*1*'+MOOV_NUM+'*'+prix+'#';
+  $('mtn-code').textContent='*880*1*'+MTN_NUM+'*'+prix+'#';
+  ntf('Plan '+payPlan.nom+' sélectionné — '+prix+' FCFA');
+}
+
+function payMoov() {
+  window.location.href='tel:*855*1*'+MOOV_NUM+'*'+payPlan.prix+'%23';
+  setTimeout(()=>ntf('📱 Validez sur votre téléphone Moov puis remplissez le formulaire'),1500);
+}
+function payMTN() {
+  window.location.href='tel:*880*1*'+MTN_NUM+'*'+payPlan.prix+'%23';
+  setTimeout(()=>ntf('📱 Validez sur votre téléphone MTN puis remplissez le formulaire'),1500);
+}
+
+function confPaiement() {
+  const tel=($('pay-tel').value||'').trim();
+  const ref=($('pay-ref').value||'').trim().toUpperCase();
+  if(!tel){$('pay-er1').textContent='Numéro requis';return;} $('pay-er1').textContent='';
+  if(!ref||ref.length<4){$('pay-er2').textContent='Référence trop courte';return;} $('pay-er2').textContent='';
+  sessionStorage.setItem('pay_ref',ref);
+  sessionStorage.setItem('pay_tel',tel);
+  sessionStorage.setItem('pay_plan',payPlan.nom);
+  ntf('✅ Paiement enregistré ! Complétez votre inscription.');
+  // Init inscription
+  initDepts();
+  G('inscription');
+}
+
+// ══ INSCRIPTION ══
+function initDepts() {
+  ['fdept','fdeptv'].forEach(id=>{
+    const s=$(id); if(!s) return;
+    s.innerHTML='<option value="">-- Département --</option>';
+    Object.keys(DP).sort().forEach(d=>s.innerHTML+=`<option>${d}</option>`);
+  });
+}
+
+function filtCommune() {
+  const d=$('fdept').value, s=$('fcomm');
+  s.innerHTML='<option value="">-- Commune --</option>';
+  if(d)(DP[d]||[]).forEach(c=>s.innerHTML+=`<option>${c}</option>`);
+}
+function filtCommuneV() {
+  const d=$('fdeptv').value, s=$('fcommv');
+  s.innerHTML='<option value="">-- Toutes --</option>';
+  if(d)(DP[d]||[]).forEach(c=>s.innerHTML+=`<option>${c}</option>`);
+}
+
+let souhaits=[];
+function ajouterSouhait() {
+  const d=$('fdeptv').value, c=$('fcommv').value;
+  if(!d&&!c){ntf('Sélectionnez département ou commune','w');return;}
+  const lb=c?`${c} (${d})`:` Dept. ${d}`;
+  souhaits.push({dept:d,commune:c,label:lb});
+  $('liste-souhaits').innerHTML=souhaits.map((s,i)=>
+    `<div style="display:flex;align-items:center;gap:8px;padding:7px;background:#f4f7f4;border-radius:7px;margin-bottom:4px;">
+      <span style="flex:1;font-size:12px;">📍 ${s.label}</span>
+      <button onclick="souhaits.splice(${i},1);document.getElementById('liste-souhaits').innerHTML=''" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;">✕</button>
+    </div>`).join('');
+}
+
+function etape2() {
+  const p=$('fp').value.trim(),n=$('fn2').value.trim(),e=$('fe').value.trim(),t=$('ft').value.trim(),f=$('ff').value;
+  if(!p||!n||!e||!t||!f){ntf('⚠️ Remplissez tous les champs','w');return;}
+  fd.p=p;fd.n=n;fd.e=e;fd.t=t;fd.fn=f;
+  show('et2');hide('et1');
+}
+function etape3() {
+  const d=$('fdept').value,c=$('fcomm').value,ec=$('fecole').value.trim(),m=$('fmotif').value;
+  if(!d||!c||!ec||!m){ntf('⚠️ Remplissez tous les champs','w');return;}
+  fd.dA=d;fd.cA=c;fd.eA=ec;fd.mo=m;
+  show('et3');hide('et2');
+}
+function etape4() {
+  if(!souhaits.length){ntf('⚠️ Ajoutez au moins une destination','w');return;}
+  fd.sh=souhaits;
+  show('et4');hide('et3');
+}
+
+function chV(v) {
+  fd.va=v;
+  $('cv').style.cssText=`border:2px solid ${v?'var(--v)':'var(--bd)'};border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer;background:${v?'#e8f5e9':'#fff'}`;
+  $('cn').style.cssText=`border:2px solid ${v?'var(--bd)':'var(--r)'};border-radius:9px;padding:12px;cursor:pointer;background:${v?'#fff':'#fdf3f4'}`;
+  $('ev').textContent='';
+}
+
+function soumettre() {
+  if(fd.va===null){$('ev').textContent='Répondez à cette question.';return;}
+  const doc={fid:'U'+Date.now(),nom:fd.p+' '+fd.n,email:fd.e,tel:fd.t,fn:fd.fn,deptA:fd.dA,commA:fd.cA,ecoleA:fd.eA,souhaits:fd.sh,motif:fd.mo,vacant:fd.va,statut:'en_attente',paiement:{statut:'confirmé',ref:sessionStorage.getItem('pay_ref')||'—',plan:sessionStorage.getItem('pay_plan')||'—'},matches:[]};
+  tous.push(doc);calcM();majS();
+  util=tous.find(r=>r.email===fd.e);
+  ntf('✅ Bienvenue ! Accès activé.');
+  affE();G('espace');
+}
+
+// ══ ESPACE ══
+function affE() {
+  const u=util;
+  const m=u.matches||[];
+  set('e-n',u.nom);
+  set('e-i',u.fn+' · '+u.commA+' ('+u.deptA+')');
+  set('e-m',m.length);
+  set('e-r',m.filter(x=>x.reco).length);
+  set('e-mu',m.filter(x=>x.mutuel).length);
+  let ban='';
+  if(u.vacant){
+    ban=`<div style="margin:8px 10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:10px;padding:11px;"><b>✅ Poste déclaré disponible</b><div style="font-size:11px;opacity:.85;margin:2px 0 5px;">Visible par tous les adhérents.</div><button onclick="togV(false)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;">Retirer</button></div>`;
+  } else {
+    ban=`<div style="margin:8px 10px;background:linear-gradient(135deg,#b7410e,var(--r));color:#fff;border-radius:10px;padding:11px;"><b>⚠️ Poste non déclaré</b><div style="font-size:11px;opacity:.85;margin:2px 0 5px;">Déclarez pour les permutations mutuelles.</div><button onclick="togV(true)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;">Déclarer disponible</button></div>`;
+  }
+  $('vban').innerHTML=ban;
+  ong('m');
+}
+
+function togV(v) {
+  tous=tous.map(r=>r.email===util.email?{...r,vacant:v}:r);
+  calcM(); util=tous.find(r=>r.email===util.email); affE();
+  ntf(v?'✅ Poste déclaré disponible':'🔴 Disponibilité retirée');
+}
+
+function ong(t) {
+  ['m','p','v'].forEach(x=>{
+    $('tb-'+x).classList.toggle('on',x===t);
+    $('tc-'+x).style.display=x===t?'block':'none';
+  });
+  const u=tous.find(r=>r.email===util.email)||util;
+  if(t==='m') affM(u);
+  if(t==='p') affP(u);
+  if(t==='v') affV(u);
+}
+
+function affM(u) {
+  const m=u.matches||[];
+  if(!m.length){
+    $('tc-m').innerHTML='<div class="c" style="text-align:center;color:#557;font-size:13px;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🔍</div>Aucune correspondance.<br><small>Déclarez votre poste disponible.</small></div>';return;
+  }
+  $('tc-m').innerHTML=`<div style="padding:6px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase;">Correspondances (${m.length})</div>`+
+    m.map(x=>`<div class="match-card ${x.reco?'reco':x.mutuel?'mutuel':''}">
+      ${x.reco?'<span class="badge bvg">⭐ Recommandé</span>':x.mutuel?'<span class="badge bam">🔄 Mutuel</span>':''}
+      <div style="font-weight:700;font-size:13px;margin-top:4px;">🏫 ${x.ecole||x.comm}</div>
+      <div style="font-size:11px;color:#557;">📍 ${x.comm} · ${x.dept}</div>
+      <div style="font-size:11px;color:#888;">👤 ${x.nom}</div>
+      <button onclick="envMsg('${x.fid}','${x.nom}')" style="margin-top:8px;background:var(--v);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;width:100%;">💬 Contacter</button>
+    </div>`).join('');
+}
+
+function affP(u) {
+  $('tc-p').innerHTML=`
+    <div class="c"><div class="ct">🏫 Mon école</div><b>${u.ecoleA}</b><div style="font-size:12px;color:#557;margin-top:2px;">📍 ${u.commA} · ${u.deptA} · 👤 ${u.fn}</div></div>
+    <div class="c"><div class="ct">🎯 Mes destinations</div>${(u.souhaits||[]).map(s=>`<div style="padding:6px 0;border-bottom:1px solid var(--g);font-size:13px;">📍 ${s.label||s.commune}</div>`).join('')}</div>
+    <div class="c"><div style="font-size:13px;color:#557;line-height:1.9;">💳 Paiement : <span class="badge ${u.paiement?.statut==='confirmé'?'bvg':'bam'}">${u.paiement?.statut||'—'}</span><br>📋 Réf : ${u.paiement?.ref||'—'}</div></div>`;
+}
+
+function affV(u) {
+  const vac=tous.filter(r=>r.vacant&&r.email!==u.email);
+  if(!vac.length){$('tc-v').innerHTML='<div class="c" style="text-align:center;color:#557;font-size:13px;padding:20px;">Aucun poste disponible.</div>';return;}
+  const par={};
+  vac.forEach(v=>{if(!par[v.commA])par[v.commA]={d:v.deptA,a:[]};par[v.commA].a.push(v);});
+  $('tc-v').innerHTML=Object.entries(par).map(([c,d])=>
+    `<div class="ch">${c} <span style="font-size:10px;opacity:.8;">${d.d}</span></div>`+
+    d.a.map(v=>`<div style="background:#fff;margin:0 10px 4px;border-radius:8px;padding:10px;border:1px solid var(--bd);">
+      <b style="font-size:13px;">🏫 ${v.ecoleA}</b>
+      <div style="font-size:11px;color:#557;margin-top:2px;">👤 ${voilerNom(v.nom)} · ${v.fn}</div>
+      <button onclick="envMsg('${v.fid}','${v.nom}')" style="margin-top:7px;background:var(--v);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;width:100%;">💬 Contacter</button>
+    </div>`).join('')
+  ).join('');
+}
+
+// ══ MESSAGERIE ══
+function getMsgs(){return JSON.parse(localStorage.getItem('edu_msgs')||'[]');}
+function saveMsgs(m){localStorage.setItem('edu_msgs',JSON.stringify(m));}
+
+function envMsg(destFid, destNom) {
+  const contenu=prompt('✉️ Message à '+voilerNom(destNom)+' :');
+  if(!contenu||!contenu.trim()) return;
+  const msgs=getMsgs();
+  msgs.push({id:Date.now(),de:util?util.email:'?',deNom:util?util.nom:'?',vers:destFid,versNom:destNom,contenu:contenu.trim(),date:new Date().toLocaleString('fr-FR'),lu:false});
+  saveMsgs(msgs);
+  ntf('✅ Message envoyé !');
+}
+
+// ══ ADMIN ══
+function majAdmin() {
+  calcM(); majS();
+  // Nouveaux
+  const lim=new Date(); lim.setDate(lim.getDate()-30);
+  const rec=tous.filter(r=>r.fid&&r.fid.startsWith('U')).slice().reverse();
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${rec.length} nouveau(x)</div>`;
+  if(!rec.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucun nouvel inscrit.</div>';
+  rec.forEach(r=>{
+    const pC=r.paiement?.statut==='confirmé';
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid ${pC?'var(--v)':'#ffe082'};">
+      <b style="font-size:13px;">${r.nom}</b>
+      <div style="font-size:11px;color:#557;">👤 ${r.fn} · 🏫 ${r.ecoleA}</div>
+      <div style="font-size:11px;color:#557;">📍 ${r.commA} · ${r.deptA}</div>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <span class="badge ${pC?'bvg':'bam'}">${pC?'✅ Payé':'⏳ En attente'}</span>
+        ${r.paiement?.plan?`<span class="badge" style="background:#e3f2fd;color:#0d47a1;">${r.paiement.plan}</span>`:''}
+      </div>
+    </div>`;
+  });
+  $('atc-nw').innerHTML=h;
+}
+
+function atab(t) {
+  ['nw','adh','pm','py'].forEach((x,i)=>{
+    $('at'+i).classList.toggle('on',x===t);
+    $('atc-'+x).style.display=x===t?'block':'none';
+  });
+  if(t==='adh') affAdh();
+  if(t==='pm') affPm();
+  if(t==='py') affPy();
+}
+
+function affAdh() {
+  const par={};
+  tous.forEach(r=>{const k=r.commA||'?';if(!par[k])par[k]={d:r.deptA,l:[]};par[k].l.push(r);});
+  let h='';
+  Object.entries(par).sort().forEach(([c,d])=>{
+    h+=`<div class="ch">${c} <span style="font-size:10px;opacity:.8;">${d.d}</span></div>`;
+    d.l.forEach(r=>h+=`<div style="background:#fff;margin:0 10px 4px;border-radius:8px;padding:10px;border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;">
+      <div><b style="font-size:13px;">${r.nom}</b><div style="font-size:11px;color:#557;">🏫 ${r.ecoleA}</div></div>
+      <span class="badge ${r.paiement?.statut==='confirmé'?'bvg':'bam'}">${r.paiement?.statut==='confirmé'?'✅':'⏳'}</span>
+    </div>`);
+  });
+  $('atc-adh').innerHTML=h||'<div class="c" style="text-align:center;color:#557;">Aucun adhérent.</div>';
+}
+
+function affPm() {
+  const mutuel=tous.filter(r=>(r.matches||[]).some(m=>m.mutuel));
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${mutuel.length} permutation(s) possible(s)</div>`;
+  if(!mutuel.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucune permutation mutuelle.</div>';
+  mutuel.forEach(r=>{
+    const m=r.matches.find(x=>x.mutuel);
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid var(--bd);">
+      <div style="background:#f4f7f4;border-radius:7px;padding:8px;margin-bottom:4px;"><b>${r.nom}</b><div style="font-size:11px;color:#557;">🏫 ${r.ecoleA} · ${r.commA}</div></div>
+      <div style="text-align:center;color:#aaa;font-size:14px;margin:3px 0;">🔄</div>
+      <div style="background:#f4f7f4;border-radius:7px;padding:8px;"><b>${m.nom}</b><div style="font-size:11px;color:#557;">📍 ${m.comm} · ${m.dept}</div></div>
+    </div>`;
+  });
+  $('atc-pm').innerHTML=h;
+}
+
+function affPy() {
+  const pays=tous.filter(r=>r.paiement);
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${pays.length} paiement(s)</div>`;
+  if(!pays.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucun paiement.</div>';
+  pays.forEach(r=>{
+    const p=r.paiement,cf=p.statut==='confirmé';
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid ${cf?'var(--v)':'#ffe082'};">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <b>${r.nom}</b><span class="badge ${cf?'bvg':'bam'}">${cf?'✅':'⏳'}</span>
+      </div>
+      <div style="font-size:12px;color:#557;">🔖 ${p.ref||'—'} ${p.plan?'· '+p.plan:''}</div>
+    </div>`;
+  });
+  $('atc-py').innerHTML=h;
+}
+
+// ══ CIRCUIT LOGIN ══
+const RL = {
+  min:{t:'🏛️ Ministère',s:'Validation officielle',h:'MinEdu',p:'ministere'},
+  ddt:{t:'📋 DDET',s:'Direction Dép. Enseignement',h:'DDET',p:'ddet'},
+  ccs:{t:'🏫 CCS',s:'Chef Circonscription',h:'CCS',p:'ccs'}
+};
+
+function oLog(r) {
+  role=r;const i=RL[r];
+  set('ml-t',i.t);set('ml-s',i.s);
+  $('ml-p').value='';$('ml-e').textContent='';
+  $('ml-hint').textContent='🔑 Mot de passe : '+i.h;
+  $('mlog').style.display='flex';
+  setTimeout(()=>$('ml-p').focus(),200);
+}
+function fLog(){$('mlog').style.display='none';role=null;}
+function vLog(){
+  const s=$('ml-p').value;
+  if(s!==PW[role]){$('ml-e').textContent='Mot de passe incorrect.';$('ml-p').value='';return;}
+  fLog();
+  ntf('✅ Accès '+RL[role].t);
+}
+$('mlog').addEventListener('click',function(e){if(e.target===this)fLog();});
+
+// ══ INIT ══
+calcM(); majS();
+// Init depts
+Object.keys(DP).sort().forEach(d=>{
+  ['fdept','fdeptv'].forEach(id=>{
+    const s=document.getElementById(id);
+    if(s) s.innerHTML+='<option>'+d+'</option>';
+  });
+});
+</script>
+</body>
+</html>

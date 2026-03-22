@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eduking 229 — Gestion des Moyennes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b0f1a; --s1:#111827; --s2:#1a2235; --s3:#202d42;
+  --border:#2a3850; --border2:#334466;
+  --gold:#f0b429; --gold2:#fcd34d;
+  --blue:#3b82f6; --blue2:#60a5fa;
+  --green:#22c55e; --red:#ef4444; --yellow:#eab308;
+  --text:#e8f0fe; --muted:#6b7fa3; --muted2:#4a5a7a;
+  --r:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* ── TOPBAR RETOUR SITE ── */
+.site-topbar{
+  background:var(--s1);border-bottom:1px solid var(--border);
+  padding:10px 20px;display:flex;align-items:center;gap:12px;
+}
+.site-topbar a{
+  color:var(--muted);font-size:12px;text-decoration:none;
+  background:var(--s2);border:1px solid var(--border);border-radius:7px;
+  padding:6px 14px;transition:all .2s;
+}
+.site-topbar a:hover{border-color:var(--gold);color:var(--gold);}
+.site-topbar .brand{font-family:'Fraunces',serif;color:var(--gold);font-size:15px;font-weight:700;margin-left:4px;}
+
+/* ── ACCUEIL ── */
+#screen-home{
+  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,0.18) 0%, transparent 70%),var(--bg);
+  align-items:center; justify-content:center; padding:40px 24px;
+}
+.home-inner{max-width:900px;width:100%;text-align:center;}
+.home-logo{width:72px;height:72px;margin:0 auto 24px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 8px 40px rgba(240,180,41,0.3);}
+.home-title{font-family:'Fraunces',serif;font-size:48px;font-weight:900;line-height:1;margin-bottom:8px;background:linear-gradient(135deg,var(--text) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.home-sub{color:var(--muted);font-size:15px;margin-bottom:48px;letter-spacing:0.5px;}
+.classes-section{margin-bottom:40px;}
+.classes-section h2{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--muted);margin-bottom:20px;letter-spacing:2px;text-transform:uppercase;font-style:italic;}
+.niveau-group{margin-bottom:28px;}
+.niveau-label{display:inline-block;font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:6px;width:100%;text-align:left;}
+.classes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.class-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:24px 20px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;text-align:left;}
+.class-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+.class-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(240,180,41,0.1);}
+.class-card:hover::before{opacity:1;}
+.class-card-code{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:var(--gold);line-height:1;margin-bottom:6px;}
+.class-card-name{font-size:13px;color:var(--muted);margin-bottom:14px;}
+.class-card-stats{display:flex;gap:12px;flex-wrap:wrap;}
+.cs-mini{font-size:11px;color:var(--muted2);}
+.cs-mini span{color:var(--text);font-weight:600;font-family:'DM Mono',monospace;}
+.class-card-badge{position:absolute;top:14px;right:14px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+.badge-ok{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.badge-ko{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.director-btn{background:linear-gradient(135deg,var(--blue) 0%,#1d4ed8 100%);color:#fff;border:none;border-radius:var(--r);padding:16px 36px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.25s;box-shadow:0 4px 20px rgba(59,130,246,0.3);}
+.director-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,130,246,0.4);}
+
+/* ── LOGIN ── */
+#screen-login,#screen-dir-login{background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(240,180,41,0.1),transparent 70%),var(--bg);align-items:center;justify-content:center;padding:40px 24px;}
+.login-box{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:40px;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.5);}
+.login-header{text-align:center;margin-bottom:32px;}
+.login-class-code{font-family:'Fraunces',serif;font-size:48px;font-weight:900;color:var(--gold);line-height:1;}
+.login-class-name{font-size:13px;color:var(--muted);margin-top:4px;}
+.login-title{font-size:14px;color:var(--muted);margin-top:12px;}
+.login-input-wrap{margin-bottom:20px;}
+.login-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:8px;}
+.login-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color 0.2s;letter-spacing:2px;}
+.login-input:focus{border-color:var(--gold);}
+.login-error{color:var(--red);font-size:12px;margin-bottom:16px;display:none;text-align:center;}
+.login-submit{width:100%;background:var(--gold);color:#000;border:none;border-radius:8px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.login-submit:hover{background:var(--gold2);transform:translateY(-1px);}
+.login-back{width:100%;background:transparent;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-top:10px;}
+.login-back:hover{border-color:var(--muted);color:var(--text);}
+
+/* ── ÉCRAN CLASSE ── */
+#screen-class{background:var(--bg);}
+.topbar{background:var(--s1);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50;}
+.topbar-back{background:transparent;border:1px solid var(--border);border-radius:8px;padding:8px 16px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.topbar-back:hover{border-color:var(--gold);color:var(--gold);}
+.topbar-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--gold);}
+.topbar-sub{font-size:12px;color:var(--muted);margin-left:auto;}
+.topbar-logout{background:transparent;border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:7px 14px;color:var(--red);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.topbar-logout:hover{background:rgba(239,68,68,0.1);}
+.class-container{max-width:1400px;margin:0 auto;padding:32px 24px;}
+.class-tabs{display:flex;gap:6px;margin-bottom:24px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:5px;width:fit-content;}
+.ctab{padding:9px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.ctab.active{background:var(--gold);color:#000;font-weight:700;}
+.ctab:hover:not(.active){color:var(--text);background:var(--s2);}
+.rules-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.rule-chip{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:7px 13px;font-size:12px;color:var(--muted);}
+.rule-chip strong{color:var(--gold);}
+.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin-bottom:28px;}
+table.mt{width:100%;border-collapse:collapse;background:var(--s1);white-space:nowrap;}
+table.mt thead th{background:var(--s2);padding:11px 13px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid var(--border);text-align:center;}
+table.mt thead th.L{text-align:left;}
+table.mt tbody td{padding:12px 13px;border-bottom:1px solid var(--border);font-size:13px;text-align:center;vertical-align:middle;}
+table.mt tbody td.L{text-align:left;}
+table.mt tbody tr:last-child td{border-bottom:none;}
+table.mt tbody tr:hover td{background:rgba(255,255,255,0.02);cursor:pointer;}
+.stu-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;}
+.num-c{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;}
+.notes-inline{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-width:330px;}
+.nc{display:flex;flex-direction:column;align-items:center;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:4px 7px;font-size:10px;min-width:44px;}
+.nc .nl{color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;margin-bottom:2px;}
+.nc .nv{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;}
+.nc.H{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.06);} .nc.H .nv{color:var(--green);}
+.nc.M{border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.06);} .nc.M .nv{color:var(--yellow);}
+.nc.L2{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.06);} .nc.L2 .nv{color:var(--red);}
+.seuil-c{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;}
+.seuil-c.ok{color:var(--green);} .seuil-c.ko{color:var(--red);}
+.avg-c{font-family:'DM Mono',monospace;font-size:15px;font-weight:700;}
+.avg-c.H{color:var(--green);} .avg-c.M{color:var(--yellow);} .avg-c.L2{color:var(--red);}
+.rpill{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+.rpill.pass{background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.25);}
+.rpill.fail{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.25);}
+.stats-wrap{margin-bottom:32px;}
+.stats-heading{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:14px;font-style:italic;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px;margin-bottom:14px;}
+.sbox{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 14px;text-align:center;}
+.sbox .sv{font-family:'DM Mono',monospace;font-size:30px;font-weight:600;line-height:1;margin-bottom:4px;}
+.sbox .sl{font-size:11px;color:var(--muted);line-height:1.4;}
+.sbox.G{border-color:rgba(34,197,94,0.3);} .sbox.G .sv{color:var(--green);}
+.sbox.R{border-color:rgba(239,68,68,0.3);} .sbox.R .sv{color:var(--red);}
+.sbox.O{border-color:rgba(240,180,41,0.3);} .sbox.O .sv{color:var(--gold);}
+.sbox.B{border-color:rgba(59,130,246,0.3);} .sbox.B .sv{color:var(--blue2);}
+.taux-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;}
+.taux-lbl{font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.taux-track{height:14px;background:var(--s2);border-radius:7px;overflow:hidden;}
+.taux-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--green),#4ade80);transition:width .7s ease;}
+.taux-nums{display:flex;justify-content:space-between;margin-top:7px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;}
+.dback{display:inline-flex;align-items:center;gap:8px;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 18px;border-radius:8px;cursor:pointer;margin-bottom:22px;transition:all 0.2s;}
+.dback:hover{border-color:var(--gold);color:var(--gold);}
+.d-header{display:flex;gap:22px;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;}
+.d-name{font-family:'Fraunces',serif;font-size:36px;font-weight:900;margin-bottom:8px;}
+.d-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.d-avg-box{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:18px 26px;text-align:center;min-width:140px;}
+.d-avg-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.d-avg-num{font-family:'DM Mono',monospace;font-size:40px;font-weight:600;line-height:1;}
+.d-avg-num.H{color:var(--green);} .d-avg-num.M{color:var(--yellow);} .d-avg-num.L2{color:var(--red);}
+.gtable{width:100%;border-collapse:collapse;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.gtable th{background:var(--s2);padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.gtable td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px;}
+.gtable tr:last-child td{border-bottom:none;}
+.dcode{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--blue2);background:rgba(59,130,246,0.1);padding:2px 7px;border-radius:4px;}
+.nbar{display:flex;align-items:center;gap:9px;}
+.ntrack{flex:1;height:6px;background:var(--s2);border-radius:3px;overflow:hidden;}
+.nfill{height:100%;border-radius:3px;}
+.nfill.H{background:var(--green);} .nfill.M{background:var(--yellow);} .nfill.L2{background:var(--red);}
+.nval{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;min-width:44px;text-align:right;}
+.nval.H{color:var(--green);} .nval.M{color:var(--yellow);} .nval.L2{color:var(--red);}
+.form-section{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:26px;}
+.form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
+.fg{display:flex;flex-direction:column;gap:7px;}
+.flbl{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;}
+.finput{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.finput:focus{border-color:var(--gold);}
+.grades-ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:13px;margin-bottom:22px;}
+.submit-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;}
+.submit-btn:hover{background:var(--gold2);transform:translateY(-1px);}
+.rrow{display:flex;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--s1);gap:16px;transition:background .15s;}
+.rrow:first-child{border-radius:var(--r) var(--r) 0 0;} .rrow:last-child{border-bottom:none;border-radius:0 0 var(--r) var(--r);}
+.rrow:hover{background:var(--s2);}
+.rnum{font-family:'DM Mono',monospace;font-size:18px;font-weight:600;min-width:32px;color:var(--muted);}
+.rnum.gold{color:#f5c842;} .rnum.silver{color:#a0aec0;} .rnum.bronze{color:#c87941;}
+.ravg{font-family:'DM Mono',monospace;font-size:20px;font-weight:600;}
+.ravg.H{color:var(--green);} .ravg.M{color:var(--yellow);} .ravg.L2{color:var(--red);}
+
+/* ── DIRECTEUR ── */
+#screen-director{background:var(--bg);}
+.dir-container{max-width:1400px;margin:0 auto;padding:32px 24px;}
+.dir-hero{background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);border:1px solid var(--border);border-radius:18px;padding:32px 36px;margin-bottom:32px;display:flex;align-items:center;gap:24px;}
+.dir-hero-icon{font-size:40px;}
+.dir-hero-title{font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:var(--gold);}
+.dir-hero-sub{font-size:13px;color:var(--muted);margin-top:4px;}
+.school-stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:32px;}
+.dir-section-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:18px;color:var(--text);font-style:italic;}
+.classes-overview{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:36px;}
+.cov-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:22px;transition:all .25s;}
+.cov-card:hover{border-color:var(--blue);box-shadow:0 8px 30px rgba(59,130,246,0.1);}
+.cov-code{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--gold);margin-bottom:2px;}
+.cov-niveau{font-size:11px;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;}
+.cov-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.cov-label{font-size:12px;color:var(--muted);}
+.cov-val{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;}
+.cov-taux-track{height:8px;background:var(--s2);border-radius:4px;overflow:hidden;margin-top:12px;}
+.cov-taux-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),#4ade80);}
+.cov-edit-btn{width:100%;margin-top:14px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px;border-radius:7px;cursor:pointer;transition:all .2s;}
+.cov-edit-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+.comp-table{width:100%;border-collapse:collapse;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.comp-table th{background:var(--s2);padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.comp-table td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02);}
+.export-btn{background:linear-gradient(135deg,#1d4ed8,var(--blue));color:#fff;border:none;border-radius:8px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.export-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(59,130,246,0.35);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:32px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:20px;}
+.modal-close{float:right;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;}
+.empty{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty .eico{font-size:44px;margin-bottom:12px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.anim{animation:fadeUp .3s ease forwards;}
+@media(max-width:640px){
+  .home-title{font-size:34px;}.classes-grid{grid-template-columns:1fr 1fr;}
+  .topbar{padding:12px 16px;}.class-container,.dir-container{padding:20px 14px;}
+  .form-grid2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ ACCUEIL ══ -->
+<div id="screen-home" class="screen active">
+  <!-- Lien retour site -->
+  <div class="site-topbar">
+    <a href="index.html">🏠 Accueil</a>
+    <a href="boutique.html">🛒 Boutique</a>
+    <a href="bibliotheque.html">📚 Biblio.</a>
+    <a href="permutations.html">🔄 Permutations</a>
+    <span class="brand">Eduking 229</span>
+  </div>
+  <div class="home-inner" style="padding-top:32px">
+    <div class="home-logo">📚</div>
+    <h1 class="home-title">Gestion des Moyennes</h1>
+    <p class="home-sub">Système scolaire — École primaire · Bénin</p>
+    <div class="classes-section">
+      <h2>Choisissez une classe</h2>
+      <div class="niveau-group">
+        <div class="niveau-label">Niveau 1 — CI / CP</div>
+        <div class="classes-grid" id="grid-n1"></div>
+      </div>
+      <div class="niveau-group">
+        <div class="niveau-label">Niveau 2 — CE1 / CE2</div>
+        <div class="classes-grid" id="grid-n2"></div>
+      </div>
+      <div class="niveau-group">
+        <div class="niveau-label">Niveau 3 — CM1 / CM2</div>
+        <div class="classes-grid" id="grid-n3"></div>
+      </div>
+    </div>
+    <!-- TARIFS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;max-width:500px;margin-inline:auto;">
+      <div onclick="showPayModal()" style="background:rgba(240,180,41,.1);border:2px solid #f0b429;border-radius:14px;padding:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:10px;color:#f0b429;font-weight:700;letter-spacing:1px;margin-bottom:6px;">📅 MENSUEL</div>
+        <div style="font-family:'DM Mono',monospace;font-size:30px;font-weight:700;color:white;">500</div>
+        <div style="font-size:11px;color:#6b7fa3;margin-top:4px;">F CFA / mois</div>
+        <div style="margin-top:8px;background:#f0b429;color:#000;border-radius:8px;padding:7px;font-size:12px;font-weight:700;">S'abonner →</div>
+      </div>
+      <div onclick="showPayModal()" style="background:rgba(240,180,41,.18);border:2px solid #f0b429;border-radius:14px;padding:16px;text-align:center;cursor:pointer;">
+        <div style="font-size:10px;color:#f0b429;font-weight:700;letter-spacing:1px;margin-bottom:6px;">🏆 ANNUEL ⭐</div>
+        <div style="font-family:'DM Mono',monospace;font-size:30px;font-weight:700;color:#f0b429;">1000</div>
+        <div style="font-size:11px;color:#6b7fa3;margin-top:4px;">F CFA / an</div>
+        <div style="margin-top:8px;background:#f0b429;color:#000;border-radius:8px;padding:7px;font-size:12px;font-weight:700;">Meilleur prix →</div>
+      </div>
+    </div>
+
+    <!-- BOUTONS -->
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
+      <button class="director-btn" onclick="goToDirectorLogin()">🏫 Espace Directeur</button>
+      <button onclick="showPayModal()" style="background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;border:none;border-radius:12px;padding:16px 28px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(34,197,94,.3);">💳 Payer maintenant</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN ENSEIGNANT ══ -->
+<div id="screen-login" class="screen">
+  <div class="login-box anim">
+    <div class="login-header">
+      <div class="login-class-code" id="login-code">CI</div>
+      <div class="login-class-name" id="login-name">Cours Initiatoire</div>
+      <div class="login-title">Espace Enseignant — Connexion requise</div>
+    </div>
+    <div class="login-input-wrap">
+      <label class="login-label">Mot de passe</label>
+      <input type="password" class="login-input" id="login-pwd" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-error" id="login-err">❌ Mot de passe incorrect</div>
+    <button class="login-submit" onclick="doLogin()">Accéder à ma classe</button>
+    <div style="margin-top:14px;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.25);border-radius:9px;padding:10px 14px;font-size:12px;color:#6b7fa3;line-height:2;">
+      🔑 <b style="color:#f0b429;">Mots de passe par classe :</b><br>
+      CI : <b style="color:white;font-family:'DM Mono',monospace;">ci1234</b> &nbsp;|&nbsp;
+      CP : <b style="color:white;font-family:'DM Mono',monospace;">cp1234</b> &nbsp;|&nbsp;
+      CE1 : <b style="color:white;font-family:'DM Mono',monospace;">ce11234</b><br>
+      CE2 : <b style="color:white;font-family:'DM Mono',monospace;">ce21234</b> &nbsp;|&nbsp;
+      CM1 : <b style="color:white;font-family:'DM Mono',monospace;">cm11234</b> &nbsp;|&nbsp;
+      CM2 : <b style="color:white;font-family:'DM Mono',monospace;">cm21234</b><br>
+      🔑 Admin/Test : <b style="color:#f0b429;font-family:'DM Mono',monospace;">0145894080</b>
+    </div>
+  <button class="login-back" onclick="goHome()">← Retour à l'accueil</button>
+  </div>
+</div>
+
+<!-- ══ ÉCRAN CLASSE ══ -->
+<div id="screen-class" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goHome()">← Accueil</button>
+    <div><div class="topbar-title" id="tb-title">CI</div></div>
+    <div class="topbar-sub" id="tb-sub"></div>
+    <button class="topbar-logout" onclick="goHome()">Déconnexion</button>
+  </div>
+  <div class="class-container">
+    <div id="class-summary-view">
+      <div class="class-tabs">
+        <button class="ctab active" onclick="switchCTab('tableau')">📋 Tableau</button>
+        <button class="ctab" onclick="switchCTab('classement')">🏆 Classement</button>
+        <button class="ctab" onclick="switchCTab('ajouter')">➕ Ajouter</button>
+      </div>
+      <div id="ctab-tableau">
+        <div class="rules-bar">
+          <div class="rule-chip" id="rule-chip-1"></div>
+          <div class="rule-chip">⚠️ Admissibilité : <strong>comptage uniquement</strong> — la moyenne est indicative</div>
+        </div>
+        <div class="table-wrap">
+          <table class="mt">
+            <thead>
+              <tr>
+                <th class="L" style="min-width:130px">Élève</th>
+                <th style="min-width:80px">Cours</th>
+                <th style="min-width:70px">Total<br>Matières</th>
+                <th style="min-width:80px">Matières<br>Composées</th>
+                <th style="min-width:340px">Note par Matière</th>
+                <th style="min-width:90px">Seuil<br>≥ 10/20</th>
+                <th style="min-width:100px">Moyenne<br><span style="font-size:9px">(indicative)</span></th>
+                <th style="min-width:130px">Résultat</th>
+              </tr>
+            </thead>
+            <tbody id="class-tbody"></tbody>
+          </table>
+        </div>
+        <div id="class-stats-wrap"></div>
+      </div>
+      <div id="ctab-classement" style="display:none"><div id="class-ranking"></div></div>
+      <div id="ctab-ajouter" style="display:none">
+        <div class="form-section">
+          <div class="form-grid2">
+            <div class="fg">
+              <label class="flbl">Nom de l'élève</label>
+              <input type="text" id="fn-name" class="finput" placeholder="Ex : Koffi Mensah">
+            </div>
+            <div class="fg">
+              <label class="flbl">Cours</label>
+              <input type="text" id="fn-cours" class="finput" readonly style="color:var(--gold);font-weight:700;font-family:'DM Mono',monospace;">
+            </div>
+          </div>
+          <div class="grades-ig" id="fn-grades"></div>
+          <button class="submit-btn" onclick="addStudentToClass()">✓ Enregistrer l'élève</button>
+        </div>
+      </div>
+    </div>
+    <div id="class-detail-view" style="display:none">
+      <button class="dback" onclick="closeDetail()">← Retour au tableau</button>
+      <div id="class-detail-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN DIRECTEUR ══ -->
+<div id="screen-dir-login" class="screen">
+  <div class="login-box anim">
+    <div class="login-header">
+      <div class="login-class-code" style="color:var(--blue2);">🏫</div>
+      <div class="login-class-name">Tableau de bord — Direction</div>
+      <div class="login-title">Accès réservé au directeur de l'école</div>
+    </div>
+    <div class="login-input-wrap">
+      <label class="login-label">Mot de passe Directeur</label>
+      <input type="password" class="login-input" id="dir-pwd" placeholder="••••••" onkeydown="if(event.key==='Enter')doDirLogin()">
+    </div>
+    <div class="login-error" id="dir-err">❌ Mot de passe incorrect</div>
+    <button class="login-submit" style="background:var(--blue);color:#fff;" onclick="doDirLogin()">Accéder au tableau de bord</button>
+    <div style="margin-top:14px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:9px;padding:10px 14px;font-size:12px;color:#6b7fa3;">
+      🔑 Mot de passe Directeur : <b style="color:#60a5fa;font-family:'DM Mono',monospace;">directeur229</b>
+    </div>
+  <button class="login-back" onclick="goHome()">← Retour à l'accueil</button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD DIRECTEUR ══ -->
+<div id="screen-director" class="screen">
+  <div class="topbar">
+    <button class="topbar-back" onclick="goHome()">← Accueil</button>
+    <div class="topbar-title" style="color:var(--blue2)">🏫 Espace Directeur</div>
+    <div class="topbar-sub" id="dir-tb-sub"></div>
+    <button class="export-btn" onclick="exportReport()">⬇ Exporter rapport</button>
+    <button class="topbar-logout" onclick="goHome()">Déconnexion</button>
+  </div>
+  <div class="dir-container">
+    <div class="dir-hero">
+      <div class="dir-hero-icon">📊</div>
+      <div>
+        <div class="dir-hero-title">Vue générale de l'école</div>
+        <div class="dir-hero-sub" id="dir-hero-sub">Toutes les classes · Données en temps réel</div>
+      </div>
+    </div>
+    <div class="dir-section-title">Statistiques globales</div>
+    <div class="school-stats-grid" id="school-stats"></div>
+    <div class="taux-wrap" style="margin-bottom:32px" id="school-taux"></div>
+    <div class="dir-section-title">Aperçu par classe</div>
+    <div class="classes-overview" id="dir-classes-overview"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="dir-section-title" style="margin:0">Tableau comparatif des classes</div>
+    </div>
+    <div class="table-wrap" style="margin-bottom:0">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Classe</th><th>Niveau</th><th>Élèves</th><th>Admis</th>
+            <th>Non Admis</th><th>Taux Réussite</th><th>Moy. Classe</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="dir-comp-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Modifier la classe</div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ══ CONFIG ══
+const CLASSES = {
+  CI:  { code:'CI',  name:'Cours Initiatoire',   niveau:1, niveauLabel:'Niveau 1', pwd:'ci1234' },
+  CP:  { code:'CP',  name:'Cours Préparatoire',  niveau:1, niveauLabel:'Niveau 1', pwd:'cp1234' },
+  CE1: { code:'CE1', name:'Cours Élémentaire 1', niveau:2, niveauLabel:'Niveau 2', pwd:'ce11234' },
+  CE2: { code:'CE2', name:'Cours Élémentaire 2', niveau:2, niveauLabel:'Niveau 2', pwd:'ce21234' },
+  CM1: { code:'CM1', name:'Cours Moyen 1',        niveau:3, niveauLabel:'Niveau 3', pwd:'cm11234' },
+  CM2: { code:'CM2', name:'Cours Moyen 2',        niveau:3, niveauLabel:'Niveau 3', pwd:'cm21234' },
+};
+const DIRECTOR_PWD = 'directeur229';
+const NIVEAUX = {
+  1:{label:'Niveau 1',classes:['CI','CP']},
+  2:{label:'Niveau 2',classes:['CE1','CE2']},
+  3:{label:'Niveau 3',classes:['CM1','CM2']},
+};
+const DISCIPLINES_N1 = [
+  {code:'L',name:'Lecture'},{code:'EE',name:'Expression écrite'},
+  {code:'M',name:'Mathématiques'},{code:'ES',name:'Éducation sociale'},
+  {code:'EST',name:'Éd. Sci. & Techno.'},{code:'D',name:'Dictée'},
+  {code:'EA-AV',name:'EA Arts Vivants'},{code:'EA-AP',name:'EA Arts Plastiques'},
+  {code:'EPS',name:'Éd. Physique & Sportive'},{code:'EM',name:'Éducation Musicale'},
+];
+const DISCIPLINES_N23 = [
+  {code:'L',name:'Lecture'},{code:'EE',name:'Expression écrite'},
+  {code:'M',name:'Mathématiques'},{code:'ES',name:'Éducation sociale'},
+  {code:'EST',name:'Éd. Sci. & Techno.'},{code:'D',name:'Dictée'},
+  {code:'EA-AV',name:'EA Arts Vivants'},{code:'EA-AP',name:'EA Arts Plastiques'},
+  {code:'EPS',name:'Éd. Physique & Sportive'},
+];
+
+// ══ DONNÉES localStorage ══
+function loadData(){
+  try{const r=localStorage.getItem('eduking229_moyennes');if(r)return JSON.parse(r);}catch(e){}
+  return {
+    CI:{students:[]},CP:{students:[]},
+    CE1:{students:[{id:1,name:'Kontchi',grades:{L:10,EE:12,M:16,ES:11,EST:6,D:5,'EA-AV':8,'EA-AP':12,EPS:8}}]},
+    CE2:{students:[]},
+    CM1:{students:[
+      {id:2,name:'Assiba',grades:{L:12,EE:14,M:17,ES:8,EST:6,D:5,'EA-AV':18,'EA-AP':17,EPS:10}},
+      {id:3,name:'André',grades:{L:14,EE:12,M:14,ES:8,EST:13,D:11,'EA-AV':15,'EA-AP':16,EPS:18}},
+    ]},
+    CM2:{students:[{id:4,name:'Cossi',grades:{L:8,EE:6,M:12,ES:16,EST:7,D:0,'EA-AV':17,'EA-AP':8,EPS:15}}]},
+  };
+}
+function saveData(){try{localStorage.setItem('eduking229_moyennes',JSON.stringify(schoolData));}catch(e){}}
+let schoolData=loadData();
+
+// ══ CALCULS ══
+function getDiscs(n){return n===1?DISCIPLINES_N1:DISCIPLINES_N23;}
+function calcStudent(s,niveau){
+  const discs=getDiscs(niveau);const SEUIL=6;
+  let sum=0,composed=0,passing=0;const details=[];
+  for(const d of discs){
+    const raw=s.grades[d.code];
+    if(raw!==null&&raw!==undefined&&raw!==''){
+      const n=parseFloat(raw);sum+=n;composed++;
+      if(n>=10)passing++;
+      details.push({...d,note:n,pass:n>=10});
+    }else{details.push({...d,note:null,pass:false});}
+  }
+  const avgNum=composed>0?sum/composed:0;
+  return{avg:avgNum.toFixed(2),avgNum,passing,totalDiscs:discs.length,composed,seuil:SEUIL,
+         result:(passing>=SEUIL)?'ADMIS(E)':'NON ADMIS(E)',passedSeuil:passing>=SEUIL,details,sum};
+}
+function calcClass(code){
+  const cl=CLASSES[code],students=schoolData[code].students;
+  const computed=students.map(s=>({s,r:calcStudent(s,cl.niveau)}));
+  const total=computed.length,admis=computed.filter(d=>d.r.passedSeuil).length;
+  const avgNum=total>0?computed.reduce((s,d)=>s+d.r.avgNum,0)/total:0;
+  const taux=total>0?Math.round(admis/total*100):0;
+  return{computed,total,admis,nonAdmis:total-admis,taux,avgClasse:avgNum.toFixed(2),avgNum};
+}
+function getMention(a){const n=parseFloat(a);if(n>=16)return'Très Bien';if(n>=14)return'Bien';if(n>=12)return'Assez Bien';if(n>=10)return'Passable';return'Insuffisant';}
+function gc(a){const n=parseFloat(a);if(n>=14)return'H';if(n>=10)return'M';return'L2';}
+function nc(n){if(n===null)return'M';if(n>=14)return'H';if(n>=10)return'M';return'L2';}
+
+// ══ NAVIGATION ══
+let currentClass=null;
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goHome(){currentClass=null;renderHome();showScreen('screen-home');}
+function goToDirectorLogin(){showScreen('screen-dir-login');document.getElementById('dir-pwd').value='';document.getElementById('dir-err').style.display='none';}
+
+// ══ ACCUEIL ══
+function renderHome(){
+  [1,2,3].forEach(n=>{
+    const grid=document.getElementById('grid-n'+n);
+    grid.innerHTML=NIVEAUX[n].classes.map(code=>{
+      const cl=CLASSES[code],{total,admis,taux}=calcClass(code),hasStu=total>0;
+      return `<div class="class-card" onclick="openClassLogin('${code}')">
+        ${hasStu?`<span class="class-card-badge ${taux>=50?'badge-ok':'badge-ko'}">${taux}%</span>`:''}
+        <div class="class-card-code">${code}</div>
+        <div class="class-card-name">${cl.name}</div>
+        <div class="class-card-stats">
+          <div class="cs-mini">Élèves : <span>${total}</span></div>
+          ${hasStu?`<div class="cs-mini">Admis : <span>${admis}/${total}</span></div>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  });
+}
+
+// ══ LOGIN ENSEIGNANT ══
+function openClassLogin(code){
+  currentClass=code;const cl=CLASSES[code];
+  document.getElementById('login-code').textContent=code;
+  document.getElementById('login-name').textContent=cl.name+' — '+cl.niveauLabel;
+  document.getElementById('login-pwd').value='';
+  document.getElementById('login-err').style.display='none';
+  showScreen('screen-login');
+  setTimeout(()=>document.getElementById('login-pwd').focus(),300);
+}
+function doLogin(){
+  const pwd=document.getElementById('login-pwd').value,cl=CLASSES[currentClass];
+  if(pwd===cl.pwd){openClass(currentClass);}
+  else{document.getElementById('login-err').style.display='block';document.getElementById('login-pwd').value='';document.getElementById('login-pwd').focus();}
+}
+
+// ══ CLASSE ══
+function openClass(code){
+  currentClass=code;const cl=CLASSES[code];
+  document.getElementById('tb-title').textContent=code+' — '+cl.name;
+  document.getElementById('tb-sub').textContent=cl.niveauLabel;
+  document.getElementById('fn-cours').value=code;
+  document.getElementById('rule-chip-1').innerHTML=`${cl.niveauLabel} — <strong>${getDiscs(cl.niveau).length} disciplines</strong> — Seuil : <strong>6 matières ≥ 10/20</strong>`;
+  buildGradeInputs(code);switchCTab('tableau');showScreen('screen-class');
+}
+function switchCTab(tab){
+  ['tableau','classement','ajouter'].forEach(t=>{document.getElementById('ctab-'+t).style.display=t===tab?'':'none';});
+  document.querySelectorAll('.ctab').forEach((b,i)=>b.classList.toggle('active',['tableau','classement','ajouter'][i]===tab));
+  if(tab==='tableau')renderClassTable(currentClass);
+  if(tab==='classement')renderClassRanking(currentClass);
+}
+function renderClassTable(code){
+  const cl=CLASSES[code],{computed,total,admis,nonAdmis,taux,avgClasse}=calcClass(code);
+  const tbody=document.getElementById('class-tbody');
+  if(total===0){
+    tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><div class="eico">🎓</div><p>Aucun élève — utilisez "Ajouter" pour commencer.</p></div></td></tr>`;
+    document.getElementById('class-stats-wrap').innerHTML='';return;
+  }
+  tbody.innerHTML=computed.map(({s,r})=>{
+    const chips=r.details.map(d=>{
+      if(d.note===null)return `<div class="nc M"><span class="nl">${d.code}</span><span class="nv" style="color:var(--muted2)">—</span></div>`;
+      const c=nc(d.note);
+      return `<div class="nc ${c}" title="${d.name}: ${d.note}/20"><span class="nl">${d.code}</span><span class="nv">${d.note}</span></div>`;
+    }).join('');
+    const ac=gc(r.avg);
+    return `<tr onclick="showStudentDetail(${s.id},'${code}')">
+      <td class="L"><div class="stu-name">${s.name}</div></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);font-weight:700">${code}</span></td>
+      <td><span class="num-c">${r.totalDiscs}</span></td>
+      <td><span class="num-c">${r.composed}</span></td>
+      <td><div class="notes-inline">${chips}</div></td>
+      <td><span class="seuil-c ${r.passedSeuil?'ok':'ko'}">${r.passing}/${r.totalDiscs}</span></td>
+      <td><span class="avg-c ${ac}">${r.avg}<span style="font-size:10px;color:var(--muted)">/20</span></span></td>
+      <td><span class="rpill ${r.passedSeuil?'pass':'fail'}">${r.passedSeuil?'✓':'✗'} ${r.result}</span></td>
+    </tr>`;
+  }).join('');
+  const best=computed.reduce((b,d)=>d.r.avgNum>b.r.avgNum?d:b);
+  const acC=gc(avgClasse);
+  document.getElementById('class-stats-wrap').innerHTML=`
+  <div class="stats-wrap">
+    <div class="stats-heading">Statistiques de la classe</div>
+    <div class="stats-grid">
+      <div class="sbox B"><div class="sv">${total}</div><div class="sl">Élèves inscrits</div></div>
+      <div class="sbox G"><div class="sv">${admis}</div><div class="sl">Admis<br><span style="font-size:10px">(≥ 6 mat. ≥ 10/20)</span></div></div>
+      <div class="sbox R"><div class="sv">${nonAdmis}</div><div class="sl">Non admis</div></div>
+      <div class="sbox O"><div class="sv">${taux}%</div><div class="sl">Taux de réussite</div></div>
+      <div class="sbox"><div class="sv ${acC}" style="font-size:22px">${avgClasse}/20</div><div class="sl">Moy. classe<br><span style="font-size:10px;color:var(--muted2)">(indicative)</span></div></div>
+      <div class="sbox"><div class="sv" style="font-size:18px;color:var(--green)">${best.s.name}</div><div class="sl">Meilleur(e) — ${best.r.avg}/20</div></div>
+    </div>
+    <div class="taux-wrap">
+      <div class="taux-lbl">Taux de réussite — seuil 6 matières ≥ 10/20</div>
+      <div class="taux-track"><div class="taux-fill" style="width:${taux}%"></div></div>
+      <div class="taux-nums"><span style="color:var(--green)">✓ ${admis} admis</span><span>${admis}/${total}</span><span style="color:var(--red)">✗ ${nonAdmis} non admis</span></div>
+    </div>
+  </div>`;
+}
+function renderClassRanking(code){
+  const{computed}=calcClass(code);
+  const ranked=[...computed].sort((a,b)=>b.r.avgNum-a.r.avgNum);
+  const medals=['🥇','🥈','🥉'],rcls=['gold','silver','bronze'];
+  document.getElementById('class-ranking').innerHTML=ranked.length===0
+    ?`<div class="empty"><div class="eico">🏆</div><p>Aucun élève.</p></div>`
+    :`<div style="border:1px solid var(--border);border-radius:var(--r);overflow:hidden">`+
+    ranked.map(({s,r},i)=>{
+      const m=i<3?medals[i]:`#${i+1}`,mc=i<3?rcls[i]:'',ac=gc(r.avg);
+      return `<div class="rrow">
+        <div class="rnum ${mc}">${m}</div>
+        <div style="flex:1"><div style="font-weight:700;font-size:15px">${s.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${code} · ${r.passing}/${r.totalDiscs} mat. ≥ 10/20</div></div>
+        <span class="rpill ${r.passedSeuil?'pass':'fail'}">${r.passedSeuil?'✓ ADMIS':'✗ NON ADMIS'}</span>
+        <div class="ravg ${ac}">${r.avg}<span style="font-size:12px;color:var(--muted)">/20</span></div>
+      </div>`;
+    }).join('')+`</div>`;
+}
+function showStudentDetail(id,code){
+  const cl=CLASSES[code],s=schoolData[code].students.find(x=>x.id===id);if(!s)return;
+  const r=calcStudent(s,cl.niveau),ac=gc(r.avg),mention=getMention(r.avg);
+  document.getElementById('class-detail-content').innerHTML=`
+  <div class="d-header anim">
+    <div style="flex:1">
+      <div class="d-name">${s.name}</div>
+      <div class="d-meta">
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);font-weight:700;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.2);border-radius:6px;padding:4px 10px">${code}</span>
+        <span class="rpill ${r.passedSeuil?'pass':'fail'}">${r.passedSeuil?'✓':'✗'} ${r.result}</span>
+        <span style="color:var(--muted);font-size:12px">${r.passing}/${r.totalDiscs} mat. ≥ 10/20 (seuil : ${r.seuil})</span>
+      </div>
+      <p style="margin-top:10px;font-size:11px;color:var(--muted2)">⚠️ L'admission est basée uniquement sur le comptage — la moyenne est indicative.</p>
+    </div>
+    <div class="d-avg-box">
+      <div class="d-avg-lbl">Moyenne (indicative)</div>
+      <div class="d-avg-num ${ac}">${r.avg}</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:4px">/ 20 — ${mention}</div>
+    </div>
+  </div>
+  <table class="gtable anim">
+    <thead><tr><th>Code</th><th>Discipline</th><th style="width:200px">Note / 20</th><th>Seuil ≥ 10/20</th></tr></thead>
+    <tbody>
+    ${r.details.map(d=>{
+      const c=d.note!==null?nc(d.note):'M',pct=d.note!==null?(d.note/20*100).toFixed(0):0;
+      const sr=d.note===null?`<span style="color:var(--muted2)">Non composé</span>`:d.pass?`<span style="color:var(--green);font-weight:700">✓ Acquis</span>`:`<span style="color:var(--red);font-weight:700">✗ Non acquis</span>`;
+      return `<tr>
+        <td><span class="dcode">${d.code}</span></td>
+        <td style="font-weight:500">${d.name}</td>
+        <td><div class="nbar"><div class="ntrack"><div class="nfill ${c}" style="width:${pct}%"></div></div><span class="nval ${c}">${d.note!==null?d.note+'/20':'—'}</span></div></td>
+        <td>${sr}</td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+    <tfoot><tr style="background:var(--s2)">
+      <td colspan="2" style="padding:13px 16px;font-weight:700">RÉCAP</td>
+      <td style="padding:13px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--gold)">Total : ${r.sum} pts | Moy. : ${r.avg}/20</td>
+      <td style="padding:13px 16px"><span class="seuil-c ${r.passedSeuil?'ok':'ko'}" style="margin-right:8px">${r.passing}/${r.totalDiscs} ≥ 10</span><span class="rpill ${r.passedSeuil?'pass':'fail'}">${r.result}</span></td>
+    </tr></tfoot>
+  </table>`;
+  document.getElementById('class-summary-view').style.display='none';
+  document.getElementById('class-detail-view').style.display='block';
+}
+function closeDetail(){
+  document.getElementById('class-summary-view').style.display='';
+  document.getElementById('class-detail-view').style.display='none';
+  renderClassTable(currentClass);
+}
+function buildGradeInputs(code){
+  const cl=CLASSES[code],discs=getDiscs(cl.niveau);
+  document.getElementById('fn-grades').innerHTML=discs.map(d=>`
+    <div>
+      <label class="flbl" style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
+        <span style="color:var(--blue2);font-family:'DM Mono',monospace;font-size:10px">${d.code}</span>
+        <span>${d.name}</span>
+      </label>
+      <input type="number" id="fg_${d.code.replace(/-/g,'_')}" class="finput" min="0" max="20" step="0.5" placeholder="Note / 20">
+    </div>`).join('');
+}
+function addStudentToClass(){
+  const name=document.getElementById('fn-name').value.trim();
+  if(!name){alert('Veuillez saisir le nom de l\'élève.');return;}
+  const code=currentClass,cl=CLASSES[code],discs=getDiscs(cl.niveau),grades={};
+  for(const d of discs){
+    const inp=document.getElementById('fg_'+d.code.replace(/-/g,'_'));
+    const val=inp?inp.value.trim():'';
+    grades[d.code]=val!==''?parseFloat(val):null;
+  }
+  schoolData[code].students.push({id:Date.now(),name,grades});
+  saveData();
+  document.getElementById('fn-name').value='';
+  buildGradeInputs(code);switchCTab('tableau');
+  alert(`✅ ${name} ajouté(e) à la classe ${code} !`);
+}
+
+// ══ DIRECTEUR ══
+function doDirLogin(){
+  const pwd=document.getElementById('dir-pwd').value;
+  if(pwd===DIRECTOR_PWD){openDirector();}
+  else{document.getElementById('dir-err').style.display='block';document.getElementById('dir-pwd').value='';document.getElementById('dir-pwd').focus();}
+}
+function openDirector(){renderDirector();showScreen('screen-director');}
+function renderDirector(){
+  const allClasses=Object.keys(CLASSES).map(code=>({code,cl:CLASSES[code],...calcClass(code)}));
+  const totalEleves=allClasses.reduce((s,c)=>s+c.total,0);
+  const totalAdmis=allClasses.reduce((s,c)=>s+c.admis,0);
+  const tauxEcole=totalEleves>0?Math.round(totalAdmis/totalEleves*100):0;
+  const avgEcole=totalEleves>0?(allClasses.reduce((s,c)=>s+c.avgNum*c.total,0)/totalEleves).toFixed(2):'0.00';
+  document.getElementById('dir-tb-sub').textContent=`${totalEleves} élèves · ${Object.keys(CLASSES).length} classes`;
+  document.getElementById('dir-hero-sub').textContent=`${Object.keys(CLASSES).length} classes · ${totalEleves} élèves inscrits`;
+  document.getElementById('school-stats').innerHTML=`
+    <div class="sbox B"><div class="sv">${totalEleves}</div><div class="sl">Élèves total</div></div>
+    <div class="sbox"><div class="sv" style="color:var(--muted)">${Object.keys(CLASSES).length}</div><div class="sl">Classes</div></div>
+    <div class="sbox G"><div class="sv">${totalAdmis}</div><div class="sl">Admis (école)</div></div>
+    <div class="sbox R"><div class="sv">${totalEleves-totalAdmis}</div><div class="sl">Non admis</div></div>
+    <div class="sbox O"><div class="sv">${tauxEcole}%</div><div class="sl">Taux réussite école</div></div>
+    <div class="sbox"><div class="sv ${gc(avgEcole)}" style="font-size:22px">${avgEcole}/20</div><div class="sl">Moy. école<br><span style="font-size:10px;color:var(--muted2)">(indicative)</span></div></div>`;
+  document.getElementById('school-taux').innerHTML=`
+    <div class="taux-lbl">Taux de réussite de l'école</div>
+    <div class="taux-track"><div class="taux-fill" style="width:${tauxEcole}%"></div></div>
+    <div class="taux-nums"><span style="color:var(--green)">✓ ${totalAdmis} admis</span><span>${totalAdmis} / ${totalEleves}</span><span style="color:var(--red)">✗ ${totalEleves-totalAdmis} non admis</span></div>`;
+  document.getElementById('dir-classes-overview').innerHTML=allClasses.map(c=>{
+    const ac=gc(c.avgClasse);
+    return `<div class="cov-card">
+      <div class="cov-code">${c.code}</div>
+      <div class="cov-niveau">${c.cl.name} · ${c.cl.niveauLabel}</div>
+      <div class="cov-row"><span class="cov-label">Élèves</span><span class="cov-val">${c.total}</span></div>
+      <div class="cov-row"><span class="cov-label">Admis</span><span class="cov-val" style="color:var(--green)">${c.admis}</span></div>
+      <div class="cov-row"><span class="cov-label">Non admis</span><span class="cov-val" style="color:var(--red)">${c.nonAdmis}</span></div>
+      <div class="cov-row"><span class="cov-label">Taux</span><span class="cov-val" style="color:${c.taux>=50?'var(--green)':'var(--red)'}">${c.taux}%</span></div>
+      <div class="cov-row"><span class="cov-label">Moy.</span><span class="cov-val ${ac}">${c.avgClasse}/20</span></div>
+      <div class="cov-taux-track"><div class="cov-taux-fill" style="width:${c.taux}%"></div></div>
+      <button class="cov-edit-btn" onclick="openDirectorEdit('${c.code}')">✏️ Gérer les élèves</button>
+    </div>`;
+  }).join('');
+  document.getElementById('dir-comp-body').innerHTML=allClasses.sort((a,b)=>b.taux-a.taux).map(c=>`
+    <tr>
+      <td style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--gold)">${c.code}</td>
+      <td style="color:var(--muted);font-size:12px">${c.cl.niveauLabel}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:600">${c.total}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--green)">${c.admis}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--red)">${c.nonAdmis}</td>
+      <td><span style="font-family:'DM Mono',monospace;font-weight:700;color:${c.taux>=50?'var(--green)':'var(--red)'}">${c.taux}%</span></td>
+      <td><span class="avg-c ${gc(c.avgClasse)}">${c.avgClasse}<span style="font-size:10px;color:var(--muted)">/20</span></span></td>
+      <td><button class="cov-edit-btn" style="width:auto;margin:0" onclick="openDirectorEdit('${c.code}')">Gérer</button></td>
+    </tr>`).join('');
+}
+function openDirectorEdit(code){
+  const cl=CLASSES[code],students=schoolData[code].students;
+  document.getElementById('modal-title').textContent=`Classe ${code} — ${cl.name}`;
+  document.getElementById('modal-body').innerHTML=`
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">${students.length} élève${students.length>1?'s':''} inscrits</p>
+    ${students.length===0?`<p style="color:var(--muted2);font-size:13px">Aucun élève dans cette classe.</p>`
+    :`<table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="text-align:left;padding:8px 10px;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)">Élève</th>
+        <th style="text-align:center;padding:8px 10px;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)">Résultat</th>
+        <th style="text-align:center;padding:8px 10px;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)">Action</th>
+      </tr></thead>
+      <tbody>${students.map(s=>{const r=calcStudent(s,cl.niveau);return `<tr>
+        <td style="padding:10px;font-weight:600">${s.name}</td>
+        <td style="padding:10px;text-align:center"><span class="rpill ${r.passedSeuil?'pass':'fail'}">${r.passedSeuil?'✓ Admis':'✗ Non admis'}</span></td>
+        <td style="padding:10px;text-align:center"><button onclick="deleteStudent('${code}',${s.id})" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:var(--red);border-radius:6px;padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer">Supprimer</button></td>
+      </tr>`;}).join('')}</tbody></table>`}`;
+  document.getElementById('modal-edit').classList.add('open');
+}
+function deleteStudent(code,id){
+  if(!confirm('Supprimer cet élève ?'))return;
+  schoolData[code].students=schoolData[code].students.filter(s=>s.id!==id);
+  saveData();renderDirector();openDirectorEdit(code);
+}
+function closeModal(){document.getElementById('modal-edit').classList.remove('open');}
+function exportReport(){
+  const allClasses=Object.keys(CLASSES).map(code=>({code,cl:CLASSES[code],...calcClass(code)}));
+  const totalEleves=allClasses.reduce((s,c)=>s+c.total,0),totalAdmis=allClasses.reduce((s,c)=>s+c.admis,0);
+  const tauxEcole=totalEleves>0?Math.round(totalAdmis/totalEleves*100):0;
+  let csv=`Rapport Eduking 229 — ${new Date().toLocaleDateString('fr-FR')}\n\nSTATISTIQUES GLOBALES\nTotal élèves,${totalEleves}\nTotal admis,${totalAdmis}\nNon admis,${totalEleves-totalAdmis}\nTaux réussite,${tauxEcole}%\n\nDÉTAIL PAR CLASSE\nClasse,Niveau,Élèves,Admis,Non admis,Taux,Moy. classe\n`;
+  allClasses.forEach(c=>csv+=`${c.code},${c.cl.niveauLabel},${c.total},${c.admis},${c.nonAdmis},${c.taux}%,${c.avgClasse}/20\n`);
+  csv+=`\nDÉTAIL DES ÉLÈVES\nClasse,Élève,Matières composées,Matières ≥ 10,Seuil atteint,Moyenne,Résultat\n`;
+  Object.keys(CLASSES).forEach(code=>{const cl=CLASSES[code];schoolData[code].students.forEach(s=>{const r=calcStudent(s,cl.niveau);csv+=`${code},${s.name},${r.composed},${r.passing},${r.passedSeuil?'OUI':'NON'},${r.avg},${r.result}\n`;});});
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`Eduking229_Moyennes_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+
+var payPlanMoy = {nom:'Annuel', prix:1000};
+
+function showPayModal(){document.getElementById('pay-modal').style.display='flex';}
+function closePayModal(){document.getElementById('pay-modal').style.display='none';}
+
+function selPlan(p,prix){
+  payPlanMoy={nom:p==='mensuel'?'Mensuel':'Annuel',prix:prix};
+  document.getElementById('pp-m').style.borderColor=p==='mensuel'?'#f0b429':'#334466';
+  document.getElementById('pp-a').style.borderColor=p==='annuel'?'#f0b429':'#334466';
+}
+function payMoov(){window.location.href='tel:*855*1*0145894080*'+payPlanMoy.prix+'%23';}
+function payMTN(){window.location.href='tel:*880*1*0167899473*'+payPlanMoy.prix+'%23';}
+
+function confPayModal(){
+  var tel=(document.getElementById('pm-tel').value||'').trim();
+  var ref=(document.getElementById('pm-ref').value||'').trim();
+  if(!tel||!ref){alert('⚠️ Remplissez tous les champs');return;}
+  if(tel.replace(/\s/g,'')==='0145894080'||ref.toLowerCase()==='admin'){
+    closePayModal();
+    alert('✅ Accès Admin activé !\nMot de passe : nom de votre classe (ex: CE1)');
+    return;
+  }
+  closePayModal();
+  alert('✅ Paiement enregistré !\n\nVotre mot de passe = nom de votre classe\n(CI, CP, CE1, CE2, CM1 ou CM2)\n\nAccès activé dès vérification.');
+}
+
+// ══ INIT ══
+renderHome();
+</script>
+
+<!-- MODAL PAIEMENT -->
+<div id="pay-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#111827;border:1px solid #334466;border-radius:18px;padding:26px;max-width:400px;width:100%;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:white;">💳 Abonnement</div>
+      <button onclick="closePayModal()" style="background:none;border:none;color:#6b7fa3;font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <div onclick="selPlan('mensuel',500)" id="pp-m" style="border:2px solid #334466;border-radius:12px;padding:14px;text-align:center;cursor:pointer;">
+        <div style="font-size:10px;color:#6b7fa3;margin-bottom:4px;">📅 Mensuel</div>
+        <div style="font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#f0b429;">500F</div>
+        <div style="font-size:10px;color:#4a5a7a;">par mois</div>
+      </div>
+      <div onclick="selPlan('annuel',1000)" id="pp-a" style="border:2px solid #f0b429;background:rgba(240,180,41,.08);border-radius:12px;padding:14px;text-align:center;cursor:pointer;">
+        <div style="font-size:10px;color:#f0b429;margin-bottom:4px;">🏆 Annuel ⭐</div>
+        <div style="font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:#f0b429;">1000F</div>
+        <div style="font-size:10px;color:#4a5a7a;">par an</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+      <button onclick="payMoov()" style="background:linear-gradient(135deg,#0057A8,#0069cc);color:#fff;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+        🔵 Moov Money<br><span style="font-size:10px;opacity:.8;">*855*1*0145894080*#</span>
+      </button>
+      <button onclick="payMTN()" style="background:linear-gradient(135deg,#e6a800,#cc7700);color:#000;border:none;border-radius:10px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+        📱 MTN MoMo<br><span style="font-size:10px;opacity:.7;">*880*1*0167899473*#</span>
+      </button>
+    </div>
+    <div style="margin-bottom:12px;">
+      <label style="font-size:11px;font-weight:700;color:#6b7fa3;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Votre numéro Mobile Money *</label>
+      <input type="tel" id="pm-tel" placeholder="+229 97 00 00 00" style="width:100%;background:#1a2235;border:1px solid #2a3850;border-radius:8px;padding:11px 14px;color:#e8f0fe;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"/>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:11px;font-weight:700;color:#6b7fa3;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">Référence SMS reçue *</label>
+      <input type="text" id="pm-ref" placeholder="Ex: TXN20260322..." style="width:100%;background:#1a2235;border:1px solid #2a3850;border-radius:8px;padding:11px 14px;color:#e8f0fe;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"/>
+      <div style="font-size:11px;color:#f0b429;margin-top:6px;padding:7px 10px;background:rgba(240,180,41,.08);border-radius:6px;">
+        🔑 Après paiement → votre mot de passe = <b>nom de votre classe</b> (ex: CE1)
+      </div>
+    </div>
+    <button onclick="confPayModal()" style="width:100%;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;">✅ Confirmer le paiement</button>
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:#4a5a7a;">
+      Admin test : numéro = <b style="color:#f0b429;">0145894080</b> · réf = <b style="color:#f0b429;">admin</b>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
