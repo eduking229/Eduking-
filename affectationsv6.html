@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#1a6b3a"/>
+<title>Eduking 229 — Affectations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#f0f5f0;color:#1a2a1a;}
+:root{
+  --v:#1a6b3a;--v2:#22913f;--j:#f5a623;--r:#c0392b;
+  --b:#1a237e;--o:#b7410e;--p:#6a1b9a;
+  --bd:#d0e4d0;--g:#f4f7f4;
+}
+nav{background:var(--v);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.nb{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial;}
+.pg{display:none;padding-bottom:40px;}.on{display:block;}
+.c{background:#fff;border-radius:10px;padding:16px;margin:10px;border:1px solid var(--bd);}
+.ct{font-size:14px;font-weight:700;color:var(--v);margin-bottom:12px;}
+.hero{background:linear-gradient(150deg,var(--v),var(--v2));color:#fff;padding:20px 16px;}
+label{display:block;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 4px;}
+input,select{width:100%;padding:11px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;background:var(--g);font-family:Arial;color:#1a2a1a;}
+input:focus,select:focus{outline:none;border-color:var(--v);}
+.err{color:var(--r);font-size:11px;margin-top:3px;}
+.hint{font-size:11px;color:#778;margin-top:4px;padding:6px 10px;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;}
+.btn{display:block;width:100%;padding:13px;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:8px;font-family:Arial;}
+.btn:active{opacity:.8;}
+.bv{background:var(--v);color:#fff;}
+.bj{background:var(--j);color:#1a2a1a;}
+.bo{background:#fff;color:var(--v);border:2px solid var(--v);}
+.badge{display:inline-block;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;}
+.bvg{background:#d4edda;color:#155724;}
+.brd{background:#f8d7da;color:#721c24;}
+.bam{background:#fff3cd;color:#856404;}
+.bgr{background:#e9ecef;color:#495057;}
+.tabs{display:flex;background:#fff;margin:6px 10px;border-radius:9px;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.07);}
+.tab{flex:1;padding:9px 4px;text-align:center;border:none;background:none;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-radius:7px;font-family:Arial;}
+.tab.on{background:var(--v);color:#fff;}
+.rc{border-radius:11px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;margin:8px 10px 0;color:#fff;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:16px;}
+.mbox{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px;max-height:90vh;overflow-y:auto;}
+#ntf{position:fixed;top:10px;left:50%;transform:translateX(-50%);color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;z-index:9999;display:none;max-width:90%;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.25);}
+.ch{background:linear-gradient(90deg,var(--v),var(--v2));color:#fff;border-radius:8px;padding:8px 12px;margin:6px 10px 3px;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:space-between;}
+.match-card{background:#fff;border-radius:10px;padding:12px;margin:0 10px 8px;border:1.5px solid var(--bd);}
+.match-card.mutuel{border-color:var(--j);}
+.match-card.reco{border-color:var(--v);}
+
+/* CARTE JAUNE ALTERNANTE */
+.tarif-wrap{margin:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tarif-card{border:2px solid var(--j);border-radius:13px;padding:14px;text-align:center;cursor:pointer;background:rgba(245,162,35,.08);transition:all .3s;}
+.tarif-card:active{transform:scale(.97);}
+.tarif-label{font-size:10px;font-weight:700;color:var(--j);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.tarif-prix{font-size:28px;font-weight:900;color:#1a2a1a;font-family:monospace;line-height:1;}
+.tarif-unit{font-size:11px;color:#778;margin-top:3px;}
+.tarif-cta{margin-top:8px;background:var(--j);color:#1a2a1a;border:none;border-radius:7px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;width:100%;font-family:Arial;}
+
+/* ESSAI GRATUIT */
+.essai-band{margin:10px;background:linear-gradient(135deg,#0d2218,#1a4a28);border:2px solid var(--j);border-radius:13px;padding:14px;text-align:center;}
+.essai-ico{font-size:28px;margin-bottom:6px;}
+.essai-titre{color:var(--j);font-size:14px;font-weight:700;margin-bottom:4px;}
+.essai-sub{color:rgba(255,255,255,.7);font-size:12px;line-height:1.6;margin-bottom:10px;}
+.essai-cta{background:var(--j);color:#1a2a1a;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial;}
+
+/* BANDE ESSAI EN COURS */
+.trial-band{margin:0 10px 6px;background:linear-gradient(135deg,#b7410e,#c0392b);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.trial-icon{font-size:20px;flex-shrink:0;}
+.trial-text strong{display:block;color:#fff;font-size:13px;}
+.trial-text small{color:rgba(255,255,255,.7);font-size:11px;}
+
+/* STATS COMMUNES */
+.communes-section{padding:0;}
+.comm-header{background:var(--nuit,#0F1E2D);color:var(--j);padding:12px 14px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:space-between;}
+.comm-stats-global{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px;background:#f4f7f4;}
+.csg{background:#fff;border-radius:10px;padding:12px;text-align:center;border:1px solid var(--bd);}
+.csg-v{font-size:20px;font-weight:900;color:var(--v);font-family:monospace;}
+.csg-l{font-size:10px;color:#778;margin-top:2px;text-transform:uppercase;}
+.comm-list{max-height:300px;overflow-y:auto;}
+.comm-item{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd);background:#fff;cursor:pointer;}
+.comm-item:active{background:#f4f7f4;}
+.comm-dept{font-size:9px;color:#778;font-weight:700;text-transform:uppercase;width:70px;flex-shrink:0;}
+.comm-name{flex:1;font-size:13px;font-weight:700;}
+.comm-badges{display:flex;gap:5px;flex-shrink:0;}
+.cb{display:flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;}
+.cb.tot{background:#dcfce7;color:#15803d;}
+.cb.dsp{background:#fff3cd;color:#856404;}
+.cb.mut{background:#dbeafe;color:#1a6b9a;}
+
+/* PAIEMENT */
+.pay-ops{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px;}
+.pay-op{border-radius:12px;padding:14px;text-align:center;cursor:pointer;border:none;font-family:Arial;}
+.pay-op:active{opacity:.8;}
+.moov{background:linear-gradient(135deg,#0057A8,#0069cc);color:#fff;}
+.mtn{background:linear-gradient(135deg,#e6a800,#cc7700);color:#1a2a1a;}
+.pay-op .ico{font-size:26px;margin-bottom:5px;}
+.pay-op .nm{font-size:13px;font-weight:700;}
+.pay-op .code{font-size:10px;opacity:.8;margin-top:3px;}
+</style>
+</head>
+<body>
+<div id="ntf"></div>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <svg width="18" height="12" viewBox="0 0 21 15"><rect width="7" height="15" fill="#22913f"/><rect x="7" width="7" height="15" fill="#f5a623"/><rect x="14" width="7" height="15" fill="#c0392b"/></svg>
+    <div>
+      <div style="font-size:15px;font-weight:900;">Eduking 229</div>
+      <div style="font-size:9px;color:rgba(255,255,255,.7);">Affectations · Bénin</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;">
+    <button class="nb" onclick="goAdmin()">⚙️ Admin</button>
+    <button class="nb" onclick="G('circuit')">🔐 Circuit</button>
+  </div>
+</nav>
+
+<!-- ══ ACCUEIL ══ -->
+<div id="pg-accueil" class="pg on">
+
+  <!-- HERO STATS -->
+  <div class="hero">
+    <h1 style="font-size:20px;font-weight:900;margin-bottom:4px;">🏫 Gestion des Affectations</h1>
+    <p style="font-size:12px;color:rgba(255,255,255,.8);margin-bottom:10px;">Permutations du personnel éducatif · Bénin</p>
+    <div style="display:flex;justify-content:space-around;">
+      <div style="text-align:center;"><div style="font-size:22px;font-weight:900;color:var(--j);" id="s1">—</div><div style="font-size:10px;color:rgba(255,255,255,.7);">Adhérents</div></div>
+      <div style="text-align:center;"><div style="font-size:22px;font-weight:900;color:var(--j);">77</div><div style="font-size:10px;color:rgba(255,255,255,.7);">Communes</div></div>
+      <div style="text-align:center;"><div style="font-size:22px;font-weight:900;color:var(--j);" id="s3">—</div><div style="font-size:10px;color:rgba(255,255,255,.7);">Corresp.</div></div>
+    </div>
+    <button onclick="G('communes')" style="width:100%;margin-top:12px;background:rgba(245,162,35,.2);border:1px solid var(--j);color:var(--j);border-radius:9px;padding:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial;">
+      🗺️ Voir statistiques par commune →
+    </button>
+  </div>
+
+  <!-- BANDE ESSAI EN COURS (cachée par défaut) -->
+  <div id="trial-band" style="display:none;" class="trial-band">
+    <div class="trial-icon">⏱️</div>
+    <div class="trial-text">
+      <strong>Essai gratuit en cours</strong>
+      <small id="trial-time">— heures restantes</small>
+    </div>
+    <button onclick="G('paiement')" style="background:var(--j);color:#1a2a1a;border:none;border-radius:7px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:Arial;flex-shrink:0;">S'abonner</button>
+  </div>
+
+  <!-- CARTES JAUNES ALTERNANTES -->
+  <div id="section-tarifs">
+    <!-- Mode tarifs (affiché par défaut) -->
+    <div id="view-tarifs">
+      <div class="tarif-wrap">
+        <div class="tarif-card" onclick="G('paiement')">
+          <div class="tarif-label">📅 Mensuel</div>
+          <div class="tarif-prix">500</div>
+          <div class="tarif-unit">F CFA / mois</div>
+          <button class="tarif-cta">S'abonner →</button>
+        </div>
+        <div class="tarif-card" onclick="G('paiement')" style="background:rgba(245,162,35,.15);">
+          <div class="tarif-label">🏆 Annuel ⭐</div>
+          <div class="tarif-prix" style="color:var(--j);">1000</div>
+          <div class="tarif-unit">F CFA / an</div>
+          <button class="tarif-cta">Meilleur prix →</button>
+        </div>
+      </div>
+    </div>
+    <!-- Mode essai (caché par défaut) -->
+    <div id="view-essai" style="display:none;">
+      <div class="essai-band">
+        <div class="essai-ico">🆓</div>
+        <div class="essai-titre">Essai gratuit — 24 heures</div>
+        <div class="essai-sub">Testez le système gratuitement pendant 24h.<br>Coordonnées visibles · Accès complet · Sans engagement.</div>
+        <button class="essai-cta" onclick="demarrerEssai()">Commencer l'essai gratuit →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNEXION -->
+  <div class="c">
+    <div class="ct">🔑 Accéder à mon espace</div>
+    <label>Email</label>
+    <input type="email" id="l-em" placeholder="prenom.nom@benin.edu"/>
+    <div class="err" id="l-er"></div>
+    <div class="hint">💡 Nouveau ? Inscrivez-vous via "S'abonner" ou "Essai gratuit"</div>
+    <br/>
+    <button class="btn bv" onclick="seConn()">Accéder →</button>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="c" style="background:linear-gradient(135deg,#1a237e,#283593);cursor:pointer;" onclick="goAdmin()">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="color:#fff;font-size:14px;font-weight:700;">⚙️ Espace Administration</div>
+        <div style="color:rgba(255,255,255,.6);font-size:11px;margin-top:3px;">Membres · Paiements · Notifications</div>
+      </div>
+      <div style="color:rgba(255,255,255,.4);font-size:22px;">›</div>
+    </div>
+  </div>
+
+  <div style="margin:0 10px 10px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px;font-size:12px;color:#5a4000;line-height:1.7;">
+    ⚠️ <b>Avis :</b> Ce système aide à identifier les permutations. La validation finale relève du <b>Ministère de l'Éducation</b>.
+  </div>
+</div>
+
+<!-- ══ COMMUNES / STATS ══ -->
+<div id="pg-communes" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50;">
+    <b style="font-size:14px;">🗺️ Statistiques par Commune</b>
+    <button class="nb" onclick="G('accueil')">← Retour</button>
+  </div>
+  <!-- Stats globales -->
+  <div class="comm-stats-global">
+    <div class="csg"><div class="csg-v" id="csg-total">—</div><div class="csg-l">Total adhérents</div></div>
+    <div class="csg"><div class="csg-v" id="csg-dispo">—</div><div class="csg-l">Postes disponibles</div></div>
+    <div class="csg"><div class="csg-v" id="csg-mut">—</div><div class="csg-l">Mutuelles</div></div>
+  </div>
+  <!-- Légende -->
+  <div style="display:flex;gap:8px;padding:8px 10px;background:#fff;border-bottom:1px solid var(--bd);flex-wrap:wrap;">
+    <span class="cb tot">● Total</span>
+    <span class="cb dsp">● Disponibles</span>
+    <span class="cb mut">● Mutuelles</span>
+  </div>
+  <!-- Liste communes -->
+  <div class="comm-list" id="comm-list"></div>
+</div>
+
+<!-- ══ PAIEMENT ══ -->
+<div id="pg-paiement" class="pg">
+  <div style="background:var(--v);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50;">
+    <div><b style="font-size:14px;">💳 Abonnement</b><div style="font-size:10px;opacity:.7;">MTN MoMo · Moov Money</div></div>
+    <button class="nb" onclick="G('accueil')">← Retour</button>
+  </div>
+
+  <div class="tarif-wrap" style="margin-top:10px;">
+    <div class="tarif-card" id="pp-m" onclick="chPlan('mensuel',500)" style="border-width:3px;">
+      <div class="tarif-label">📅 Mensuel</div>
+      <div class="tarif-prix">500</div>
+      <div class="tarif-unit">F CFA / mois</div>
+    </div>
+    <div class="tarif-card" id="pp-a" onclick="chPlan('annuel',1000)" style="border-width:3px;background:rgba(245,162,35,.15);">
+      <div class="tarif-label">🏆 Annuel ⭐</div>
+      <div class="tarif-prix" style="color:var(--j);">1000</div>
+      <div class="tarif-unit">F CFA / an</div>
+    </div>
+  </div>
+
+  <div class="pay-ops">
+    <button class="pay-op moov" onclick="payMoov()">
+      <div class="ico">🔵</div>
+      <div class="nm">Moov Money</div>
+      <div class="code" id="moov-code">*855*1*MOOV*500#</div>
+    </button>
+    <button class="pay-op mtn" onclick="payMTN()">
+      <div class="ico">📱</div>
+      <div class="nm">MTN MoMo</div>
+      <div class="code" id="mtn-code">*880*1*MTN*500#</div>
+    </button>
+  </div>
+
+  <div class="c">
+    <div class="ct">✅ Confirmer votre paiement</div>
+    <div style="background:#e3f2fd;border-radius:8px;padding:10px;font-size:12px;color:#0d47a1;margin-bottom:12px;line-height:1.7;">
+      1. Choisissez votre plan<br>2. Appuyez Moov ou MTN<br>3. Validez avec votre PIN<br>4. Notez la référence SMS<br>5. Remplissez ci-dessous
+    </div>
+    <label>Votre numéro Mobile Money *</label>
+    <input type="tel" id="pay-tel" placeholder="97 XX XX XX"/>
+    <div class="err" id="pay-er1"></div>
+    <label>Référence transaction SMS *</label>
+    <input type="text" id="pay-ref" placeholder="Ex: TXN20260322..." style="text-transform:uppercase;"/>
+    <div class="err" id="pay-er2"></div>
+    <br/>
+    <button class="btn bj" onclick="confPaiement()">✅ Confirmer et s'inscrire →</button>
+  </div>
+</div>
+
+<!-- ══ INSCRIPTION ══ -->
+<div id="pg-inscription" class="pg">
+  <div style="background:var(--v);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:52px;z-index:50;">
+    <b style="font-size:14px;" id="insc-titre">📝 Inscription</b>
+    <button class="nb" onclick="G('paiement')">← Retour</button>
+  </div>
+  <div class="c">
+    <div class="ct">👤 Vos informations personnelles</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div>
+        <label>Prénom *</label>
+        <input id="f-prenom" placeholder="ex: Kossi"/>
+      </div>
+      <div>
+        <label>Nom *</label>
+        <input id="f-nom" placeholder="ex: Agossou"/>
+      </div>
+    </div>
+    <label>Email *</label>
+    <input type="email" id="f-email" placeholder="prenom.nom@benin.edu"/>
+    <label>Téléphone *</label>
+    <input type="tel" id="f-tel" placeholder="97 XX XX XX"/>
+    <label>Département *</label>
+    <select id="f-dept" onchange="filtCom('f-comm','f-dept')">
+      <option value="">-- Choisir département --</option>
+    </select>
+    <label>Commune *</label>
+    <select id="f-comm">
+      <option value="">-- Choisir commune --</option>
+    </select>
+    <label>Ordre d'enseignement *</label>
+    <select id="f-ordre">
+      <option value="">-- Choisir ordre --</option>
+      <option>Maternelle</option>
+      <option>Primaire</option>
+      <option>Secondaire</option>
+    </select>
+    <label>Fonction *</label>
+    <select id="f-fonction">
+      <option value="">-- Choisir fonction --</option>
+      <option>Directeur</option>
+      <option>Directeur Adjoint</option>
+    </select>
+    <label>Statut *</label>
+    <select id="f-statut">
+      <option value="">-- Choisir statut --</option>
+      <option>FE</option>
+      <option>ACDP</option>
+      <option>AME</option>
+    </select>
+    <label>École actuelle *</label>
+    <input id="f-ecole" placeholder="Nom de votre école"/>
+    <label>Motif de permutation *</label>
+    <select id="f-motif">
+      <option value="">-- Motif --</option>
+      <option>Rapprochement familial</option>
+      <option>Raisons médicales</option>
+      <option>Convenances personnelles</option>
+      <option>Promotion interne</option>
+      <option>Autres</option>
+    </select>
+    <label>Destination souhaitée</label>
+    <select id="f-deptv" onchange="filtCom('f-commv','f-deptv')">
+      <option value="">-- Tous départements --</option>
+    </select>
+    <select id="f-commv" style="margin-top:6px;">
+      <option value="">-- Toutes communes --</option>
+    </select>
+    <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px;margin-top:10px;font-size:12px;color:#5a4000;">
+      ⚠️ <b>Disponibilité de votre poste :</b>
+    </div>
+    <div id="cv" onclick="chV(true)" style="border:2px solid var(--bd);border-radius:9px;padding:11px;margin-top:8px;cursor:pointer;">
+      <b>✅ Oui, mon poste est disponible</b><br>
+      <small style="color:#778;">Recommandé — augmente vos chances</small>
+    </div>
+    <div id="cn" onclick="chV(false)" style="border:2px solid var(--bd);border-radius:9px;padding:11px;margin-top:6px;cursor:pointer;">
+      <b>❌ Non, pas pour l'instant</b>
+    </div>
+    <div class="err" id="ev" style="margin-top:6px;"></div>
+    <br/>
+    <button class="btn bv" onclick="soumettre()">✅ Enregistrer mon inscription</button>
+  </div>
+</div>
+
+<!-- ══ ESPACE MEMBRE ══ -->
+<div id="pg-espace" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div>
+        <div id="e-n" style="font-weight:700;font-size:15px;"></div>
+        <div id="e-i" style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;"></div>
+      </div>
+      <button onclick="deco()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:6px;font-size:11px;cursor:pointer;">Quitter</button>
+    </div>
+    <div style="display:flex;justify-content:space-around;">
+      <div style="text-align:center;"><div id="e-m" style="font-size:20px;font-weight:900;">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Corresp.</div></div>
+      <div style="text-align:center;"><div id="e-r" style="font-size:20px;font-weight:900;color:var(--j);">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Recom.</div></div>
+      <div style="text-align:center;"><div id="e-mu" style="font-size:20px;font-weight:900;color:#a5d6a7;">0</div><div style="font-size:9px;color:rgba(255,255,255,.7);">Mutuelles</div></div>
+    </div>
+  </div>
+  <!-- BANDE ESSAI -->
+  <div id="espace-trial-band" style="display:none;background:linear-gradient(135deg,#b7410e,#c0392b);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+    <div>
+      <div style="color:#fff;font-size:13px;font-weight:700;">⏱️ Essai gratuit</div>
+      <div style="color:rgba(255,255,255,.7);font-size:11px;" id="espace-trial-time">— restantes</div>
+    </div>
+    <button onclick="G('paiement')" style="background:var(--j);color:#1a2a1a;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial;">S'abonner</button>
+  </div>
+  <div id="vban"></div>
+  <div class="tabs">
+    <button class="tab on" id="tb-m" onclick="ong('m')">Corresp.</button>
+    <button class="tab" id="tb-p" onclick="ong('p')">Mon profil</button>
+    <button class="tab" id="tb-v" onclick="ong('v')">Disponibles</button>
+  </div>
+  <div id="tc-m"></div>
+  <div id="tc-p" style="display:none;"></div>
+  <div id="tc-v" style="display:none;"></div>
+</div>
+
+<!-- ══ CIRCUIT ══ -->
+<div id="pg-circuit" class="pg">
+  <div style="background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+    <b style="font-size:14px;">🔐 Circuit Officiel</b>
+    <button class="nb" onclick="G('accueil')">Accueil</button>
+  </div>
+  <div class="c" style="font-size:12px;color:#557;line-height:2;">
+    🔑 <b>Mots de passe :</b><br>
+    🏛️ Ministère : <b style="color:#1a237e;font-family:monospace;">MinEdu</b><br>
+    📋 DDET : <b style="color:#b7410e;font-family:monospace;">DDET</b><br>
+    🏫 CCS : <b style="color:#6a1b9a;font-family:monospace;">CCS</b>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#1a237e,#283593);" onclick="oLog('min')">
+    <span style="font-size:24px;">🏛️</span>
+    <div style="flex:1;"><b>Ministère de l'Éducation</b><div style="font-size:11px;opacity:.75;">Validation officielle</div></div>
+    <span style="opacity:.4;font-size:18px;">›</span>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#b7410e,#c0392b);margin-top:8px;" onclick="oLog('ddt')">
+    <span style="font-size:24px;">📋</span>
+    <div style="flex:1;"><b>DDET</b><div style="font-size:11px;opacity:.75;">Direction Dép. Enseignement</div></div>
+    <span style="opacity:.4;font-size:18px;">›</span>
+  </div>
+  <div class="rc" style="background:linear-gradient(135deg,#6a1b9a,#7b1fa2);margin-top:8px;" onclick="oLog('ccs')">
+    <span style="font-size:24px;">🏫</span>
+    <div style="flex:1;"><b>CCS</b><div style="font-size:11px;opacity:.75;">Chef Circonscription</div></div>
+    <span style="opacity:.4;font-size:18px;">›</span>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="pg-admin" class="pg">
+  <div style="background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+    <b style="font-size:14px;">⚙️ Administration</b>
+    <button class="nb" onclick="G('accueil')">← Accueil</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;">
+    <div class="c" style="margin:0;text-align:center;"><div id="a1" style="font-size:22px;font-weight:900;color:var(--v);">—</div><div style="font-size:10px;color:#557;">Adhérents</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a2" style="font-size:22px;font-weight:900;color:var(--j);">—</div><div style="font-size:10px;color:#557;">Disponibles</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a3" style="font-size:22px;font-weight:900;color:var(--r);">—</div><div style="font-size:10px;color:#557;">Permutations</div></div>
+    <div class="c" style="margin:0;text-align:center;"><div id="a4" style="font-size:22px;font-weight:900;color:#1a237e;">—</div><div style="font-size:10px;color:#557;">Essais en cours</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="at0" onclick="atab('nw')">🔔 Récents</button>
+    <button class="tab" id="at1" onclick="atab('adh')">Membres</button>
+    <button class="tab" id="at2" onclick="atab('pm')">Permut.</button>
+    <button class="tab" id="at3" onclick="atab('py')">💳 Paiem.</button>
+  </div>
+  <div id="atc-nw" style="margin-top:4px;"></div>
+  <div id="atc-adh" style="display:none;margin-top:4px;"></div>
+  <div id="atc-pm" style="display:none;margin-top:4px;"></div>
+  <div id="atc-py" style="display:none;margin-top:4px;"></div>
+</div>
+
+<!-- MODAL LOGIN CIRCUIT -->
+<div class="modal" id="mlog">
+  <div class="mbox">
+    <div id="ml-t" style="font-weight:900;font-size:16px;margin-bottom:4px;text-align:center;"></div>
+    <div id="ml-s" style="font-size:12px;color:#557;text-align:center;margin-bottom:14px;"></div>
+    <label>Mot de passe *</label>
+    <input type="password" id="ml-p" placeholder="••••••••" onkeydown="if(event.key==='Enter')vLog()"/>
+    <div id="ml-hint" style="font-size:11px;color:#0A6E3F;margin-top:5px;padding:6px 10px;background:#f0fdf4;border-radius:6px;border:1px solid #bbf7d0;"></div>
+    <div class="err" id="ml-e" style="margin-top:4px;"></div>
+    <button class="btn bv" onclick="vLog()" style="margin-top:12px;">🔓 Accéder</button>
+    <button class="btn bo" onclick="fLog()" style="margin-top:4px;">Annuler</button>
+  </div>
+</div>
+
+<script>
+// ══ DONNÉES ══
+const DP = {
+  "Alibori":["Banikoara","Gogounou","Kandi","Karimama","Malanville","Ségbana"],
+  "Atacora":["Boukoumbé","Cobly","Kérou","Kouandé","Matéri","Natitingou","Pehunco","Tanguiéta","Toucountouna"],
+  "Atlantique":["Abomey-Calavi","Allada","Kpomassè","Ouidah","Sô-Ava","Toffo","Tori-Bossito","Zè"],
+  "Borgou":["Bembèrèkè","Kalalé","N'Dali","Nikki","Parakou","Pèrèrè","Sinendé","Tchaourou"],
+  "Collines":["Bantè","Dassa-Zoumè","Glazoué","Ouèssè","Savalou","Savè"],
+  "Couffo":["Aplahoué","Djakotomey","Dogbo","Klouékanmè","Lalo","Toviklin"],
+  "Donga":["Bassila","Copargo","Djougou","Ouaké"],
+  "Littoral":["Cotonou"],
+  "Mono":["Athiémé","Bopa","Comè","Grand-Popo","Houéyogbé","Lokossa"],
+  "Ouémé":["Adjarra","Adjohoun","Aguégués","Akpro-Missérété","Avrankou","Bonou","Dangbo","Porto-Novo","Sèmè-Podji"],
+  "Plateau":["Adja-Ouèrè","Ifangni","Kétou","Pobè","Sakété"],
+  "Zou":["Abomey","Agbangnizoun","Bohicon","Covè","Djidja","Ouinhi","Za-Kpota","Zagnanado","Zogbodomey"]
+};
+
+const PW_CIRCUIT = {min:'MinEdu', ddt:'DDET', ccs:'CCS'};
+const ADMIN_NUM = '0145894080'; // secret
+const MTN_NUM = '0167899473';
+const MOOV_NUM = '0145894080';
+const DUREE_ESSAI_MS = 24 * 60 * 60 * 1000; // 24h
+
+const DM = [
+  {fid:'D1',nom:'Kofi Agossou',email:'kofi.agossou@benin.edu',tel:'97000001',prenom:'Kofi',nomf:'Agossou',dept:'Littoral',comm:'Cotonou',ordre:'Primaire',fonction:'Directeur',statut:'FE',ecole:'EPP Akpakpa',motif:'Rapprochement familial',souhaits:[{dept:'Atlantique',commune:'Abomey-Calavi'}],vacant:true,abonne:true,trial:false,paiement:{statut:'confirmé',ref:'TXN001'},matches:[]},
+  {fid:'D2',nom:'Amina Seidou',email:'amina.seidou@benin.edu',tel:'97000002',prenom:'Amina',nomf:'Seidou',dept:'Atlantique',comm:'Abomey-Calavi',ordre:'Primaire',fonction:'Directeur Adjoint',statut:'ACDP',ecole:'EPP Abomey-Calavi',motif:'Convenances personnelles',souhaits:[{dept:'Littoral',commune:'Cotonou'}],vacant:true,abonne:true,trial:false,paiement:{statut:'confirmé',ref:'TXN002'},matches:[]},
+];
+
+let tous = DM.map(d=>({...d}));
+let util = null;
+let role = null;
+let payPlan = {nom:'Annuel', prix:1000};
+let fdVacant = null;
+
+const $ = id => document.getElementById(id);
+const set = (id,v) => { const e=$(id); if(e) e.textContent=v; };
+
+function ntf(m,t) {
+  const e=$('ntf'); e.textContent=m;
+  e.style.background = t==='e'?'#c0392b':t==='w'?'#d97706':'#1a6b3a';
+  e.style.display='block';
+  setTimeout(()=>e.style.display='none',3000);
+}
+
+// ══ ALTERNANCE CARTES JAUNES ══
+var showTarifs = true;
+function alternerCartes() {
+  showTarifs = !showTarifs;
+  const vt=$('view-tarifs'), ve=$('view-essai');
+  if(vt && ve) {
+    vt.style.display = showTarifs ? 'block' : 'none';
+    ve.style.display = showTarifs ? 'none' : 'block';
+  }
+}
+setInterval(alternerCartes, 4000);
+
+// ══ ESSAI GRATUIT ══
+function getTrialInfo() {
+  const start = localStorage.getItem('edu_trial_start');
+  if(!start) return null;
+  const elapsed = Date.now() - parseInt(start);
+  const remaining = DUREE_ESSAI_MS - elapsed;
+  return {active: remaining > 0, remaining: remaining, elapsed: elapsed};
+}
+
+function demarrerEssai() {
+  if(getTrialInfo()?.active) {
+    ntf('⏱️ Essai déjà en cours !','w');
+    G('inscription');
+    return;
+  }
+  localStorage.setItem('edu_trial_start', Date.now().toString());
+  localStorage.setItem('edu_trial_mode', '1');
+  ntf('🆓 Essai gratuit démarré ! 24h d\'accès complet.');
+  G('inscription');
+}
+
+function heuresRestantes(ms) {
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  return h + 'h ' + m + 'min restantes';
+}
+
+function majTrialBand() {
+  const info = getTrialInfo();
+  const band = $('trial-band');
+  const espBand = $('espace-trial-band');
+  if(info?.active) {
+    const txt = heuresRestantes(info.remaining);
+    if(band) { band.style.display='flex'; $('trial-time').textContent=txt; }
+    if(espBand) { espBand.style.display='flex'; $('espace-trial-time').textContent=txt; }
+  } else if(info && !info.active) {
+    if(band) band.style.display='none';
+    if(espBand) espBand.style.display='none';
+  }
+}
+setInterval(majTrialBand, 60000);
+
+// ══ NAVIGATION ══
+function G(p) {
+  document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));
+  const el=$('pg-'+p); if(el){el.classList.add('on');window.scrollTo(0,0);}
+  if(p==='admin') majAdmin();
+  if(p==='communes') affCommunes();
+  majTrialBand();
+}
+function goAdmin(){majAdmin();G('admin');}
+
+// ══ MATCHING ══
+function voilerNom(n) {
+  if(!n) return '•••';
+  return n.split(' ').map(w=>w[0]+'•••').join(' ');
+}
+function voilerTel(t) {
+  if(!t||t.length<4) return '••••••••';
+  return t.slice(0,2)+'••••'+t.slice(-2);
+}
+function voilerEmail(e) {
+  if(!e||!e.includes('@')) return '•••@•••';
+  const p=e.split('@');
+  return p[0].slice(0,2)+'•••@'+p[1].slice(0,2)+'•••';
+}
+
+function estVisible(demandeur, cible) {
+  // Admin voit tout
+  if(demandeur && demandeur.email===ADMIN_NUM) return true;
+  // Abonné voit les abonnés
+  if(demandeur?.abonne && cible.abonne) return true;
+  // Essai → voit pendant 24h
+  const info = getTrialInfo();
+  if(info?.active) return true;
+  return false;
+}
+
+function calcM() {
+  const dispo = tous.filter(r=>r.vacant && (r.abonne||r.trial));
+  tous = tous.map(req=>{
+    const m=[];
+    dispo.forEach(a=>{
+      if(a.email===req.email) return;
+      const jV=(req.souhaits||[]).some(s=>s.commune===a.comm||s.dept===a.dept);
+      if(!jV) return;
+      const lV=(a.souhaits||[]).some(s=>s.commune===req.comm||s.dept===req.dept);
+      const sc=(lV?50:0)+(a.vacant?30:0)+(a.fonction===req.fonction?20:0);
+      m.push({fid:a.fid,nom:a.nom,email:a.email,tel:a.tel,comm:a.comm,dept:a.dept,ecole:a.ecole,fonction:a.fonction,mutuel:lV&&a.vacant,reco:lV&&a.vacant&&a.fonction===req.fonction,score:sc});
+    });
+    return {...req, matches:m.sort((a,b)=>b.score-a.score)};
+  });
+}
+
+function majS() {
+  set('s1', tous.filter(r=>r.abonne||r.trial).length);
+  set('s3', tous.filter(r=>(r.matches||[]).length>0).length);
+  set('a1', tous.filter(r=>r.abonne||r.trial).length);
+  set('a2', tous.filter(r=>r.vacant).length);
+  set('a3', tous.filter(r=>(r.matches||[]).some(m=>m.mutuel)).length);
+  set('a4', tous.filter(r=>r.trial&&!r.abonne).length);
+}
+
+// ══ STATS COMMUNES ══
+function affCommunes() {
+  calcM(); majS();
+  set('csg-total', tous.filter(r=>r.abonne||r.trial).length);
+  set('csg-dispo', tous.filter(r=>r.vacant).length);
+  set('csg-mut', tous.filter(r=>(r.matches||[]).some(m=>m.mutuel)).length);
+
+  // Grouper par commune
+  const par = {};
+  Object.keys(DP).forEach(dept=>{
+    DP[dept].forEach(comm=>{
+      const membres = tous.filter(r=>(r.abonne||r.trial) && r.comm===comm);
+      const dispos = membres.filter(r=>r.vacant).length;
+      const mutuels = membres.filter(r=>(r.matches||[]).some(m=>m.mutuel)).length;
+      if(membres.length>0) {
+        par[comm]={dept:dept, total:membres.length, dispos:dispos, mutuels:mutuels};
+      }
+    });
+  });
+
+  const list = $('comm-list');
+  if(!Object.keys(par).length) {
+    list.innerHTML='<div style="text-align:center;padding:30px;color:#557;font-size:13px;">Aucune donnée disponible</div>';
+    return;
+  }
+  list.innerHTML = Object.entries(par)
+    .sort((a,b)=>b[1].total-a[1].total)
+    .map(([comm,d])=>`
+      <div class="comm-item">
+        <div class="comm-dept">${d.dept}</div>
+        <div class="comm-name">${comm}</div>
+        <div class="comm-badges">
+          <span class="cb tot">${d.total}</span>
+          ${d.dispos>0?`<span class="cb dsp">${d.dispos}</span>`:''}
+          ${d.mutuels>0?`<span class="cb mut">${d.mutuels}</span>`:''}
+        </div>
+      </div>`).join('');
+}
+
+// ══ CONNEXION ══
+function seConn() {
+  const em=$('l-em').value.trim().toLowerCase();
+  const er=$('l-er');
+  if(!em){er.textContent='Champ requis';return;}
+
+  // ADMIN SECRET
+  if(em===ADMIN_NUM||em==='admin'){
+    util={fid:'ADMIN',nom:'Janvier TOGBENON',email:ADMIN_NUM,prenom:'Janvier',nomf:'TOGBENON',dept:'Littoral',comm:'Cotonou',ordre:'Primaire',fonction:'Directeur',statut:'FE',ecole:'Eduking 229',souhaits:[{dept:'Atlantique',commune:'Abomey-Calavi'}],vacant:true,abonne:true,trial:false,paiement:{statut:'confirmé',ref:'ADMIN'},matches:[]};
+    if(!tous.find(r=>r.email===ADMIN_NUM)) tous.push(util);
+    calcM(); util=tous.find(r=>r.email===ADMIN_NUM);
+    er.textContent=''; affE(); G('espace');
+    ntf('✅ Accès Admin activé'); return;
+  }
+
+  const r=tous.find(x=>x.email===em);
+  if(!r){er.textContent='Compte introuvable — inscrivez-vous.';return;}
+
+  // Vérifier essai expiré
+  if(r.trial && !r.abonne) {
+    const start = localStorage.getItem('edu_trial_start_'+r.fid);
+    if(start && (Date.now()-parseInt(start)) > DUREE_ESSAI_MS) {
+      er.textContent='⏱️ Votre essai de 24h a expiré. Abonnez-vous pour continuer.';
+      G('paiement'); return;
+    }
+  }
+
+  er.textContent=''; util=r; affE(); G('espace');
+}
+function deco(){util=null;G('accueil');}
+
+// ══ PAIEMENT ══
+function chPlan(p, prix) {
+  payPlan={nom:p==='mensuel'?'Mensuel':'Annuel',prix:prix};
+  $('pp-m').style.background=p==='mensuel'?'rgba(245,162,35,.2)':'rgba(245,162,35,.08)';
+  $('pp-a').style.background=p==='annuel'?'rgba(245,162,35,.2)':'rgba(245,162,35,.08)';
+  $('moov-code').textContent='*855*1*'+MOOV_NUM+'*'+prix+'#';
+  $('mtn-code').textContent='*880*1*'+MTN_NUM+'*'+prix+'#';
+  ntf('Plan '+payPlan.nom+' — '+prix+' FCFA');
+}
+function payMoov(){window.location.href='tel:*855*1*'+MOOV_NUM+'*'+payPlan.prix+'%23';setTimeout(()=>ntf('📱 Validez puis remplissez le formulaire'),1500);}
+function payMTN(){window.location.href='tel:*880*1*'+MTN_NUM+'*'+payPlan.prix+'%23';setTimeout(()=>ntf('📱 Validez puis remplissez le formulaire'),1500);}
+
+function confPaiement() {
+  const tel=($('pay-tel').value||'').trim();
+  const ref=($('pay-ref').value||'').trim().toUpperCase();
+  if(!tel){$('pay-er1').textContent='Numéro requis';return;}$('pay-er1').textContent='';
+  if(!ref||ref.length<4){$('pay-er2').textContent='Référence trop courte';return;}$('pay-er2').textContent='';
+  sessionStorage.setItem('pay_ref',ref);
+  sessionStorage.setItem('pay_tel',tel);
+  sessionStorage.setItem('pay_plan',payPlan.nom);
+  sessionStorage.setItem('mode','paye');
+  $('insc-titre').textContent='📝 Inscription — '+payPlan.nom;
+  initDepts();
+  G('inscription');
+  ntf('✅ Paiement enregistré ! Complétez votre profil.');
+}
+
+// ══ INSCRIPTION ══
+function initDepts() {
+  ['f-dept','f-deptv'].forEach(id=>{
+    const s=$(id); if(!s) return;
+    const hasAll=s.innerHTML.includes('-- Tous');
+    s.innerHTML=(hasAll?'<option value="">-- Tous départements --</option>':'<option value="">-- Choisir département --</option>');
+    Object.keys(DP).sort().forEach(d=>s.innerHTML+=`<option>${d}</option>`);
+  });
+}
+
+function filtCom(commId, deptId) {
+  const d=$(deptId).value, s=$(commId);
+  if(!s) return;
+  const isAll=s.innerHTML.includes('-- Toutes');
+  s.innerHTML=isAll?'<option value="">-- Toutes communes --</option>':'<option value="">-- Choisir commune --</option>';
+  if(d)(DP[d]||[]).forEach(c=>s.innerHTML+=`<option>${c}</option>`);
+}
+
+function chV(v) {
+  fdVacant=v;
+  $('cv').style.cssText=`border:2px solid ${v?'var(--v)':'var(--bd)'};border-radius:9px;padding:11px;margin-top:8px;cursor:pointer;background:${v?'#e8f5e9':'#fff'}`;
+  $('cn').style.cssText=`border:2px solid ${v?'var(--bd)':'var(--r)'};border-radius:9px;padding:11px;margin-top:6px;cursor:pointer;background:${v?'#fff':'#fdf3f4'}`;
+  $('ev').textContent='';
+}
+
+function soumettre() {
+  const prenom=($('f-prenom').value||'').trim();
+  const nom=($('f-nom').value||'').trim();
+  const email=($('f-email').value||'').trim().toLowerCase();
+  const tel=($('f-tel').value||'').trim();
+  const dept=($('f-dept').value||'').trim();
+  const comm=($('f-comm').value||'').trim();
+  const ordre=($('f-ordre').value||'').trim();
+  const fonction=($('f-fonction').value||'').trim();
+  const statut=($('f-statut').value||'').trim();
+  const ecole=($('f-ecole').value||'').trim();
+  const motif=($('f-motif').value||'').trim();
+  const deptv=($('f-deptv').value||'').trim();
+  const commv=($('f-commv').value||'').trim();
+
+  if(!prenom||!nom||!email||!tel||!dept||!comm||!ordre||!fonction||!statut||!ecole||!motif){
+    ntf('⚠️ Remplissez tous les champs obligatoires','w');return;
+  }
+  if(fdVacant===null){$('ev').textContent='Répondez à la question sur votre poste.';return;}
+
+  const mode = sessionStorage.getItem('mode')||'essai';
+  const isTrial = mode==='essai';
+  const isAdmin = email===ADMIN_NUM;
+
+  const doc = {
+    fid:'U'+Date.now(), nom:prenom+' '+nom, prenom:prenom, nomf:nom,
+    email:email, tel:tel, dept:dept, comm:comm, ordre:ordre,
+    fonction:fonction, statut:statut, ecole:ecole, motif:motif,
+    souhaits:commv?[{dept:deptv,commune:commv,label:commv+(deptv?' ('+deptv+')':'')}]:[],
+    vacant:fdVacant, abonne:!isTrial||isAdmin,
+    trial:isTrial&&!isAdmin,
+    paiement:isTrial?null:{statut:'confirmé',ref:sessionStorage.getItem('pay_ref')||'—',plan:sessionStorage.getItem('pay_plan')||'—'},
+    matches:[]
+  };
+
+  if(isTrial&&!isAdmin) {
+    localStorage.setItem('edu_trial_start_'+doc.fid, Date.now().toString());
+  }
+
+  tous.push(doc); calcM(); majS();
+  util=tous.find(r=>r.email===email);
+
+  ntf(isTrial?'🆓 Essai gratuit activé ! 24h d\'accès.':'✅ Inscription confirmée ! Bienvenue.');
+  affE(); G('espace');
+  sessionStorage.removeItem('mode');
+}
+
+// ══ ESSAI DEPUIS ACCUEIL ══
+function demarrerEssai() {
+  sessionStorage.setItem('mode','essai');
+  $('insc-titre').textContent='📝 Inscription — Essai Gratuit 24h';
+  initDepts();
+  G('inscription');
+}
+
+// ══ ESPACE MEMBRE ══
+function affE() {
+  const u=util;
+  const m=u.matches||[];
+  set('e-n',u.nom);
+  set('e-i',(u.ordre||'')+' · '+(u.fonction||'')+' · '+u.comm+' ('+u.dept+')');
+  set('e-m',m.length);
+  set('e-r',m.filter(x=>x.reco).length);
+  set('e-mu',m.filter(x=>x.mutuel).length);
+
+  let ban='';
+  if(u.vacant){
+    ban=`<div style="margin:8px 10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:10px;padding:11px;"><b style="font-size:13px;">✅ Poste déclaré disponible</b><div style="font-size:11px;opacity:.85;margin:3px 0 6px;">Visible par les adhérents.</div><button onclick="togV(false)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial;">Retirer</button></div>`;
+  } else {
+    ban=`<div style="margin:8px 10px;background:linear-gradient(135deg,#b7410e,var(--r));color:#fff;border-radius:10px;padding:11px;"><b style="font-size:13px;">⚠️ Poste non déclaré</b><div style="font-size:11px;opacity:.85;margin:3px 0 6px;">Déclarez pour les permutations mutuelles.</div><button onclick="togV(true)" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial;">Déclarer</button></div>`;
+  }
+  $('vban').innerHTML=ban;
+  majTrialBand();
+  ong('m');
+}
+
+function togV(v){
+  tous=tous.map(r=>r.email===util.email?{...r,vacant:v}:r);
+  calcM(); util=tous.find(r=>r.email===util.email); affE();
+  ntf(v?'✅ Poste déclaré disponible':'🔴 Disponibilité retirée');
+}
+
+function ong(t){
+  ['m','p','v'].forEach(x=>{
+    $('tb-'+x).classList.toggle('on',x===t);
+    $('tc-'+x).style.display=x===t?'block':'none';
+  });
+  const u=tous.find(r=>r.email===util.email)||util;
+  if(t==='m') affM(u);
+  if(t==='p') affP(u);
+  if(t==='v') affVu(u);
+}
+
+function affM(u){
+  const m=u.matches||[];
+  const trial=u.trial&&!u.abonne;
+  const info=getTrialInfo();
+  const canSee=u.abonne||u.email===ADMIN_NUM||(trial&&info?.active);
+
+  if(!m.length){
+    $('tc-m').innerHTML='<div class="c" style="text-align:center;color:#557;padding:20px;"><div style="font-size:28px;margin-bottom:8px;">🔍</div>Aucune correspondance.<br><small>Déclarez votre poste disponible.</small></div>';return;
+  }
+  $('tc-m').innerHTML=`<div style="padding:6px 12px;font-size:11px;color:#557;font-weight:700;text-transform:uppercase;">Correspondances (${m.length})</div>`+
+  m.map(x=>`
+    <div class="match-card ${x.reco?'reco':x.mutuel?'mutuel':''}">
+      ${x.reco?'<span class="badge bvg">⭐ Recommandé</span>':x.mutuel?'<span class="badge bam">🔄 Mutuel</span>':''}
+      <div style="font-weight:700;font-size:13px;margin-top:5px;">🏫 ${x.ecole}</div>
+      <div style="font-size:11px;color:#557;margin-top:3px;">📍 ${x.comm} · ${x.dept}</div>
+      <div style="font-size:11px;color:#888;">👤 ${canSee?x.nom:voilerNom(x.nom)}</div>
+      ${canSee?`<div style="font-size:11px;color:#888;">📱 ${voilerTel(x.tel)}</div>`:''}
+      ${trial&&info?.active?`<div style="font-size:10px;color:#b7410e;margin-top:4px;">⏱️ Visible pendant l'essai gratuit</div>`:''}
+      <button onclick="envMsg('${x.fid}','${x.nom}')" style="margin-top:8px;background:var(--v);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;width:100%;font-family:Arial;">💬 Contacter</button>
+    </div>`).join('');
+}
+
+function affP(u){
+  const info=getTrialInfo();
+  const isTrial=u.trial&&!u.abonne;
+  $('tc-p').innerHTML=`
+    <div class="c">
+      <div class="ct">👤 Mon profil</div>
+      <div style="font-size:13px;color:#557;line-height:2;">
+        📛 ${u.prenom||''} ${u.nomf||u.nom}<br>
+        🎓 ${u.ordre||'—'} · ${u.fonction||'—'} · ${u.statut||'—'}<br>
+        🏫 ${u.ecole}<br>
+        📍 ${u.comm} · ${u.dept}<br>
+        📋 Motif : ${u.motif||'—'}
+      </div>
+      ${isTrial?`<div style="margin-top:10px;background:#fdf3f4;border:1px solid #f5c6cb;border-radius:8px;padding:10px;font-size:12px;color:#721c24;line-height:1.7;">⏱️ <b>Compte essai gratuit</b><br>${info?.active?heuresRestantes(info.remaining):'Essai expiré — abonnez-vous'}</div>`:`<div style="margin-top:10px;font-size:12px;color:#557;">💳 ${u.paiement?.statut==='confirmé'?'✅ Abonnement actif':'—'} · ${u.paiement?.plan||'—'}</div>`}
+      <button onclick="G('paiement')" class="btn bj" style="margin-top:12px;">💳 ${isTrial?'S\'abonner maintenant':'Renouveler l\'abonnement'}</button>
+    </div>`;
+}
+
+function affVu(u){
+  const vac=tous.filter(r=>r.vacant&&r.email!==u.email&&(r.abonne||r.trial));
+  const info=getTrialInfo();
+  const canSee=u.abonne||u.email===ADMIN_NUM||(u.trial&&info?.active);
+  if(!vac.length){$('tc-v').innerHTML='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucun poste disponible.</div>';return;}
+  const par={};
+  vac.forEach(v=>{if(!par[v.comm])par[v.comm]={d:v.dept,a:[]};par[v.comm].a.push(v);});
+  $('tc-v').innerHTML=Object.entries(par).map(([c,d])=>
+    `<div class="ch">${c} <span style="font-size:10px;opacity:.8;">${d.d}</span></div>`+
+    d.a.map(v=>`<div style="background:#fff;margin:0 10px 4px;border-radius:8px;padding:10px;border:1px solid var(--bd);">
+      <b style="font-size:13px;">🏫 ${v.ecole}</b>
+      <div style="font-size:11px;color:#557;margin-top:2px;">👤 ${canSee?v.nom:voilerNom(v.nom)} · ${v.fonction||'—'}</div>
+      ${canSee?`<div style="font-size:11px;color:#778;">📱 ${voilerTel(v.tel)}</div>`:''}
+      <button onclick="envMsg('${v.fid}','${v.nom}')" style="margin-top:7px;background:var(--v);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;width:100%;font-family:Arial;">💬 Contacter</button>
+    </div>`).join('')
+  ).join('');
+}
+
+// ══ MESSAGERIE ══
+function getMsgs(){return JSON.parse(localStorage.getItem('edu_msgs')||'[]');}
+function saveMsgs(m){localStorage.setItem('edu_msgs',JSON.stringify(m));}
+
+function envMsg(destFid, destNom) {
+  const contenu=prompt('✉️ Message à '+voilerNom(destNom)+' :');
+  if(!contenu||!contenu.trim()) return;
+  const msgs=getMsgs();
+  msgs.push({id:Date.now(),de:util?util.email:'?',deNom:util?util.nom:'?',vers:destFid,versNom:destNom,contenu:contenu.trim(),date:new Date().toLocaleString('fr-FR'),lu:false});
+  saveMsgs(msgs);
+  ntf('✅ Message envoyé !');
+}
+
+// ══ ADMIN ══
+function majAdmin(){
+  calcM(); majS();
+  const rec=tous.slice().reverse();
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${rec.length} membre(s)</div>`;
+  if(!rec.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucun inscrit.</div>';
+  rec.forEach(r=>{
+    const isTrial=r.trial&&!r.abonne;
+    const info=isTrial?getTrialInfo():null;
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid ${r.abonne?'var(--v)':'#ffe082'};">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div>
+          <b style="font-size:13px;">${r.nom}</b>
+          <div style="font-size:11px;color:#557;">${r.ordre||'—'} · ${r.fonction||'—'} · ${r.statut||'—'}</div>
+          <div style="font-size:11px;color:#557;">🏫 ${r.ecole} · ${r.comm}</div>
+          <div style="font-size:11px;color:#888;">📧 ${r.email} · 📱 ${r.tel||'—'}</div>
+        </div>
+        <span class="badge ${r.abonne?'bvg':isTrial?'bam':'brd'}">${r.abonne?'✅ Abonné':isTrial?'⏱️ Essai':'❌'}</span>
+      </div>
+      ${isTrial&&info?`<div style="font-size:11px;color:#b7410e;">${info.active?heuresRestantes(info.remaining):'Essai expiré'}</div>`:''}
+    </div>`;
+  });
+  $('atc-nw').innerHTML=h;
+}
+
+function atab(t){
+  ['nw','adh','pm','py'].forEach((x,i)=>{
+    $('at'+i).classList.toggle('on',x===t);
+    $('atc-'+x).style.display=x===t?'block':'none';
+  });
+  if(t==='adh') affAdh();
+  if(t==='pm') affPm();
+  if(t==='py') affPy();
+}
+
+function affAdh(){
+  const par={};
+  tous.forEach(r=>{const k=r.comm||'?';if(!par[k])par[k]={d:r.dept,l:[]};par[k].l.push(r);});
+  let h='';
+  Object.entries(par).sort().forEach(([c,d])=>{
+    h+=`<div class="ch">${c} <span style="font-size:10px;opacity:.8;">${d.d}</span><span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 7px;border-radius:10px;">${d.l.length}</span></div>`;
+    d.l.forEach(r=>h+=`<div style="background:#fff;margin:0 10px 4px;border-radius:8px;padding:10px;border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;">
+      <div><b>${r.nom}</b><div style="font-size:11px;color:#557;">${r.fonction||'—'} · ${r.statut||'—'}</div></div>
+      <span class="badge ${r.abonne?'bvg':r.trial?'bam':'brd'}">${r.abonne?'✅':r.trial?'⏱️':'❌'}</span>
+    </div>`);
+  });
+  $('atc-adh').innerHTML=h||'<div class="c" style="text-align:center;color:#557;">Aucun adhérent.</div>';
+}
+
+function affPm(){
+  const mut=tous.filter(r=>(r.matches||[]).some(m=>m.mutuel));
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${mut.length} permutation(s)</div>`;
+  if(!mut.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucune permutation mutuelle.</div>';
+  mut.forEach(r=>{
+    const m=r.matches.find(x=>x.mutuel);
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid var(--bd);">
+      <div style="background:#f4f7f4;border-radius:7px;padding:8px;margin-bottom:4px;"><b>${r.nom}</b><div style="font-size:11px;color:#557;">🏫 ${r.ecole} · ${r.comm}</div></div>
+      <div style="text-align:center;color:#aaa;margin:3px 0;">🔄</div>
+      <div style="background:#f4f7f4;border-radius:7px;padding:8px;"><b>${m.nom}</b><div style="font-size:11px;color:#557;">📍 ${m.comm} · ${m.dept}</div></div>
+    </div>`;
+  });
+  $('atc-pm').innerHTML=h;
+}
+
+function affPy(){
+  const pays=tous.filter(r=>r.paiement);
+  let h=`<div style="padding:6px 12px 4px;font-size:11px;font-weight:700;color:#557;text-transform:uppercase;">${pays.length} paiement(s)</div>`;
+  if(!pays.length) h+='<div class="c" style="text-align:center;color:#557;padding:20px;">Aucun paiement.</div>';
+  pays.forEach(r=>{
+    const p=r.paiement,cf=p.statut==='confirmé';
+    h+=`<div style="background:#fff;margin:0 10px 8px;border-radius:10px;padding:12px;border:1.5px solid ${cf?'var(--v)':'#ffe082'};">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><b>${r.nom}</b><span class="badge ${cf?'bvg':'bam'}">${cf?'✅':'⏳'}</span></div>
+      <div style="font-size:12px;color:#557;">🔖 ${p.ref||'—'} ${p.plan?'· '+p.plan:''}</div>
+    </div>`;
+  });
+  $('atc-py').innerHTML=h;
+}
+
+// ══ CIRCUIT ══
+const RL={min:{t:'🏛️ Ministère',s:'Validation officielle',h:'MinEdu'},ddt:{t:'📋 DDET',s:'Direction Dép. Enseignement',h:'DDET'},ccs:{t:'🏫 CCS',s:'Chef Circonscription',h:'CCS'}};
+
+function oLog(r){
+  role=r;const i=RL[r];
+  set('ml-t',i.t);set('ml-s',i.s);
+  $('ml-p').value='';$('ml-e').textContent='';
+  $('ml-hint').textContent='🔑 Mot de passe : '+i.h;
+  $('mlog').style.display='flex';
+  setTimeout(()=>$('ml-p').focus(),200);
+}
+function fLog(){$('mlog').style.display='none';role=null;}
+function vLog(){
+  const s=$('ml-p').value;
+  if(s!==PW_CIRCUIT[role]){$('ml-e').textContent='Mot de passe incorrect.';$('ml-p').value='';return;}
+  fLog(); ntf('✅ Accès '+RL[role].t);
+}
+$('mlog').addEventListener('click',function(e){if(e.target===this)fLog();});
+
+// ══ INIT ══
+initDepts();
+calcM(); majS(); majTrialBand();
+</script>
+</body>
+</html>
