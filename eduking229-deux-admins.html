@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eduking 229 — Admin Paiements / Admin Contenu</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vert:#0A6E3F; --vert2:#13a55a; --vert3:#dcfce7;
+  --jaune:#F5C518; --jaune2:#fde68a;
+  --rouge:#C8202A; --rouge2:#fee2e2;
+  --bleu:#1A5FA8; --bleu2:#dbeafe;
+  --orange:#C96A1F; --orange2:#ffedd5;
+  --violet:#7c3aed;
+  --nuit:#0D1B2A; --nuit2:#162639; --nuit3:#1E3349;
+  --gris:#7A8899; --gris2:#F0F4F8;
+  --sh:0 6px 28px rgba(13,27,42,.18);
+  --sh2:0 20px 60px rgba(13,27,42,.35);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--nuit);color:#c8d8e8;overflow-x:hidden;}
+button,input,select,textarea{font-family:'Outfit',sans-serif;}
+button{cursor:pointer;}
+
+/* ═══════════════════════════════
+   LOGIN
+═══════════════════════════════ */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(200,32,42,.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 70%,rgba(26,95,168,.08) 0%,transparent 55%),
+    var(--nuit);
+}
+.login-box{
+  width:100%;max-width:520px;
+  background:var(--nuit2);border:1px solid rgba(255,255,255,.07);
+  border-radius:28px;padding:44px 40px;
+  box-shadow:var(--sh2);
+}
+.login-brand{
+  display:flex;align-items:center;gap:14px;
+  justify-content:center;margin-bottom:32px;
+}
+.lb-icon{
+  width:54px;height:54px;border-radius:16px;
+  background:linear-gradient(135deg,var(--jaune),var(--orange));
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;box-shadow:0 6px 20px rgba(245,197,24,.28);
+}
+.lb-text strong{display:block;font-family:'Fraunces',serif;color:white;font-size:22px;font-weight:900;}
+.lb-text span{color:var(--jaune);font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:2.5px;}
+
+.login-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;color:white;text-align:center;margin-bottom:5px;}
+.login-sub{color:rgba(255,255,255,.35);font-size:13px;text-align:center;margin-bottom:28px;}
+
+/* PROFIL SELECTOR */
+.profils{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.profil-btn{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;border-radius:16px;
+  border:2px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.03);
+  color:rgba(255,255,255,.6);transition:all .22s;text-align:left;
+  position:relative;overflow:hidden;
+}
+.profil-btn::before{
+  content:'';position:absolute;inset:0;opacity:0;transition:opacity .22s;
+}
+.profil-btn.paiements::before{background:linear-gradient(135deg,rgba(200,32,42,.08),rgba(245,197,24,.04));}
+.profil-btn.contenu::before{background:linear-gradient(135deg,rgba(26,95,168,.1),rgba(124,58,237,.05));}
+.profil-btn:hover{border-color:rgba(255,255,255,.18);color:white;}
+.profil-btn:hover::before,.profil-btn.selected::before{opacity:1;}
+.profil-btn.selected.paiements{border-color:var(--rouge);color:white;}
+.profil-btn.selected.contenu{border-color:var(--bleu);color:white;}
+.pb-icon{
+  width:46px;height:46px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;position:relative;z-index:1;
+}
+.pb-icon.pai{background:rgba(200,32,42,.15);}
+.pb-icon.con{background:rgba(26,95,168,.15);}
+.pb-text{flex:1;position:relative;z-index:1;}
+.pb-name{font-size:15px;font-weight:700;margin-bottom:3px;}
+.pb-desc{font-size:11.5px;color:rgba(255,255,255,.4);line-height:1.5;}
+.pb-check{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;opacity:0;transition:opacity .2s;
+  position:relative;z-index:1;flex-shrink:0;
+}
+.pb-check.pai{background:var(--rouge);color:white;}
+.pb-check.con{background:var(--bleu);color:white;}
+.profil-btn.selected .pb-check{opacity:1;}
+.pb-scope{
+  position:absolute;bottom:8px;right:12px;
+  font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;
+  padding:2px 7px;border-radius:8px;z-index:1;
+}
+.pb-scope.pai{background:rgba(200,32,42,.15);color:#f87171;}
+.pb-scope.con{background:rgba(26,95,168,.15);color:#60a5fa;}
+
+.login-fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.login-fg label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.3px;font-family:'JetBrains Mono',monospace;}
+.login-fg input{
+  padding:13px 16px;border-radius:12px;
+  border:1.5px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.04);color:white;font-size:14px;outline:none;
+  transition:all .2s;
+}
+.login-fg input:focus{border-color:var(--jaune);background:rgba(255,255,255,.06);}
+.login-fg input::placeholder{color:rgba(255,255,255,.22);}
+
+.login-cta{
+  width:100%;padding:15px;border-radius:14px;border:none;
+  font-size:15px;font-weight:800;letter-spacing:.3px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:all .25s;margin-top:6px;
+}
+.login-cta.pai{background:linear-gradient(135deg,var(--rouge),#e84d56);color:white;}
+.login-cta.pai:hover{box-shadow:0 8px 28px rgba(200,32,42,.45);transform:translateY(-1px);}
+.login-cta.con{background:linear-gradient(135deg,var(--bleu),#3a8fd4);color:white;}
+.login-cta.con:hover{box-shadow:0 8px 28px rgba(26,95,168,.45);transform:translateY(-1px);}
+
+.login-hint{
+  margin-top:18px;padding:12px 16px;border-radius:12px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  font-size:12px;color:rgba(255,255,255,.35);text-align:center;
+  font-family:'JetBrains Mono',monospace;
+}
+.login-hint em{color:var(--jaune);font-style:normal;}
+
+/* ═══════════════════════════════
+   APP
+═══════════════════════════════ */
+.app{display:none;min-height:100vh;flex-direction:column;}
+.app.on{display:flex;}
+
+/* TOPBAR */
+.topbar{
+  height:54px;background:var(--nuit);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;padding:0 22px;gap:16px;
+  position:sticky;top:0;z-index:400;flex-shrink:0;
+}
+.tb-logo{display:flex;align-items:center;gap:10px;}
+.tb-logo-icon{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.tb-logo-icon.pai{background:linear-gradient(135deg,var(--rouge),#e84d56);}
+.tb-logo-icon.con{background:linear-gradient(135deg,var(--bleu),#3a8fd4);}
+.tb-logo strong{font-family:'Fraunces',serif;color:white;font-size:16px;font-weight:900;}
+.tb-logo small{color:var(--gris);font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;}
+
+.tb-role{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:20px;
+  font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;
+}
+.tb-role.pai{background:rgba(200,32,42,.12);color:#f87171;border:1px solid rgba(200,32,42,.2);}
+.tb-role.con{background:rgba(26,95,168,.12);color:#60a5fa;border:1px solid rgba(26,95,168,.2);}
+.tb-role .rdot{width:6px;height:6px;border-radius:50%;}
+.tb-role.pai .rdot{background:#f87171;box-shadow:0 0 0 2px rgba(248,113,113,.2);}
+.tb-role.con .rdot{background:#60a5fa;box-shadow:0 0 0 2px rgba(96,165,250,.2);}
+
+.tb-space{flex:1;}
+
+.tb-notif{
+  position:relative;width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  transition:all .2s;
+}
+.tb-notif:hover{background:rgba(255,255,255,.1);}
+.nb{
+  position:absolute;top:-5px;right:-5px;
+  width:18px;height:18px;border-radius:50%;border:2px solid var(--nuit);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;font-family:'JetBrains Mono',monospace;
+}
+.nb.pai{background:var(--rouge);color:white;}
+.nb.con{background:var(--bleu);color:white;}
+
+.tb-user{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 14px;border-radius:12px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+}
+.tu-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.tu-name{color:white;font-size:13px;font-weight:700;}
+.tu-role-small{font-size:10px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace;}
+
+.tb-out{
+  padding:7px 14px;border-radius:9px;
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.07);font-size:12px;font-weight:700;
+  transition:all .2s;
+}
+.tb-out:hover{background:rgba(200,32,42,.15);color:#f87171;border-color:rgba(200,32,42,.2);}
+
+/* BODY */
+.app-body{display:flex;flex:1;}
+
+/* SIDEBAR */
+.sidebar{
+  width:250px;background:rgba(13,27,42,.95);
+  border-right:1px solid rgba(255,255,255,.05);
+  position:sticky;top:54px;height:calc(100vh - 54px);
+  overflow-y:auto;flex-shrink:0;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent;
+}
+.sb-grp{padding:13px 16px 4px;font-size:9px;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:2.5px;font-family:'JetBrains Mono',monospace;}
+.sb-link{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  color:rgba(255,255,255,.48);font-size:13.5px;font-weight:500;
+  border-left:2.5px solid transparent;transition:all .18s;cursor:pointer;
+}
+.sb-link:hover{color:rgba(255,255,255,.88);background:rgba(255,255,255,.04);}
+.sb-link.on.pai{color:#f87171;border-left-color:var(--rouge);background:rgba(200,32,42,.06);}
+.sb-link.on.con{color:#60a5fa;border-left-color:var(--bleu);background:rgba(26,95,168,.06);}
+.sb-link .si{font-size:17px;width:20px;text-align:center;flex-shrink:0;}
+.sb-badge{margin-left:auto;font-size:9.5px;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:10px;}
+.sb-badge.g{background:rgba(21,165,88,.2);color:#4ade80;}
+.sb-badge.r{background:rgba(200,32,42,.2);color:#f87171;animation:pulse 2s infinite;}
+.sb-badge.b{background:rgba(26,95,168,.2);color:#60a5fa;}
+.sb-badge.y{background:rgba(245,197,24,.15);color:var(--jaune);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.sb-lock{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  color:rgba(255,255,255,.2);font-size:13px;font-weight:500;
+  cursor:not-allowed;position:relative;
+}
+.sb-lock .si{font-size:17px;width:20px;text-align:center;}
+.sb-lock::after{content:'🔒';font-size:13px;margin-left:auto;opacity:.5;}
+
+.sb-divider{height:1px;background:rgba(255,255,255,.05);margin:8px 0;}
+
+.sb-footer{padding:16px;border-top:1px solid rgba(255,255,255,.05);}
+.sb-who{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.04);border-radius:12px;padding:12px;
+}
+.sw-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sw-name{color:white;font-size:13px;font-weight:700;}
+.sw-role{font-size:10.5px;color:rgba(255,255,255,.35);margin-top:2px;}
+.sw-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;margin-left:auto;flex-shrink:0;box-shadow:0 0 0 2px rgba(34,197,94,.2);}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:24px 28px 70px;}
+
+/* PANEL */
+.panel{display:none;}
+.panel.on{display:block;}
+
+/* PAGE HEADER */
+.pg-hdr{margin-bottom:22px;}
+.pg-hdr h2{font-family:'Fraunces',serif;font-size:23px;font-weight:900;color:white;margin-bottom:4px;}
+.pg-hdr h2 em{font-style:italic;}
+.pg-hdr p{color:rgba(255,255,255,.38);font-size:13px;}
+
+/* SCOPE BANNER */
+.scope-banner{
+  border-radius:14px;padding:15px 18px;margin-bottom:22px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.scope-banner.pai{background:rgba(200,32,42,.08);border:1.5px solid rgba(200,32,42,.2);}
+.scope-banner.con{background:rgba(26,95,168,.08);border:1.5px solid rgba(26,95,168,.2);}
+.sb-icon{font-size:26px;flex-shrink:0;margin-top:2px;}
+.sb-info{flex:1;}
+.sb-info strong{display:block;font-size:14px;font-weight:700;color:white;margin-bottom:4px;}
+.sb-info p{font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;}
+.sb-perms{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+.sp-tag{padding:4px 10px;border-radius:8px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.sp-tag.ok.pai{background:rgba(200,32,42,.15);color:#f87171;border:1px solid rgba(200,32,42,.2);}
+.sp-tag.ok.con{background:rgba(26,95,168,.15);color:#60a5fa;border:1px solid rgba(26,95,168,.2);}
+.sp-tag.no{background:rgba(255,255,255,.05);color:rgba(255,255,255,.25);text-decoration:line-through;}
+
+/* STATS */
+.stats-row{display:grid;gap:14px;margin-bottom:22px;}
+.stats-row.n4{grid-template-columns:repeat(4,1fr);}
+.stats-row.n3{grid-template-columns:repeat(3,1fr);}
+.stats-row.n2{grid-template-columns:repeat(2,1fr);}
+.stc{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:18px 20px;transition:all .2s;
+}
+.stc:hover{background:rgba(255,255,255,.06);}
+.stc-ico{font-size:26px;margin-bottom:10px;}
+.stc-val{font-family:'JetBrains Mono',monospace;font-size:25px;font-weight:700;color:white;margin-bottom:3px;}
+.stc-lab{font-size:12px;color:rgba(255,255,255,.38);}
+.stc-delta{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
+.stc-delta.up{background:rgba(21,165,88,.18);color:#4ade80;}
+.stc-delta.dn{background:rgba(200,32,42,.18);color:#f87171;}
+.stc-delta.nn{background:rgba(255,255,255,.06);color:rgba(255,255,255,.38);}
+
+/* CARD BLOCK */
+.cb{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;margin-bottom:18px;overflow:hidden;
+}
+.cb-hdr{
+  padding:15px 20px;border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cb-hdr-title{color:white;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.cb-hdr-right{display:flex;gap:8px;}
+.cbtn{padding:7px 14px;border-radius:9px;font-size:12px;font-weight:700;border:none;font-family:'Outfit',sans-serif;transition:all .2s;}
+.cbtn.pri-pai{background:var(--rouge);color:white;}
+.cbtn.pri-pai:hover{background:#a01820;}
+.cbtn.pri-con{background:var(--bleu);color:white;}
+.cbtn.pri-con:hover{background:#154d8a;}
+.cbtn.ghost{background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.09);}
+.cbtn.ghost:hover{background:rgba(255,255,255,.12);}
+.cbtn.danger{background:rgba(200,32,42,.14);color:#f87171;border:1px solid rgba(200,32,42,.18);}
+.cbtn.danger:hover{background:rgba(200,32,42,.25);}
+
+/* PAIEMENT ITEM */
+.pay-item{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.04);
+  transition:background .15s;position:relative;
+}
+.pay-item:last-child{border-bottom:none;}
+.pay-item:hover{background:rgba(255,255,255,.03);}
+.pay-item.urgent::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rouge);}
+.pay-item.done::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vert2);}
+.pay-ico{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+.pay-ico.mtn{background:rgba(245,197,24,.12);}
+.pay-ico.moov{background:rgba(26,95,168,.12);}
+.pay-ico.wave{background:rgba(124,58,237,.12);}
+.pay-ico.ok{background:rgba(21,165,88,.12);}
+.pay-body{flex:1;}
+.pay-top{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.pay-name{color:white;font-size:14px;font-weight:700;}
+.pay-amount{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;}
+.pay-amount.pending{color:var(--jaune);}
+.pay-amount.ok{color:#4ade80;}
+.pay-detail{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;margin-bottom:8px;}
+.pay-actions{display:flex;gap:6px;}
+.pa-btn{padding:6px 13px;border-radius:8px;font-size:11.5px;font-weight:700;border:none;font-family:'Outfit',sans-serif;transition:all .2s;}
+.pa-btn.confirm{background:rgba(21,165,88,.2);color:#4ade80;}
+.pa-btn.confirm:hover{background:rgba(21,165,88,.35);}
+.pa-btn.reject{background:rgba(200,32,42,.14);color:#f87171;}
+.pa-btn.reject:hover{background:rgba(200,32,42,.25);}
+.pa-btn.call{background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);}
+.pa-btn.call:hover{background:rgba(255,255,255,.14);}
+.pay-time{font-size:11px;color:rgba(255,255,255,.22);font-family:'JetBrains Mono',monospace;flex-shrink:0;padding-top:3px;}
+
+/* NOTIF ITEM */
+.ni{
+  display:flex;align-items:flex-start;gap:13px;
+  padding:15px 20px;border-bottom:1px solid rgba(255,255,255,.04);
+  transition:background .15s;cursor:pointer;position:relative;
+}
+.ni:last-child{border-bottom:none;}
+.ni:hover{background:rgba(255,255,255,.03);}
+.ni.unread.pai::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--rouge);}
+.ni.unread.con::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--bleu);}
+.ni-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.ni-ico.r{background:rgba(200,32,42,.12);}
+.ni-ico.g{background:rgba(21,165,88,.12);}
+.ni-ico.y{background:rgba(245,197,24,.1);}
+.ni-ico.b{background:rgba(26,95,168,.12);}
+.ni-ico.o{background:rgba(201,106,31,.12);}
+.ni-body{flex:1;}
+.ni-title{color:white;font-size:13.5px;font-weight:700;margin-bottom:3px;}
+.ni-sub{color:rgba(255,255,255,.38);font-size:12px;line-height:1.5;}
+.ni-time{font-size:10.5px;color:rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;flex-shrink:0;padding-top:2px;}
+.ni-acts{display:flex;gap:6px;margin-top:8px;}
+.na-btn{padding:5px 12px;border-radius:7px;font-size:11px;font-weight:700;border:none;font-family:'Outfit',sans-serif;transition:all .2s;}
+.na-btn.ok{background:rgba(21,165,88,.2);color:#4ade80;}
+.na-btn.ok:hover{background:rgba(21,165,88,.33);}
+.na-btn.view{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);}
+.na-btn.view:hover{background:rgba(255,255,255,.14);}
+
+/* MEMBRES TABLE */
+.mem-table{width:100%;border-collapse:collapse;}
+.mem-table th{padding:11px 16px;text-align:left;font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;border-bottom:1px solid rgba(255,255,255,.06);}
+.mem-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;}
+.mem-table tbody tr:hover{background:rgba(255,255,255,.03);}
+.mem-table td{padding:12px 16px;font-size:13px;color:rgba(255,255,255,.7);}
+.mi{display:flex;align-items:center;gap:9px;}
+.mi-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.mi-name{color:white;font-weight:700;font-size:13px;}
+.mi-email{font-size:11px;color:rgba(255,255,255,.28);}
+.stag{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:7px;font-size:10.5px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.stag.ok{background:rgba(21,165,88,.15);color:#4ade80;}
+.stag.no{background:rgba(200,32,42,.15);color:#f87171;}
+.stag.wait{background:rgba(245,197,24,.12);color:var(--jaune);}
+.mb-new{background:rgba(21,165,88,.18);color:#4ade80;font-size:9px;padding:1px 6px;border-radius:4px;margin-left:5px;font-family:'JetBrains Mono',monospace;animation:pulse 2s infinite;}
+.td-acts{display:flex;gap:5px;}
+.td-btn{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;border:none;font-family:'Outfit',sans-serif;transition:all .2s;}
+.td-btn.act{background:rgba(21,165,88,.15);color:#4ade80;}
+.td-btn.act:hover{background:rgba(21,165,88,.28);}
+.td-btn.blk{background:rgba(200,32,42,.14);color:#f87171;}
+.td-btn.blk:hover{background:rgba(200,32,42,.25);}
+.td-btn.see{background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);}
+.td-btn.see:hover{background:rgba(255,255,255,.13);}
+.td-btn.dis{opacity:.3;cursor:not-allowed;pointer-events:none;}
+
+/* RESSOURCES GRID */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.res-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;overflow:hidden;transition:all .22s;
+}
+.res-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);}
+.res-thumb{
+  height:80px;display:flex;align-items:center;justify-content:center;
+  font-size:38px;position:relative;
+}
+.res-thumb.m{background:linear-gradient(135deg,rgba(10,110,63,.2),rgba(21,165,88,.08));}
+.res-thumb.f{background:linear-gradient(135deg,rgba(200,32,42,.2),rgba(232,67,77,.08));}
+.res-thumb.s{background:linear-gradient(135deg,rgba(26,95,168,.2),rgba(58,143,212,.08));}
+.res-thumb.h{background:linear-gradient(135deg,rgba(201,106,31,.2),rgba(232,142,64,.08));}
+.res-thumb.v{background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(167,139,250,.08));}
+.rt-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:6px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.rt-badge.pdf{background:rgba(220,38,38,.2);color:#f87171;}
+.rt-badge.exo{background:rgba(10,110,63,.2);color:#4ade80;}
+.rt-badge.plan{background:rgba(201,106,31,.2);color:#fb923c;}
+.rt-badge.av{background:rgba(124,58,237,.2);color:#a78bfa;}
+.res-body{padding:13px 14px;}
+.res-t{font-size:13px;font-weight:700;color:white;margin-bottom:6px;line-height:1.4;}
+.res-m{font-size:11px;color:rgba(255,255,255,.32);display:flex;gap:8px;flex-wrap:wrap;}
+.res-foot{padding:10px 14px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:6px;justify-content:flex-end;}
+.r-btn{padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;border:none;font-family:'Outfit',sans-serif;transition:all .2s;}
+.r-btn.edit{background:rgba(26,95,168,.15);color:#60a5fa;}
+.r-btn.edit:hover{background:rgba(26,95,168,.28);}
+.r-btn.del{background:rgba(200,32,42,.12);color:#f87171;}
+.r-btn.del:hover{background:rgba(200,32,42,.22);}
+
+/* UPLOAD ZONE */
+.upload-zone{
+  border:2px dashed rgba(26,95,168,.3);border-radius:16px;
+  padding:32px;text-align:center;cursor:pointer;transition:all .2s;
+  background:rgba(26,95,168,.04);margin-bottom:18px;
+}
+.upload-zone:hover{border-color:var(--bleu);background:rgba(26,95,168,.08);}
+.uz-ico{font-size:44px;margin-bottom:10px;}
+.uz-t{font-size:15px;font-weight:700;color:white;margin-bottom:5px;}
+.uz-s{font-size:12px;color:rgba(255,255,255,.3);}
+
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg2 .fg{margin-bottom:0;}
+.fg label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;font-family:'JetBrains Mono',monospace;}
+.fg input,.fg select,.fg textarea{
+  padding:12px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.04);color:white;font-size:14px;outline:none;
+  transition:border-color .2s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--bleu);}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.22);}
+.fg select option{background:#1e3349;}
+.form-submit{
+  width:100%;padding:14px;border-radius:12px;border:none;
+  font-size:14px;font-weight:800;transition:all .2s;
+  font-family:'Outfit',sans-serif;margin-top:8px;
+}
+.form-submit.con{background:linear-gradient(135deg,var(--bleu),#3a8fd4);color:white;}
+.form-submit.con:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,95,168,.4);}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.04);}
+.toggle-row:last-child{border-bottom:none;}
+.tr-info strong{display:block;color:white;font-size:13.5px;margin-bottom:2px;}
+.tr-info span{font-size:12px;color:rgba(255,255,255,.35);}
+.toggle{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on.pai{background:var(--rouge);}
+.toggle.on.con{background:var(--bleu);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform .2s;}
+.toggle.on::after{transform:translateX(20px);}
+
+/* HISTOGRAMME */
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:90px;}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.bc-bar{border-radius:5px 5px 0 0;width:100%;min-height:3px;cursor:pointer;}
+.bc-bar:hover{filter:brightness(1.2);}
+.bc-bar.pai-c{background:linear-gradient(to top,var(--rouge),#e84d56);}
+.bc-bar.curr.pai-c{background:linear-gradient(to top,var(--jaune),#f5d44f);}
+.bc-label{font-size:9px;color:rgba(255,255,255,.28);font-family:'JetBrains Mono',monospace;}
+.bc-val{font-size:8px;color:rgba(255,255,255,.38);font-family:'JetBrains Mono',monospace;}
+
+/* MATRIX COMPARAISON */
+.perm-matrix{padding:18px 20px;}
+.pm-row{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.pm-row:last-child{border-bottom:none;}
+.pm-action{flex:1;font-size:13px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:8px;}
+.pm-cat{font-size:9px;color:rgba(255,255,255,.28);font-family:'JetBrains Mono',monospace;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.06);}
+.pm-cell{width:110px;text-align:center;flex-shrink:0;}
+.pm-chk{width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;}
+.pm-chk.y{background:rgba(21,165,88,.15);color:#4ade80;}
+.pm-chk.n{background:rgba(255,255,255,.05);color:rgba(255,255,255,.2);}
+.pm-col-h{width:110px;text-align:center;flex-shrink:0;}
+.pm-col-h .pch{font-size:10.5px;font-weight:700;font-family:'JetBrains Mono',monospace;padding:5px 10px;border-radius:8px;display:inline-block;}
+.pm-col-h .pch.pai{background:rgba(200,32,42,.12);color:#f87171;}
+.pm-col-h .pch.con{background:rgba(26,95,168,.12);color:#60a5fa;}
+
+/* LOG */
+.log-item{display:flex;align-items:flex-start;gap:11px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.04);}
+.log-item:last-child{border-bottom:none;}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.log-action{font-size:13px;color:rgba(255,255,255,.7);}
+.log-action strong{color:white;}
+.log-time{font-size:10.5px;color:rgba(255,255,255,.22);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+/* ACCÈS BLOQUÉ */
+.blocked{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:60px 20px;text-align:center;
+}
+.blocked-ico{font-size:52px;margin-bottom:16px;opacity:.35;}
+.blocked-t{font-size:17px;font-weight:700;color:rgba(255,255,255,.4);margin-bottom:8px;}
+.blocked-s{font-size:13px;color:rgba(255,255,255,.22);max-width:320px;line-height:1.6;}
+
+/* TOAST */
+.toasts{position:fixed;top:66px;right:18px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{
+  background:var(--nuit2);border:1px solid rgba(255,255,255,.09);border-radius:14px;
+  padding:13px 17px;display:flex;align-items:center;gap:10px;
+  font-size:13px;color:white;font-weight:600;max-width:340px;
+  transform:translateX(120%);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:auto;box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.toast.show{transform:translateX(0);opacity:1;}
+.toast.tg{border-left:3px solid #4ade80;}
+.toast.tr{border-left:3px solid #f87171;}
+.toast.ty{border-left:3px solid var(--jaune);}
+.toast.tb{border-left:3px solid #60a5fa;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:800;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{
+  background:var(--nuit2);border:1.5px solid rgba(255,255,255,.09);
+  border-radius:24px;width:540px;max-width:92vw;max-height:82vh;
+  overflow-y:auto;animation:mIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes mIn{from{opacity:0;transform:scale(.85) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hdr{
+  padding:22px;border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;background:var(--nuit2);z-index:2;border-radius:24px 24px 0 0;
+}
+.modal-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.modal-info strong{display:block;color:white;font-size:16px;font-weight:700;}
+.modal-info small{color:rgba(255,255,255,.33);font-size:12px;}
+.modal-close{margin-left:auto;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.5);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:rgba(255,255,255,.07);}
+.modal-body{padding:22px;}
+
+/* ANIMS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .45s ease forwards;}
+.d1{animation-delay:.07s;opacity:0}.d2{animation-delay:.14s;opacity:0}
+.d3{animation-delay:.21s;opacity:0}.d4{animation-delay:.28s;opacity:0}
+
+@media(max-width:900px){
+  .stats-row.n4{grid-template-columns:repeat(2,1fr);}
+  .res-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:640px){
+  .res-grid{grid-template-columns:1fr;}
+  .main{padding:16px 14px 60px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════════════════════
+     ÉCRAN CONNEXION
+═════════════════════════════════════ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="lb-icon">📚</div>
+      <div class="lb-text">
+        <strong>Eduking 229</strong>
+        <span>ADMINISTRATION</span>
+      </div>
+    </div>
+    <div class="login-title">Connexion Administration</div>
+    <p class="login-sub">Sélectionnez votre profil d'administrateur</p>
+
+    <div class="profils">
+      <button class="profil-btn paiements selected" id="pb-pai" onclick="pickRole('pai')">
+        <div class="pb-icon pai">💰</div>
+        <div class="pb-text">
+          <div class="pb-name">Admin Paiements</div>
+          <div class="pb-desc">Validation MTN MoMo · Revenus · Membres · Alertes paiements exclusives</div>
+        </div>
+        <div class="pb-check pai">✓</div>
+        <span class="pb-scope pai">PAIEMENTS</span>
+      </button>
+      <button class="profil-btn contenu" id="pb-con" onclick="pickRole('con')">
+        <div class="pb-icon con">📚</div>
+        <div class="pb-text">
+          <div class="pb-name">Admin Contenu</div>
+          <div class="pb-desc">Bibliothèque PDF · Ressources · Membres · Alertes contenu exclusives</div>
+        </div>
+        <div class="pb-check con">✓</div>
+        <span class="pb-scope con">CONTENU</span>
+      </button>
+    </div>
+
+    <div class="login-fg">
+      <label>Identifiant</label>
+      <input type="text" id="li-user" placeholder="admin@eduking229.bj" value="admin@eduking229.bj">
+    </div>
+    <div class="login-fg">
+      <label>Mot de passe</label>
+      <input type="password" id="li-pass" placeholder="••••••••" value="eduking2025">
+    </div>
+
+    <button class="login-cta pai" id="loginCta" onclick="doLogin()">
+      💰 Connexion Admin Paiements
+    </button>
+
+    <div class="login-hint">
+      Démo — ID : <em>admin@eduking229.bj</em> · MDP : <em>eduking2025</em>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     APPLICATION
+═════════════════════════════════════ -->
+<div class="app" id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-logo">
+      <div class="tb-logo-icon" id="tb-ico">📚</div>
+      <div>
+        <strong>Eduking 229</strong>
+        <small id="tb-sub">ADMIN</small>
+      </div>
+    </div>
+    <div class="tb-role" id="tb-role"><div class="rdot"></div><span id="tb-role-txt">Admin</span></div>
+    <div class="tb-space"></div>
+    <button class="tb-notif" onclick="goPanel('notifs')" id="notif-btn">
+      🔔<div class="nb" id="notif-nb">0</div>
+    </button>
+    <div class="tb-user">
+      <div class="tu-av" id="tu-av">👤</div>
+      <div>
+        <div class="tu-name" id="tu-name">Admin</div>
+        <div class="tu-role-small" id="tu-role-small">—</div>
+      </div>
+    </div>
+    <button class="tb-out" onclick="doLogout()">↩ Déco</button>
+  </div>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- MAIN -->
+    <div class="main" id="mainArea">
+
+      <!-- ──── PANEL : ACCUEIL ──── -->
+      <div class="panel on" id="panel-accueil">
+        <div class="pg-hdr fu">
+          <h2 id="ph-title">Vue d'ensemble</h2>
+          <p id="ph-desc">Tableau de bord</p>
+        </div>
+        <div class="scope-banner fu d1" id="scope-banner"></div>
+        <div class="stats-row fu d2" id="home-stats"></div>
+        <div class="cb fu d3" id="home-chart-block">
+          <div class="cb-hdr">
+            <div class="cb-hdr-title">📈 Revenus mensuels 2025</div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--jaune)">432 500 F CFA</span>
+          </div>
+          <div style="padding:16px 4px 6px">
+            <div class="bar-chart" id="rev-chart"></div>
+          </div>
+        </div>
+        <div class="cb fu d4">
+          <div class="cb-hdr"><div class="cb-hdr-title">📋 Activité récente</div><button class="cbtn ghost" onclick="toast('📋 Journal exporté','ty')">Exporter</button></div>
+          <div id="home-log"></div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : NOTIFICATIONS ──── -->
+      <div class="panel" id="panel-notifs">
+        <div class="pg-hdr fu">
+          <h2>🔔 Mes <em>notifications</em></h2>
+          <p id="notif-desc">Alertes personnalisées selon votre rôle</p>
+        </div>
+        <div class="cb">
+          <div class="cb-hdr">
+            <div class="cb-hdr-title">Notifications non lues <span id="notif-unread-badge" style="background:var(--rouge);color:white;font-size:10px;padding:2px 8px;border-radius:10px;font-family:'JetBrains Mono',monospace;margin-left:6px">0</span></div>
+            <button class="cbtn ghost" onclick="markAllRead()">Tout lire</button>
+          </div>
+          <div id="notif-list"></div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : PAIEMENTS ──── -->
+      <div class="panel" id="panel-paiements">
+        <div class="pg-hdr fu">
+          <h2>💰 Gestion des <em>paiements</em></h2>
+          <p>Validation MTN MoMo · Moov Money · Wave — Accès réservé Admin Paiements</p>
+        </div>
+        <div class="stats-row n3 fu d1" style="margin-bottom:20px">
+          <div class="stc"><div class="stc-ico">⏳</div><div class="stc-val" id="pa-attente">3</div><div class="stc-lab">En attente</div><div class="stc-delta dn">⚠ Urgent</div></div>
+          <div class="stc"><div class="stc-ico">✅</div><div class="stc-val">44</div><div class="stc-lab">Validés ce mois</div><div class="stc-delta up">↑ +8</div></div>
+          <div class="stc"><div class="stc-ico">💰</div><div class="stc-val">432 500</div><div class="stc-lab">Revenus F CFA</div><div class="stc-delta up">↑ +14%</div></div>
+        </div>
+        <div class="cb fu d2">
+          <div class="cb-hdr">
+            <div class="cb-hdr-title">⏳ Paiements en attente de validation</div>
+            <button class="cbtn pri-pai" onclick="confirmerTous()">✅ Tout confirmer</button>
+          </div>
+          <div id="pay-list"></div>
+        </div>
+        <div class="cb fu d3">
+          <div class="cb-hdr"><div class="cb-hdr-title">✅ Paiements validés récents</div></div>
+          <div id="pay-done-list"></div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : MEMBRES ──── -->
+      <div class="panel" id="panel-membres">
+        <div class="pg-hdr fu">
+          <h2>👥 Gestion des <em>membres</em></h2>
+          <p id="membres-desc">Enseignants inscrits · Activation · Gestion des accès</p>
+        </div>
+        <div class="cb fu d1">
+          <div class="cb-hdr">
+            <div class="cb-hdr-title">Liste des membres (47)</div>
+            <div class="cb-hdr-right">
+              <button class="cbtn ghost" onclick="toast('📊 Export Excel lancé','ty')">📊 Exporter</button>
+              <button class="cbtn" id="btn-add-membre" style="display:none" onclick="openModal('add')">+ Ajouter</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="mem-table">
+              <thead><tr><th>Membre</th><th>Plan</th><th>Statut</th><th>Date</th><th>Montant</th><th>Actions</th></tr></thead>
+              <tbody id="membres-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : BIBLIOTHÈQUE ──── -->
+      <div class="panel" id="panel-biblio">
+        <div class="pg-hdr fu">
+          <h2>📚 <em>Bibliothèque</em> pédagogique</h2>
+          <p>Gestion des ressources — Accès réservé Admin Contenu</p>
+        </div>
+        <div class="upload-zone fu d1" onclick="openModal('upload')">
+          <div class="uz-ico">📂</div>
+          <div class="uz-t">Ajouter une nouvelle ressource</div>
+          <div class="uz-s">Glissez ou cliquez · PDF · Audio · Vidéo · Max 50 MB</div>
+        </div>
+        <div class="res-grid fu d2" id="biblio-grid"></div>
+      </div>
+
+      <!-- ──── PANEL : REVENUS (PAI seulement) ──── -->
+      <div class="panel" id="panel-revenus">
+        <div class="pg-hdr fu">
+          <h2>📊 <em>Revenus</em> & Statistiques</h2>
+          <p>Suivi financier · Plans actifs · Historique des transactions</p>
+        </div>
+        <div class="stats-row n4 fu d1">
+          <div class="stc"><div class="stc-ico">💰</div><div class="stc-val">432 500</div><div class="stc-lab">Total F CFA 2025</div><div class="stc-delta up">↑ +14%</div></div>
+          <div class="stc"><div class="stc-ico">📅</div><div class="stc-val">54 000</div><div class="stc-lab">Ce mois (F CFA)</div><div class="stc-delta up">↑ +22%</div></div>
+          <div class="stc"><div class="stc-ico">📱</div><div class="stc-val">38</div><div class="stc-lab">Via MTN MoMo</div><div class="stc-delta up">↑ 86%</div></div>
+          <div class="stc"><div class="stc-ico">🏫</div><div class="stc-val">3</div><div class="stc-lab">Plans École actifs</div><div class="stc-delta nn">Stable</div></div>
+        </div>
+        <div class="cb fu d2">
+          <div class="cb-hdr">
+            <div class="cb-hdr-title">📈 Revenus par mois</div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--jaune);font-weight:700">432 500 F CFA total</span>
+          </div>
+          <div style="padding:16px 4px 6px"><div class="bar-chart" id="rev-chart-2"></div></div>
+        </div>
+        <div class="cb fu d3">
+          <div class="cb-hdr"><div class="cb-hdr-title">💳 Répartition par plan</div></div>
+          <div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:12px;padding:18px">
+              <div style="font-size:28px;margin-bottom:8px">📅</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:white">12</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.35)">Mensuels actifs</div>
+              <div style="font-size:11px;color:#4ade80;margin-top:4px;font-family:'JetBrains Mono',monospace">30 000 F/mois</div>
+            </div>
+            <div style="text-align:center;background:rgba(245,197,24,.06);border:1.5px solid rgba(245,197,24,.15);border-radius:12px;padding:18px">
+              <div style="font-size:28px;margin-bottom:8px">📚</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--jaune)">32</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.35)">Annuels actifs</div>
+              <div style="font-size:11px;color:#4ade80;margin-top:4px;font-family:'JetBrains Mono',monospace">576 000 F/an</div>
+            </div>
+            <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:12px;padding:18px">
+              <div style="font-size:28px;margin-bottom:8px">🏫</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:white">3</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.35)">Écoles actives</div>
+              <div style="font-size:11px;color:#4ade80;margin-top:4px;font-family:'JetBrains Mono',monospace">120 000 F/an</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : PARAMÈTRES ──── -->
+      <div class="panel" id="panel-params">
+        <div class="pg-hdr fu">
+          <h2>⚙️ <em>Paramètres</em></h2>
+          <p>Alertes · Notifications · Compte</p>
+        </div>
+        <div class="cb fu d1">
+          <div class="cb-hdr"><div class="cb-hdr-title">🔔 Mes alertes personnalisées</div></div>
+          <div id="params-toggles"></div>
+        </div>
+        <div class="cb fu d2">
+          <div class="cb-hdr"><div class="cb-hdr-title">🔐 Sécurité du compte</div></div>
+          <div style="padding:20px">
+            <div class="fg2">
+              <div class="fg"><label>Mot de passe actuel</label><input type="password" placeholder="••••••••"></div>
+              <div class="fg"><label>Nouveau mot de passe</label><input type="password" placeholder="••••••••"></div>
+            </div>
+            <button class="cbtn pri-con" style="margin-top:4px" onclick="toast('🔐 Mot de passe mis à jour','tg')">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ──── PANEL : COMPARAISON RÔLES ──── -->
+      <div class="panel" id="panel-roles">
+        <div class="pg-hdr fu">
+          <h2>🔐 Répartition des <em>responsabilités</em></h2>
+          <p>Vue complète de la division des tâches entre les deux administrateurs</p>
+        </div>
+
+        <!-- CARDS RÉSUMÉ -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px" class="fu d1">
+          <div style="background:rgba(200,32,42,.07);border:1.5px solid rgba(200,32,42,.18);border-radius:18px;padding:24px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <div style="width:48px;height:48px;border-radius:14px;background:rgba(200,32,42,.15);display:flex;align-items:center;justify-content:center;font-size:26px">💰</div>
+              <div>
+                <div style="color:white;font-size:17px;font-weight:800">Admin Paiements</div>
+                <div style="color:#f87171;font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px">FINANCE & MEMBRES</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              ${['✅ Valider les paiements MTN MoMo','✅ Voir et exporter les revenus','✅ Activer / bloquer les membres','✅ Alertes paiements reçus','✅ Alertes inscriptions non payées','✅ Rapport financier hebdomadaire','🔒 Bibliothèque (lecture seule)','🔒 Ajouter des ressources PDF','🔒 Alertes nouvelles ressources'].map(t=>`<div style="font-size:13px;color:${t.startsWith('✅')?'rgba(255,255,255,.8)':'rgba(255,255,255,.28)'}">${t}</div>`).join('')}
+            </div>
+          </div>
+          <div style="background:rgba(26,95,168,.07);border:1.5px solid rgba(26,95,168,.2);border-radius:18px;padding:24px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <div style="width:48px;height:48px;border-radius:14px;background:rgba(26,95,168,.15);display:flex;align-items:center;justify-content:center;font-size:26px">📚</div>
+              <div>
+                <div style="color:white;font-size:17px;font-weight:800">Admin Contenu</div>
+                <div style="color:#60a5fa;font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px">BIBLIOTHÈQUE & MEMBRES</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              ${['✅ Ajouter des ressources PDF','✅ Modifier et organiser le contenu','✅ Gérer les membres (voir/bloquer)','✅ Alertes nouvelles inscriptions','✅ Alertes ressources ajoutées','✅ Statistiques d\'utilisation','🔒 Valider les paiements','🔒 Voir les revenus financiers','🔒 Alertes paiements MTN MoMo'].map(t=>`<div style="font-size:13px;color:${t.startsWith('✅')?'rgba(255,255,255,.8)':'rgba(255,255,255,.28)'}">${t}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- MATRICE -->
+        <div class="cb fu d2">
+          <div class="cb-hdr"><div class="cb-hdr-title">🔐 Matrice complète des permissions</div></div>
+          <div class="perm-matrix">
+            <div class="pm-row" style="border-bottom:2px solid rgba(255,255,255,.07);padding-bottom:10px">
+              <div style="flex:1"></div>
+              <div class="pm-col-h"><div class="pch pai">💰 Paiements</div></div>
+              <div class="pm-col-h"><div class="pch con">📚 Contenu</div></div>
+            </div>
+            <div id="perm-matrix-rows"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-ico" id="modal-ico" style="background:rgba(26,95,168,.15)">📚</div>
+      <div class="modal-info"><strong id="modal-title">Titre</strong><small id="modal-sub">Sous-titre</small></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* ══════════════════════════════════════
+   DONNÉES
+══════════════════════════════════════ */
+const PROFILS = {
+  pai: {
+    name:'Admin Paiements', icon:'💰', short:'PAIEMENTS',
+    who:'Kofi J. — Admin Paiements', email:'kofi@eduking229.bj',
+    perms:{ paiements:true, revenus:true, membres:true, biblio:false, params:true, roles:true },
+    notifTypes:['paiement','inscription-impayee','membre'],
+    settings:[
+      {label:'Alerte paiement MTN MoMo reçu', desc:'Notification immédiate dès réception', on:true},
+      {label:'Alerte paiement en attente +1h', desc:'Rappel si aucune action après 1 heure', on:true},
+      {label:'Alerte inscription non payée', desc:'Nouveau membre sans paiement confirmé', on:true},
+      {label:'Rapport financier hebdomadaire', desc:'Synthèse revenus chaque lundi matin par email', on:true},
+      {label:'Alerte membre bloqué', desc:'Notification si un accès est révoqué', on:false},
+    ],
+    stats:[
+      {ico:'💰',val:'432 500',lab:'Revenus F CFA',d:'up',dt:'↑ +14%'},
+      {ico:'⏳',val:'3',lab:'Paiements en attente',d:'dn',dt:'⚠ À valider'},
+      {ico:'✅',val:'44',lab:'Paiements validés',d:'up',dt:'Ce mois'},
+      {ico:'👥',val:'47',lab:'Membres actifs',d:'up',dt:'↑ +3 aujourd\'hui'},
+    ],
+  },
+  con: {
+    name:'Admin Contenu', icon:'📚', short:'CONTENU',
+    who:'Sènan A. — Admin Contenu', email:'senan@eduking229.bj',
+    perms:{ paiements:false, revenus:false, membres:true, biblio:true, params:true, roles:true },
+    notifTypes:['inscription','ressource','membre'],
+    settings:[
+      {label:'Alerte nouvelle inscription', desc:'Notification dès qu\'un enseignant crée un compte', on:true},
+      {label:'Alerte membre activé par Admin Paiements', desc:'Savoir quand un membre reçoit l\'accès', on:true},
+      {label:'Alerte ressource populaire (+100 vues)', desc:'Notification si une ressource devient virale', on:true},
+      {label:'Rapport d\'utilisation hebdomadaire', desc:'Synthèse des ressources les plus téléchargées', on:false},
+      {label:'Alerte signalement ressource', desc:'Si un enseignant signale un problème de contenu', on:true},
+    ],
+    stats:[
+      {ico:'📚',val:'284',lab:'Ressources publiées',d:'up',dt:'↑ +3 ce mois'},
+      {ico:'🆕',val:'3',lab:'Nouveaux inscrits',d:'up',dt:'Aujourd\'hui'},
+      {ico:'👥',val:'47',lab:'Membres actifs',d:'up',dt:'Accès OK'},
+      {ico:'⬇️',val:'1 847',lab:'Téléchargements',d:'up',dt:'Ce mois'},
+    ],
+  },
+};
+
+const NOTIFS_ALL = [
+  {id:1, types:['paiement'], ico:'💰', icoC:'y', title:'Paiement MTN MoMo reçu : 18 000 F CFA', sub:'Mme Tchaou Blandine · +229 97 11 22 33 · Réf. MTN-0038291 · Accès activé automatiquement', time:'12 min', unread:true, hasAct:false},
+  {id:2, types:['inscription'], ico:'🆕', icoC:'g', title:'Nouvelle inscription : M. Hounkpatin Rodrigue', sub:'Plan Annuel · EP Bohicon · Paiement MTN en attente de validation par Admin Paiements', time:'28 min', unread:true, hasAct:true, actLabel:'Voir le profil'},
+  {id:3, types:['inscription-impayee'], ico:'⚠️', icoC:'r', title:'Inscription sans paiement : Mme Dossou Angèle', sub:'Inscrite il y a 2h · Aucun paiement Mobile Money reçu · Compte bloqué en attente', time:'2h', unread:true, hasAct:true, actLabel:'Valider paiement'},
+  {id:4, types:['ressource'], ico:'📚', icoC:'b', title:'Nouvelle ressource publiée dans la bibliothèque', sub:'Mme Sènan A. · Géométrie CM1 · Les formes · 3 fiches PDF ajoutées', time:'3h', unread:true, hasAct:false},
+  {id:5, types:['paiement'], ico:'💰', icoC:'y', title:'Paiement Wave reçu : 40 000 F CFA', sub:'M. Kpossou Théodore · Plan École 5 comptes · EPP Abomey · Accès activé', time:'5h', unread:false, hasAct:false},
+  {id:6, types:['membre'], ico:'👤', icoC:'g', title:'Membre activé : Mme Agossadou Flore', sub:'Plan Annuel · Accès complet à la bibliothèque · 18 000 F CFA validé', time:'6h', unread:false, hasAct:false},
+  {id:7, types:['inscription'], ico:'🆕', icoC:'g', title:'Nouvelle inscription : Mme Vodounou Rachelle', sub:'Plan Mensuel · EP Ouidah · En attente de validation paiement', time:'8h', unread:false, hasAct:false},
+  {id:8, types:['ressource'], ico:'📈', icoC:'o', title:'Ressource populaire : Tables de multiplication CE1', sub:'520 vues · 312 téléchargements ce mois — Ressource la plus consultée', time:'hier', unread:false, hasAct:false},
+];
+
+const PAIEMENTS_ATTENTE = [
+  {nom:'M. Hounkpatin Rodrigue', tel:'+229 97 33 44 55', plan:'Annuel', montant:'18 000 F', methode:'MTN MoMo', mIcon:'📱', mClass:'mtn', date:'il y a 28 min', urgent:true},
+  {nom:'Mme Dossou Angèle', tel:'+229 96 77 88 99', plan:'Mensuel', montant:'2 500 F', methode:'Moov Money', mIcon:'📲', mClass:'moov', date:'il y a 2h', urgent:true},
+  {nom:'Mme Vodounou Rachelle', tel:'+229 97 00 11 22', plan:'Mensuel', montant:'2 500 F', methode:'Wave', mIcon:'🌊', mClass:'wave', date:'il y a 8h', urgent:false},
+];
+const PAIEMENTS_DONE = [
+  {nom:'Mme Tchaou Blandine', plan:'Annuel', montant:'18 000 F', methode:'MTN MoMo', date:'il y a 12 min'},
+  {nom:'M. Kpossou Théodore', plan:'École', montant:'40 000 F', methode:'Wave', date:'il y a 5h'},
+  {nom:'Mme Agossadou Flore', plan:'Annuel', montant:'18 000 F', methode:'MTN MoMo', date:'hier 14h22'},
+];
+
+const MEMBRES = [
+  {nom:'Mme Tchaou Blandine', email:'b.tchaou@ecole.bj', av:'👩‍🏫', plan:'Annuel', statut:'ok', date:'14 mars', montant:'18 000 F', isNew:true},
+  {nom:'M. Hounkpatin Rodrigue', email:'r.hounkpatin@ecole.bj', av:'👨‍🏫', plan:'Annuel', statut:'wait', date:'14 mars', montant:'En attente', isNew:true},
+  {nom:'Mme Dossou Angèle', email:'a.dossou@ecole.bj', av:'👩‍🏫', plan:'Mensuel', statut:'wait', date:'14 mars', montant:'En attente', isNew:true},
+  {nom:'M. Azondekon Paul', email:'p.azondekon@ecole.bj', av:'👨‍🏫', plan:'Annuel', statut:'no', date:'13 mars', montant:'—', isNew:false},
+  {nom:'Mme Agossadou Flore', email:'f.agossadou@ecole.bj', av:'👩‍🏫', plan:'Annuel', statut:'ok', date:'12 mars', montant:'18 000 F', isNew:false},
+  {nom:'M. Kpossou Théodore', email:'t.kpossou@ecole.bj', av:'👨‍🏫', plan:'École', statut:'ok', date:'10 mars', montant:'40 000 F', isNew:false},
+  {nom:'Mme Vodounou Rachelle', email:'r.vodounou@ecole.bj', av:'👩‍🏫', plan:'Mensuel', statut:'wait', date:'13 mars', montant:'2 500 F', isNew:false},
+];
+
+const RESSOURCES = [
+  {ico:'📐',bg:'m',type:'pdf',t:'Les fractions simples — CM1',m:'CM1-CM2 · 342 vues'},
+  {ico:'📝',bg:'f',type:'exo',t:'Lecture syllabique Série B — CP2',m:'CP1-CP2 · 215 vues'},
+  {ico:'🌱',bg:'s',type:'plan',t:'Germination des plantes — CE2',m:'CE1-CE2 · 189 vues'},
+  {ico:'🗺️',bg:'h',type:'pdf',t:'Les villes du Bénin — CM1',m:'CM1 · 440 vues'},
+  {ico:'🧮',bg:'m',type:'exo',t:'Tables de multiplication — CE1',m:'CE1-CE2 · 520 vues'},
+  {ico:'🎵',bg:'v',type:'av',t:'Comptines pour les sons — CP1',m:'CP1 · 302 vues'},
+];
+
+const PERMS_MATRIX = [
+  {action:'Valider les paiements Mobile Money',cat:'PAIEMENTS',pai:true,con:false},
+  {action:'Voir l\'historique des transactions',cat:'PAIEMENTS',pai:true,con:false},
+  {action:'Exporter les données financières',cat:'PAIEMENTS',pai:true,con:false},
+  {action:'Voir les revenus et statistiques',cat:'FINANCES',pai:true,con:false},
+  {action:'Rapport financier hebdomadaire',cat:'FINANCES',pai:true,con:false},
+  {action:'Ajouter des ressources PDF / Audio',cat:'BIBLIOTHÈQUE',pai:false,con:true},
+  {action:'Modifier et supprimer des ressources',cat:'BIBLIOTHÈQUE',pai:false,con:true},
+  {action:'Organiser les catégories de contenu',cat:'BIBLIOTHÈQUE',pai:false,con:true},
+  {action:'Activer / bloquer les membres',cat:'MEMBRES',pai:true,con:true},
+  {action:'Voir la liste des membres',cat:'MEMBRES',pai:true,con:true},
+  {action:'Alertes paiement MTN reçu',cat:'ALERTES',pai:true,con:false},
+  {action:'Alertes nouvelle inscription',cat:'ALERTES',pai:false,con:true},
+  {action:'Alertes inscription sans paiement',cat:'ALERTES',pai:true,con:false},
+  {action:'Alertes nouvelles ressources publiées',cat:'ALERTES',pai:false,con:true},
+];
+
+const REV = [{m:'Jan',v:28},{m:'Fév',v:36},{m:'Mar',v:42},{m:'Avr',v:38},{m:'Mai',v:54},{m:'Jun',v:48},{m:'Jul',v:32},{m:'Aoû',v:41},{m:'Sep',v:60},{m:'Oct',v:55},{m:'Nov',v:68},{m:'Déc',v:54,curr:true}];
+
+const LOGS = [
+  {dot:'#4ade80',action:'Paiement MTN validé · <strong>Mme Tchaou Blandine</strong> · 18 000 F CFA',time:'il y a 12 min'},
+  {dot:'var(--jaune)',action:'<strong>Mme Sènan A.</strong> a publié 3 nouvelles fiches Maths CM1',time:'il y a 1h'},
+  {dot:'#f87171',action:'Paiement en attente depuis 2h · <strong>Mme Dossou Angèle</strong>',time:'il y a 2h'},
+  {dot:'#60a5fa',action:'Membre activé automatiquement · <strong>M. Kpossou Théodore</strong> · Plan École',time:'il y a 5h'},
+  {dot:'rgba(255,255,255,.3)',action:'Connexion Admin Contenu · <strong>Mme Sènan A.</strong>',time:'il y a 6h'},
+];
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let role = 'pai';
+
+/* ══════════════════════════════════════
+   LOGIN
+══════════════════════════════════════ */
+function pickRole(r) {
+  role = r;
+  document.querySelectorAll('.profil-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('pb-' + r).classList.add('selected');
+  const cta = document.getElementById('loginCta');
+  cta.className = 'login-cta ' + r;
+  cta.textContent = r === 'pai' ? '💰 Connexion Admin Paiements' : '📚 Connexion Admin Contenu';
+}
+
+function doLogin() {
+  const cta = document.getElementById('loginCta');
+  cta.textContent = '⏳ Connexion...'; cta.disabled = true;
+  setTimeout(() => {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('app').classList.add('on');
+    initApp();
+  }, 800);
+}
+
+function doLogout() {
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('loginWrap').style.display = 'flex';
+  const cta = document.getElementById('loginCta');
+  cta.disabled = false;
+  pickRole(role);
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+function initApp() {
+  const p = PROFILS[role];
+  // Topbar
+  const ic = document.getElementById('tb-ico');
+  ic.className = 'tb-logo-icon ' + role;
+  ic.textContent = p.icon;
+  document.getElementById('tb-sub').textContent = p.short;
+  const rb = document.getElementById('tb-role');
+  rb.className = 'tb-role ' + role;
+  document.getElementById('tb-role-txt').textContent = p.name;
+  document.getElementById('tu-av').textContent = p.icon;
+  document.getElementById('tu-name').textContent = p.who;
+  document.getElementById('tu-role-small').textContent = p.email;
+  const nb = document.getElementById('notif-nb');
+  nb.className = 'nb ' + role;
+
+  buildSidebar();
+  buildHome();
+  buildNotifs();
+  buildMembres();
+  buildPaiements();
+  buildBiblio();
+  buildRevenus();
+  buildParams();
+  buildRoles();
+  updateNotifBadge();
+  goPanel('accueil');
+
+  // Sim notif entrante après 18s
+  setTimeout(() => {
+    const n = {id:99, types: role === 'pai' ? ['paiement'] : ['inscription'],
+      ico: role === 'pai' ? '💰' : '🆕', icoC: role === 'pai' ? 'y' : 'g',
+      title: role === 'pai' ? 'Paiement MTN reçu : 18 000 F CFA — M. Bello Sèmèvo' : 'Nouvelle inscription : M. Bello Sèmèvo',
+      sub: role === 'pai' ? 'Référence MTN-0039188 · Accès activé automatiquement' : 'Plan Annuel · EP Djougou · En attente de paiement',
+      time:'instant', unread:true, hasAct: role === 'pai' ? false : true, actLabel:'Voir profil'};
+    NOTIFS_ALL.unshift(n);
+    buildNotifs(); updateNotifBadge();
+    toast(n.title, role === 'pai' ? 'ty' : 'tb');
+  }, 18000);
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+function buildSidebar() {
+  const p = PROFILS[role];
+  const pp = p.perms;
+  const cls = role;
+
+  let html = `
+    <div class="sb-grp">Navigation</div>
+    <div class="sb-link on ${cls}" onclick="goPanel('accueil',this)"><span class="si">🏠</span>Vue d'ensemble</div>
+    <div class="sb-link" onclick="goPanel('notifs',this)"><span class="si">🔔</span>Mes notifications<span class="sb-badge r" id="sb-nb">0</span></div>
+    <div class="sb-divider"></div>
+    <div class="sb-grp">Mes responsabilités</div>
+  `;
+  if (pp.paiements) html += `<div class="sb-link" onclick="goPanel('paiements',this)"><span class="si">💰</span>Paiements<span class="sb-badge r">3</span></div>`;
+  else html += `<div class="sb-lock"><span class="si">💰</span>Paiements</div>`;
+
+  html += `<div class="sb-link" onclick="goPanel('membres',this)"><span class="si">👥</span>Membres<span class="sb-badge g">47</span></div>`;
+
+  if (pp.biblio) html += `<div class="sb-link" onclick="goPanel('biblio',this)"><span class="si">📚</span>Bibliothèque<span class="sb-badge b">284</span></div>`;
+  else html += `<div class="sb-lock"><span class="si">📚</span>Bibliothèque</div>`;
+
+  if (pp.revenus) html += `<div class="sb-link" onclick="goPanel('revenus',this)"><span class="si">📊</span>Revenus<span class="sb-badge y">2025</span></div>`;
+  else html += `<div class="sb-lock"><span class="si">📊</span>Revenus</div>`;
+
+  html += `
+    <div class="sb-divider"></div>
+    <div class="sb-grp">Système</div>
+    <div class="sb-link" onclick="goPanel('roles',this)"><span class="si">🔐</span>Répartition des rôles</div>
+    <div class="sb-link" onclick="goPanel('params',this)"><span class="si">⚙️</span>Paramètres</div>
+    <div class="sb-footer">
+      <div class="sb-who">
+        <div class="sw-av" style="background:${role === 'pai' ? 'rgba(200,32,42,.15)' : 'rgba(26,95,168,.15)'}">${PROFILS[role].icon}</div>
+        <div><div class="sw-name">${role === 'pai' ? 'Kofi J.' : 'Sènan A.'}</div><div class="sw-role">${PROFILS[role].name}</div></div>
+        <div class="sw-dot"></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function goPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('on', 'pai', 'con'));
+  document.getElementById('panel-' + id).classList.add('on');
+  if (el) { el.classList.add('on', role); }
+}
+
+/* ══════════════════════════════════════
+   HOME
+══════════════════════════════════════ */
+function buildHome() {
+  const p = PROFILS[role];
+  document.getElementById('ph-title').textContent = p.name + ' — Vue d\'ensemble';
+  document.getElementById('ph-desc').textContent = p.who + ' · ' + p.email;
+
+  // Scope banner
+  const sb = document.getElementById('scope-banner');
+  sb.className = 'scope-banner fu d1 ' + role;
+  const tags = role === 'pai'
+    ? ['✓ Paiements','✓ Revenus','✓ Membres','✗ Bibliothèque','✗ Ressources PDF']
+    : ['✗ Paiements','✗ Revenus','✓ Membres','✓ Bibliothèque','✓ Ressources PDF'];
+  sb.innerHTML = `
+    <div class="sb-icon">${p.icon}</div>
+    <div class="sb-info">
+      <strong>${p.name} — ${role === 'pai' ? 'Finance & Membres' : 'Contenu & Membres'}</strong>
+      <p>${role === 'pai'
+        ? 'Vous validez les paiements Mobile Money, suivez les revenus et gérez l\'accès des membres. Vous recevez uniquement les alertes financières.'
+        : 'Vous gérez la bibliothèque pédagogique, ajoutez les ressources PDF et suivez les membres. Vous recevez uniquement les alertes de contenu et d\'inscriptions.'}</p>
+      <div class="sb-perms">${tags.map(t => `<span class="sp-tag ${t.startsWith('✓') ? 'ok ' + role : 'no'}">${t}</span>`).join('')}</div>
+    </div>
+  `;
+
+  // Stats
+  const sr = document.getElementById('home-stats');
+  sr.className = 'stats-row n4 fu d2';
+  sr.innerHTML = p.stats.map(s => `
+    <div class="stc">
+      <div class="stc-ico">${s.ico}</div>
+      <div class="stc-val">${s.val}</div>
+      <div class="stc-lab">${s.lab}</div>
+      <div class="stc-delta ${s.d}">${s.dt}</div>
+    </div>
+  `).join('');
+
+  // Chart
+  document.getElementById('home-chart-block').style.display = role === 'pai' ? 'block' : 'none';
+  if (role === 'pai') buildBarChart('rev-chart');
+
+  // Log
+  document.getElementById('home-log').innerHTML = LOGS.map(l => `
+    <div class="log-item">
+      <div class="log-dot" style="background:${l.dot}"></div>
+      <div><div class="log-action">${l.action}</div><div class="log-time">${l.time}</div></div>
+    </div>
+  `).join('');
+}
+
+function buildBarChart(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const max = Math.max(...REV.map(d => d.v));
+  el.innerHTML = REV.map(d => {
+    const h = Math.round((d.v / max) * 82);
+    return `<div class="bc">
+      <div class="bc-val">${d.v}k</div>
+      <div class="bc-bar pai-c ${d.curr ? 'curr' : ''}" style="height:${h}px" onclick="toast('📊 ${d.m} : ${d.v*1000} F CFA','ty')"></div>
+      <div class="bc-label">${d.m}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════
+   NOTIFICATIONS (FILTRÉES PAR RÔLE)
+══════════════════════════════════════ */
+function visibleNotifs() {
+  return NOTIFS_ALL.filter(n => n.types.some(t => PROFILS[role].notifTypes.includes(t)));
+}
+
+function buildNotifs() {
+  const desc = role === 'pai'
+    ? 'Vous recevez uniquement : alertes paiements Mobile Money, inscriptions non payées, membres activés'
+    : 'Vous recevez uniquement : alertes nouvelles inscriptions, nouvelles ressources, signalements de contenu';
+  document.getElementById('notif-desc').textContent = desc;
+
+  const list = visibleNotifs();
+  document.getElementById('notif-list').innerHTML = list.length
+    ? list.map((n, i) => `
+      <div class="ni ${n.unread ? 'unread ' + role : ''}" onclick="readNotif(${n.id})">
+        <div class="ni-ico ${n.icoC}">${n.ico}</div>
+        <div class="ni-body">
+          <div class="ni-title">${n.title}</div>
+          <div class="ni-sub">${n.sub}</div>
+          ${n.hasAct && n.unread ? `<div class="ni-acts">
+            <button class="na-btn ok" onclick="event.stopPropagation();actNotif(${n.id})">${n.actLabel || 'Confirmer'}</button>
+            <button class="na-btn view" onclick="event.stopPropagation();toast('👁 Détail ouvert','tb')">Voir</button>
+          </div>` : ''}
+        </div>
+        <div class="ni-time">il y a ${n.time}</div>
+      </div>
+    `).join('')
+    : `<div style="padding:32px;text-align:center;color:rgba(255,255,255,.25);font-size:13.5px">✅ Aucune notification non lue</div>`;
+}
+
+function readNotif(id) { const n = NOTIFS_ALL.find(x => x.id === id); if (n) { n.unread = false; buildNotifs(); updateNotifBadge(); } }
+function actNotif(id) { const n = NOTIFS_ALL.find(x => x.id === id); if (n) { n.unread = false; n.hasAct = false; buildNotifs(); updateNotifBadge(); toast('✅ Action effectuée', 'tg'); } }
+function markAllRead() { NOTIFS_ALL.forEach(n => n.unread = false); buildNotifs(); updateNotifBadge(); toast('✅ Toutes les notifications lues', 'tg'); }
+
+function updateNotifBadge() {
+  const n = visibleNotifs().filter(x => x.unread).length;
+  ['notif-nb','sb-nb','notif-unread-badge'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = n; });
+}
+
+/* ══════════════════════════════════════
+   PAIEMENTS
+══════════════════════════════════════ */
+function buildPaiements() {
+  document.getElementById('pa-attente').textContent = PAIEMENTS_ATTENTE.length;
+  document.getElementById('pay-list').innerHTML = PAIEMENTS_ATTENTE.length
+    ? PAIEMENTS_ATTENTE.map((p, i) => `
+      <div class="pay-item ${p.urgent ? 'urgent' : ''}">
+        <div class="pay-ico ${p.mClass}">${p.mIcon}</div>
+        <div class="pay-body">
+          <div class="pay-top">
+            <div class="pay-name">${p.nom}</div>
+            <div class="pay-amount pending">${p.montant}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace">${p.methode}</div>
+          </div>
+          <div class="pay-detail">Plan ${p.plan} · ${p.tel} · ${p.date}${p.urgent ? ' · <span style="color:#f87171;font-weight:700">⚠ Urgent</span>' : ''}</div>
+          <div class="pay-actions">
+            <button class="pa-btn confirm" onclick="confirmerPaiement(${i})">✅ Confirmer</button>
+            <button class="pa-btn reject" onclick="rejeterPaiement(${i})">❌ Rejeter</button>
+            <button class="pa-btn call" onclick="toast('📱 SMS envoyé à ${p.tel}','tb')">📱 Contacter</button>
+          </div>
+        </div>
+        <div class="pay-time">${p.date}</div>
+      </div>
+    `).join('')
+    : `<div style="padding:32px;text-align:center;color:#4ade80;font-size:14px;font-weight:700">✅ Aucun paiement en attente</div>`;
+
+  document.getElementById('pay-done-list').innerHTML = PAIEMENTS_DONE.map(p => `
+    <div class="pay-item done">
+      <div class="pay-ico ok">✅</div>
+      <div class="pay-body">
+        <div class="pay-top"><div class="pay-name">${p.nom}</div><div class="pay-amount ok">${p.montant}</div></div>
+        <div class="pay-detail">Plan ${p.plan} · ${p.methode} · ${p.date}</div>
+      </div>
+      <div class="pay-time">${p.date}</div>
+    </div>
+  `).join('');
+}
+
+function confirmerPaiement(i) {
+  const p = PAIEMENTS_ATTENTE.splice(i, 1)[0];
+  PAIEMENTS_DONE.unshift({...p, date:'à l\'instant'});
+  buildPaiements();
+  const m = MEMBRES.find(x => x.nom.includes(p.nom.split(' ').pop()));
+  if (m) m.statut = 'ok';
+  buildMembres();
+  toast('✅ Paiement confirmé — accès activé pour ' + p.nom, 'tg');
+}
+
+function rejeterPaiement(i) {
+  PAIEMENTS_ATTENTE.splice(i, 1);
+  buildPaiements();
+  toast('❌ Paiement rejeté', 'tr');
+}
+
+function confirmerTous() {
+  while (PAIEMENTS_ATTENTE.length) {
+    const p = PAIEMENTS_ATTENTE.shift();
+    PAIEMENTS_DONE.unshift({...p, date:'à l\'instant'});
+  }
+  buildPaiements();
+  MEMBRES.forEach(m => { if (m.statut === 'wait') m.statut = 'ok'; });
+  buildMembres();
+  toast('✅ Tous les paiements confirmés — accès activés', 'tg');
+}
+
+/* ══════════════════════════════════════
+   MEMBRES
+══════════════════════════════════════ */
+function buildMembres() {
+  const isPai = role === 'pai';
+  document.getElementById('membres-desc').textContent = isPai
+    ? 'Gérez les accès · Activez après confirmation du paiement Mobile Money'
+    : 'Vue des membres · Vous pouvez voir les profils et bloquer un accès si nécessaire';
+  const addBtn = document.getElementById('btn-add-membre');
+  if (addBtn) addBtn.style.display = isPai ? 'block' : 'none';
+
+  document.getElementById('membres-body').innerHTML = MEMBRES.map((m, i) => `
+    <tr>
+      <td>
+        <div class="mi">
+          <div class="mi-av" style="background:rgba(10,110,63,.15)">${m.av}</div>
+          <div>
+            <div class="mi-name">${m.nom}${m.isNew ? '<span class="mb-new">NOUVEAU</span>' : ''}</div>
+            <div class="mi-email">${m.email}</div>
+          </div>
+        </div>
+      </td>
+      <td>${m.plan}</td>
+      <td><span class="stag ${{ok:'ok',no:'no',wait:'wait'}[m.statut]}">${{ok:'✅ Actif',no:'❌ Non payé',wait:'⏳ Attente'}[m.statut]}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11.5px">${m.date}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:12px;color:${m.statut==='ok'?'#4ade80':'rgba(255,255,255,.35)'}">${m.montant}</td>
+      <td>
+        <div class="td-acts">
+          ${m.statut !== 'ok' && isPai ? `<button class="td-btn act" onclick="activerMembre(${i})">✅ Activer</button>` : ''}
+          ${m.statut !== 'ok' && !isPai ? `<button class="td-btn act dis">✅ Activer</button>` : ''}
+          ${m.statut === 'ok' ? `<button class="td-btn blk" onclick="toast('🔒 Accès de ${m.nom} suspendu','tr')">🔒 Bloquer</button>` : ''}
+          <button class="td-btn see" onclick="toast('👁 Fiche : ${m.nom}','tb')">Voir</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function activerMembre(i) {
+  MEMBRES[i].statut = 'ok';
+  buildMembres();
+  toast('✅ Accès activé pour ' + MEMBRES[i].nom, 'tg');
+}
+
+/* ══════════════════════════════════════
+   BIBLIOTHÈQUE
+══════════════════════════════════════ */
+function buildBiblio() {
+  document.getElementById('biblio-grid').innerHTML = RESSOURCES.map((r, i) => `
+    <div class="res-card">
+      <div class="res-thumb ${r.bg}">
+        <span>${r.ico}</span>
+        <span class="rt-badge ${r.type}">${r.type.toUpperCase()}</span>
+      </div>
+      <div class="res-body">
+        <div class="res-t">${r.t}</div>
+        <div class="res-m">${r.m}</div>
+      </div>
+      <div class="res-foot">
+        <button class="r-btn edit" onclick="toast('✏️ Modification : ${r.t}','tb')">✏️ Modifier</button>
+        <button class="r-btn del" onclick="toast('🗑 Supprimé','tr')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════
+   REVENUS
+══════════════════════════════════════ */
+function buildRevenus() { setTimeout(() => buildBarChart('rev-chart-2'), 100); }
+
+/* ══════════════════════════════════════
+   PARAMS
+══════════════════════════════════════ */
+function buildParams() {
+  const s = PROFILS[role].settings;
+  document.getElementById('params-toggles').innerHTML = s.map((st, i) => `
+    <div class="toggle-row">
+      <div class="tr-info"><strong>${st.label}</strong><span>${st.desc}</span></div>
+      <div class="toggle ${st.on ? 'on ' + role : ''}" onclick="this.classList.toggle('on');this.classList.toggle('${role}');toast(this.classList.contains('on') ? '✅ Activé' : '🔕 Désactivé','${role === 'pai' ? 'ty' : 'tb'}')"></div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════
+   RÔLES MATRIX
+══════════════════════════════════════ */
+function buildRoles() {
+  document.getElementById('perm-matrix-rows').innerHTML = PERMS_MATRIX.map(r => `
+    <div class="pm-row">
+      <div class="pm-action">${r.action}<span class="pm-cat">${r.cat}</span></div>
+      <div class="pm-cell"><div class="pm-chk ${r.pai ? 'y' : 'n'}">${r.pai ? '✓' : '—'}</div></div>
+      <div class="pm-cell"><div class="pm-chk ${r.con ? 'y' : 'n'}">${r.con ? '✓' : '—'}</div></div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+function openModal(type) {
+  const ov = document.getElementById('overlay');
+  if (type === 'upload') {
+    document.getElementById('modal-ico').textContent = '📂';
+    document.getElementById('modal-ico').style.background = 'rgba(26,95,168,.15)';
+    document.getElementById('modal-title').textContent = 'Ajouter une ressource';
+    document.getElementById('modal-sub').textContent = 'PDF · Audio · Vidéo · Exercice';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="fg2">
+        <div class="fg"><label>Titre</label><input type="text" placeholder="Les fractions simples — CM1"></div>
+        <div class="fg"><label>Matière</label><select><option>Mathématiques</option><option>Français</option><option>Sciences</option><option>Histoire-Géo</option></select></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label>Type</label><select><option>Fiche PDF</option><option>Exercice</option><option>Plan de leçon</option><option>Audio</option><option>Vidéo</option></select></div>
+        <div class="fg"><label>Niveau</label><select><option>CP1-CP2</option><option>CE1-CE2</option><option>CM1-CM2</option><option>Tous</option></select></div>
+      </div>
+      <button class="form-submit con" onclick="toast('✅ Ressource publiée dans la bibliothèque !','tg');closeModal()">📤 Publier la ressource</button>
+    `;
+  } else {
+    document.getElementById('modal-ico').textContent = '👥';
+    document.getElementById('modal-ico').style.background = 'rgba(200,32,42,.15)';
+    document.getElementById('modal-title').textContent = 'Ajouter un membre';
+    document.getElementById('modal-sub').textContent = 'Activation immédiate';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="fg2">
+        <div class="fg"><label>Nom complet</label><input type="text" placeholder="Mme Kossou Marie"></div>
+        <div class="fg"><label>Email</label><input type="email" placeholder="marie@ecole.bj"></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label>Téléphone</label><input type="tel" placeholder="+229 97 00 00 00"></div>
+        <div class="fg"><label>Plan</label><select><option>Mensuel — 2 500 F</option><option>Annuel — 18 000 F</option><option>École — 40 000 F</option></select></div>
+      </div>
+      <button class="form-submit con" style="background:linear-gradient(135deg,var(--rouge),#e84d56)" onclick="toast('✅ Membre ajouté et accès activé','tg');closeModal()">✅ Créer et activer l'accès</button>
+    `;
+  }
+  ov.classList.add('open');
+}
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function closeOverlay(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function toast(msg, type='tg') {
+  const icons = {tg:'✅',tr:'⚠️',ty:'💰',tb:'ℹ️'};
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span style="font-size:20px">${icons[type]}</span>${msg}`;
+  c.appendChild(el);
+  setTimeout(() => el.classList.add('show'), 10);
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 500); }, 4200);
+}
+</script>
+</body>
+</html>
