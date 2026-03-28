@@ -3,329 +3,933 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bibliothèque Numérique — Eduking 229</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Eduking 229 – Bibliothèque Pédagogique</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --vert: #1a6b3a; --vert-clair: #2d9a57; --jaune: #f5c518;
-    --rouge: #c0392b; --creme: #fdf8f0; --texte: #1a1a1a; --gris: #6b6b6b;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texte); }
+:root{
+  --bg:#0d1b2a;
+  --bg2:#112233;
+  --card:#162840;
+  --gold:#f5c518;
+  --gold2:#e6a800;
+  --accent:#1eb980;
+  --text:#f0f4f8;
+  --muted:#8aa0b8;
+  --red:#e74c3c;
+  --border:#1e3a55;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
 
-  nav {
-    position: fixed; top: 0; width: 100%; z-index: 100;
-    background: var(--vert); padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-  .logo { font-family: 'Playfair Display', serif; color: var(--jaune); font-size: 1.4rem; font-weight: 900; text-decoration: none; }
-  .logo span { color: white; }
-  nav ul { list-style: none; display: flex; gap: 18px; }
-  nav ul li a { color: white; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-  nav ul li a:hover { color: var(--jaune); }
-  nav ul li a.active { color: var(--jaune); font-weight: 700; }
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(13,27,42,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:8px;flex:1}
+.logo-icon{font-size:28px}
+.logo-text{font-family:'Sora',sans-serif;font-weight:800;font-size:13px;line-height:1.2}
+.logo-text span{color:var(--gold);font-size:10px;font-weight:600;display:block;letter-spacing:.08em}
+.nav-btns{display:flex;gap:8px}
+.btn{padding:9px 16px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:'DM Sans',sans-serif}
+.btn-ghost{background:rgba(255,255,255,.08);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.15)}
+.btn-gold{background:var(--gold);color:#0d1b2a}
+.btn-gold:hover{background:var(--gold2)}
+.btn-green{background:var(--accent);color:#fff}
+.btn-green:hover{background:#19a070}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#c0392b}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--card)}
+.btn-lg{padding:14px 28px;font-size:15px}
+.btn-full{width:100%}
+.btn-sm{padding:7px 13px;font-size:12px}
 
-  .page-header {
-    background: linear-gradient(160deg, #0d4a27 0%, #1a6b3a 100%);
-    padding: 110px 24px 50px; text-align: center;
-  }
-  .page-header h1 { font-family: 'Playfair Display', serif; color: white; font-size: 2.2rem; margin-bottom: 10px; }
-  .page-header p { color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+/* HERO */
+.hero{padding:48px 20px 60px;text-align:center;background:linear-gradient(170deg,#0d1b2a 0%,#0a2a1a 60%,#0d1b2a 100%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(30,185,128,.12) 0%,transparent 70%)}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(30,185,128,.12);border:1px solid rgba(30,185,128,.3);border-radius:50px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.06em;margin-bottom:20px}
+.hero h1{font-family:'Sora',sans-serif;font-size:34px;font-weight:800;line-height:1.15;margin-bottom:8px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero p{color:var(--muted);font-size:15px;line-height:1.65;margin-bottom:32px;max-width:360px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;flex-direction:column;gap:12px;align-items:center}
+.hero-btns .btn{min-width:220px}
 
-  /* ABONNEMENTS */
-  .abonnements-section { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--vert); margin-bottom: 10px; text-align: center; }
-  .section-sub { text-align: center; color: var(--gris); margin-bottom: 40px; font-size: 0.95rem; }
+/* STATS */
+.stats{display:flex;justify-content:center;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2)}
+.stat{flex:1;text-align:center;padding:20px 8px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--gold)}
+.stat-l{font-size:11px;color:var(--muted);margin-top:2px}
 
-  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 60px; }
+/* SECTION */
+.section{padding:36px 16px}
+.section-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.section-title .tag{font-size:11px;background:rgba(245,197,24,.12);color:var(--gold);border:1px solid rgba(245,197,24,.3);border-radius:50px;padding:3px 10px;font-weight:600}
 
-  .plan-card {
-    background: white; border-radius: 20px; padding: 32px 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.07); position: relative;
-    border: 2px solid transparent; transition: transform 0.2s, box-shadow 0.2s;
-    display: flex; flex-direction: column;
-  }
-  .plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
-  .plan-card.populaire { border-color: var(--jaune); }
+/* PLANS */
+.plans{display:flex;flex-direction:column;gap:14px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.plan-card.featured{border-color:var(--gold);background:linear-gradient(135deg,#1e2f1a 0%,var(--card) 100%)}
+.plan-card.featured::before{content:'POPULAIRE';position:absolute;top:12px;right:-20px;background:var(--gold);color:#0d1b2a;font-size:9px;font-weight:700;padding:3px 30px;transform:rotate(35deg);letter-spacing:.08em}
+.plan-name{font-family:'Sora',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px}
+.plan-price{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:var(--gold);line-height:1}
+.plan-price small{font-size:13px;color:var(--muted);font-weight:400}
+.plan-desc{font-size:13px;color:var(--muted);margin:8px 0 16px}
+.plan-features{list-style:none;margin-bottom:18px;display:flex;flex-direction:column;gap:6px}
+.plan-features li{font-size:13px;display:flex;align-items:center;gap:8px}
+.plan-features li::before{content:'✓';color:var(--accent);font-weight:700;font-size:14px}
+.plan-number{font-size:11px;color:var(--muted);margin-top:10px;text-align:center}
+.plan-number strong{color:var(--gold)}
 
-  .badge-pop {
-    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-    background: var(--jaune); color: var(--vert); padding: 4px 16px;
-    border-radius: 50px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
-  }
-  .plan-icon { font-size: 2.2rem; margin-bottom: 14px; }
-  .plan-nom { font-weight: 700; font-size: 1rem; color: var(--gris); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .plan-prix { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--vert); margin-bottom: 4px; }
-  .plan-prix span { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 400; color: var(--gris); }
-  .plan-periode { font-size: 0.8rem; color: var(--gris); margin-bottom: 20px; }
-  .plan-features { list-style: none; margin-bottom: 24px; flex: 1; }
-  .plan-features li { font-size: 0.85rem; color: var(--texte); padding: 6px 0; border-bottom: 1px solid #f5f5f5; display: flex; align-items: flex-start; gap: 8px; }
-  .plan-features li::before { content: '✓'; color: var(--vert-clair); font-weight: 700; flex-shrink: 0; }
-  .btn-souscrire {
-    width: 100%; padding: 13px; border-radius: 10px; border: none; font-size: 0.9rem;
-    font-weight: 700; cursor: pointer; transition: all 0.2s;
-    background: var(--vert); color: white;
-  }
-  .btn-souscrire:hover { background: var(--vert-clair); }
-  .plan-card.populaire .btn-souscrire { background: var(--jaune); color: var(--vert); }
-  .plan-card.populaire .btn-souscrire:hover { background: #e8b800; }
+/* LIBRARY */
+.library-grid{display:flex;flex-direction:column;gap:12px}
+.doc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px}
+.doc-icon{font-size:32px;flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-title{font-family:'Sora',sans-serif;font-weight:600;font-size:14px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:12px;color:var(--muted)}
+.doc-badge{display:inline-block;font-size:10px;background:rgba(30,185,128,.12);color:var(--accent);border:1px solid rgba(30,185,128,.25);border-radius:50px;padding:2px 8px;margin-top:4px}
+.doc-locked{font-size:10px;background:rgba(231,76,60,.1);color:var(--red);border:1px solid rgba(231,76,60,.2);border-radius:50px;padding:2px 8px;margin-top:4px}
 
-  /* CATALOGUE */
-  .catalogue-section { background: white; padding: 60px 24px; }
-  .catalogue-inner { max-width: 900px; margin: 0 auto; }
-  .catalogue-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
-  .doc-card {
-    border: 1px solid #e8e8e8; border-radius: 12px; padding: 16px;
-    transition: all 0.2s; cursor: default; position: relative; overflow: hidden;
-  }
-  .doc-card:hover { border-color: var(--vert); box-shadow: 0 4px 16px rgba(26,107,58,0.1); }
-  .doc-icon { font-size: 1.8rem; margin-bottom: 8px; }
-  .doc-card h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
-  .doc-card .doc-meta { font-size: 0.72rem; color: var(--gris); }
-  .doc-lock {
-    position: absolute; top: 12px; right: 12px;
-    background: #f0f0f0; border-radius: 50%; width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
-  }
+/* OVERLAY / MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-end;justify-content:center}
+.overlay.active{display:flex}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:24px 20px 36px;border-top:1px solid var(--border);animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-family:'Sora',sans-serif;font-weight:700;font-size:18px;margin-bottom:16px;text-align:center}
+.modal-close{position:absolute;top:18px;right:18px;background:rgba(255,255,255,.08);border:none;color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
 
-  /* FAQ */
-  .faq-section { max-width: 700px; margin: 0 auto; padding: 60px 24px; }
-  .faq-item { border-bottom: 1px solid #e8e8e8; padding: 18px 0; }
-  .faq-q { font-weight: 700; font-size: 0.95rem; color: var(--vert); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-  .faq-a { font-size: 0.85rem; color: var(--gris); line-height: 1.7; margin-top: 10px; display: none; }
-  .faq-item.open .faq-a { display: block; }
-  .faq-item.open .faq-arrow { transform: rotate(180deg); }
-  .faq-arrow { transition: transform 0.2s; font-size: 0.8rem; }
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:80px}
+select option{background:var(--bg)}
 
-  /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.active { display: flex; }
-  .modal { background: white; border-radius: 20px; padding: 32px 28px; max-width: 400px; width: 100%; position: relative; animation: popIn 0.3s ease; }
-  @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .modal-close { position: absolute; top: 16px; right: 16px; background: #f0f0f0; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
-  .modal h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--vert); margin-bottom: 6px; }
-  .modal .plan-info { font-size: 0.85rem; color: var(--gris); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0; }
-  .mtn-box { background: #FFF8E1; border: 2px solid var(--jaune); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
-  .mtn-numero { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; margin: 10px 0; }
-  .mtn-montant { background: var(--vert); color: white; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; margin: 12px 0; }
-  .instructions { font-size: 0.82rem; color: var(--gris); line-height: 1.7; margin-bottom: 20px; }
-  .btn-confirmer { width: 100%; background: var(--vert); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+/* PAYMENT CARD */
+.pay-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+.pay-step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--gold);color:#0d1b2a;border-radius:50%;font-size:11px;font-weight:700;margin-right:8px}
+.pay-step p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.pay-number{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:.05em;text-align:center;margin:10px 0;background:rgba(245,197,24,.08);border-radius:10px;padding:12px}
+.pay-amount{text-align:center;font-family:'Sora',sans-serif;font-size:28px;font-weight:800;margin:8px 0}
 
-  footer { background: #0d1a12; color: rgba(255,255,255,0.6); padding: 30px 24px; text-align: center; }
-  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-  footer a:hover { color: var(--jaune); }
+/* ADMIN */
+.admin-header{background:linear-gradient(90deg,#0d1b2a,#1a0a2a);border-bottom:2px solid var(--gold);padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.admin-badge{background:var(--gold);color:#0d1b2a;font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px;letter-spacing:.06em}
+.admin-tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 16px 0;border-bottom:1px solid var(--border)}
+.admin-tab{padding:8px 16px;font-size:13px;font-weight:600;border-radius:10px 10px 0 0;border:none;cursor:pointer;background:transparent;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.admin-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(245,197,24,.05)}
+.admin-panel{padding:16px}
+.admin-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.admin-card h3{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--gold)}
+.doc-admin-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.doc-admin-row:last-child{border-bottom:none}
+.doc-admin-info{flex:1;min-width:0}
+.doc-admin-info .t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-admin-info .s{font-size:11px;color:var(--muted)}
+.doc-admin-actions{display:flex;gap:6px;flex-shrink:0}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.kpi-val{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--gold)}
+.kpi-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.sub-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.sub-row:last-child{border-bottom:none}
+.sub-badge{font-size:10px;padding:2px 8px;border-radius:50px;font-weight:600}
+.sub-trial{background:rgba(30,185,128,.12);color:var(--accent);border:1px solid rgba(30,185,128,.25)}
+.sub-month{background:rgba(245,197,24,.12);color:var(--gold);border:1px solid rgba(245,197,24,.25)}
+.sub-year{background:rgba(155,89,182,.12);color:#bb8fce;border:1px solid rgba(155,89,182,.25)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--accent);color:#fff;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s ease;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--red)}
+
+/* LOCK BANNER */
+.lock-banner{background:linear-gradient(135deg,rgba(231,76,60,.1),rgba(231,76,60,.05));border:1px solid rgba(231,76,60,.25);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:20px}
+.lock-banner h3{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px}
+.lock-banner p{font-size:13px;color:var(--muted);margin-bottom:14px}
+
+/* FILE UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:rgba(245,197,24,.03)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone .uz-icon{font-size:36px;margin-bottom:8px}
+.upload-zone p{font-size:13px;color:var(--muted)}
+.upload-zone strong{color:var(--gold)}
+
+/* BOTTOM TABS (main app) */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,27,42,.98);border-top:1px solid var(--border);padding:8px 0 16px;z-index:99}
+.bottom-nav.visible{display:flex}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px;border:none;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;transition:color .2s}
+.bnav-item.active{color:var(--gold)}
+.bnav-icon{font-size:22px}
+.bnav-lbl{font-size:10px;font-weight:600}
+.pb{padding-bottom:80px}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block}
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="logo">Edu<span>king</span> 229</a>
-  <ul>
-    <li><a href="boutique.html">Boutique</a></li>
-    <li><a href="bibliotheque.html" class="active">Bibliothèque</a></li>
-  </ul>
-</nav>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-<div class="page-header">
-  <h1>📚 Bibliothèque Numérique</h1>
-  <p>Accès illimité à toutes les ressources pédagogiques avec un abonnement adapté à votre besoin.</p>
-</div>
-
-<!-- PLANS -->
-<div class="abonnements-section">
-  <h2 class="section-title">Choisissez votre abonnement</h2>
-  <p class="section-sub">Paiement via MTN Mobile Money · Accès immédiat</p>
-
-  <div class="plans-grid">
-
-    <div class="plan-card">
-      <div class="plan-icon">🌙</div>
-      <div class="plan-nom">Mensuel</div>
-      <div class="plan-prix">2 000 <span>FCFA</span></div>
-      <div class="plan-periode">par mois</div>
-      <ul class="plan-features">
-        <li>Accès à tous les documents</li>
-        <li>6 niveaux (CI au CM2)</li>
-        <li>4 matières disponibles</li>
-        <li>Téléchargement illimité</li>
-        <li>Renouvellement mensuel</li>
-      </ul>
-      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement Mensuel', '2 000 FCFA')">S'abonner</button>
+<!-- ===================== LANDING SCREEN ===================== -->
+<div class="screen active" id="screen-home">
+  <nav>
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <div class="logo-text">Eduking 229<span>PRIMAIRE · BÉNIN</span></div>
     </div>
-
-    <div class="plan-card populaire">
-      <div class="badge-pop">⭐ Le plus populaire</div>
-      <div class="plan-icon">🌟</div>
-      <div class="plan-nom">Annuel</div>
-      <div class="plan-prix">15 000 <span>FCFA</span></div>
-      <div class="plan-periode">par an — économisez 9 000 FCFA</div>
-      <ul class="plan-features">
-        <li>Accès à tous les documents</li>
-        <li>6 niveaux (CI au CM2)</li>
-        <li>4 matières disponibles</li>
-        <li>Téléchargement illimité</li>
-        <li>Nouvelles ressources incluses</li>
-        <li>Support prioritaire</li>
-      </ul>
-      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement Annuel', '15 000 FCFA')">S'abonner</button>
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="openLogin()">🔑 Connexion</button>
+      <button class="btn btn-gold" onclick="openRegister()">S'inscrire</button>
     </div>
+  </nav>
 
-    <div class="plan-card">
-      <div class="plan-icon">🏫</div>
-      <div class="plan-nom">École</div>
-      <div class="plan-prix">50 000 <span>FCFA</span></div>
-      <div class="plan-periode">par an · jusqu'à 10 enseignants</div>
-      <ul class="plan-features">
-        <li>10 comptes enseignants</li>
-        <li>Accès complet partagé</li>
-        <li>Tous niveaux et matières</li>
-        <li>Ressources imprimables</li>
-        <li>Support dédié WhatsApp</li>
-        <li>Formation en ligne incluse</li>
-      </ul>
-      <button class="btn-souscrire" onclick="ouvrirModal('Abonnement École', '50 000 FCFA')">Contacter</button>
+  <div class="hero">
+    <div class="badge">🇧🇯 PROGRAMME OFFICIEL BÉNIN · CP1 → CM2</div>
+    <h1>La bibliothèque<br>pédagogique du<br><em>Bénin</em></h1>
+    <p>Manuels, guides, fiches, mesures correctives et ressources pédagogiques pour tous les enseignants du primaire béninois.</p>
+    <div class="hero-btns">
+      <button class="btn btn-gold btn-lg" onclick="openRegister()">🔓 Accéder aux ressources</button>
+      <button class="btn btn-ghost btn-lg" onclick="startTrial()">✨ Essai gratuit 30 jours</button>
     </div>
-
   </div>
 
-  <!-- COMPARAISON -->
-  <div style="background:white;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
-    <h3 style="font-family:'Playfair Display',serif;color:var(--vert);margin-bottom:16px;font-size:1.1rem;">💡 Pourquoi l'abonnement ?</h3>
-    <p style="font-size:0.85rem;color:var(--gris);line-height:1.7;">
-      Avec l'abonnement annuel à <strong>15 000 FCFA</strong>, vous accédez à <em>toutes</em> les ressources disponibles.
-      En achetant séparément à 500 FCFA, vous atteignez ce montant après seulement 30 documents.
-      L'abonnement est la solution idéale pour les enseignants actifs.
-    </p>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">120+</div><div class="stat-l">Documents</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Niveaux CP→CM2</div></div>
+    <div class="stat"><div class="stat-n">12</div><div class="stat-l">Départements</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">💳 Choisissez votre formule <span class="tag">ABONNEMENT</span></div>
+    <div class="plans">
+
+      <!-- ESSAI -->
+      <div class="plan-card">
+        <div class="plan-name">✨ Essai Gratuit</div>
+        <div class="plan-price">0 FCFA <small>/ 30 jours</small></div>
+        <div class="plan-desc">Découvrez la bibliothèque sans engagement</div>
+        <ul class="plan-features">
+          <li>Accès limité aux ressources</li>
+          <li>5 téléchargements par mois</li>
+          <li>Aperçu des fiches pédagogiques</li>
+        </ul>
+        <button class="btn btn-outline btn-full" onclick="startTrial()">Démarrer l'essai gratuit</button>
+      </div>
+
+      <!-- MENSUEL -->
+      <div class="plan-card">
+        <div class="plan-name">📅 Abonnement Mensuel</div>
+        <div class="plan-price">500 FCFA <small>/ mois</small></div>
+        <div class="plan-desc">Accès complet renouvelable chaque mois</div>
+        <ul class="plan-features">
+          <li>Accès illimité à tous les documents</li>
+          <li>Téléchargements illimités</li>
+          <li>Toutes les matières CP→CM2</li>
+          <li>Mises à jour mensuelles</li>
+        </ul>
+        <button class="btn btn-gold btn-full" onclick="openPayment('mensuel')">Payer via Moov Money</button>
+        <div class="plan-number">Envoyez à : <strong>0145894080</strong></div>
+      </div>
+
+      <!-- ANNUEL -->
+      <div class="plan-card featured">
+        <div class="plan-name">⭐ Abonnement Annuel</div>
+        <div class="plan-price">1 000 FCFA <small>/ an</small></div>
+        <div class="plan-desc">Meilleur rapport qualité-prix sur toute l'année scolaire</div>
+        <ul class="plan-features">
+          <li>Accès illimité 12 mois</li>
+          <li>Téléchargements illimités</li>
+          <li>Toutes les matières CP→CM2</li>
+          <li>Nouvelles fiches en priorité</li>
+          <li>Support prioritaire</li>
+        </ul>
+        <button class="btn btn-gold btn-full" onclick="openPayment('annuel')">Payer via MTN MoMo</button>
+        <div class="plan-number">Envoyez à : <strong>0167899473</strong></div>
+      </div>
+
+    </div>
   </div>
 </div>
 
-<!-- CATALOGUE APERÇU -->
-<div class="catalogue-section">
-  <div class="catalogue-inner">
-    <h2 class="section-title">Aperçu du catalogue</h2>
-    <p class="section-sub">Un extrait des ressources disponibles dans la bibliothèque</p>
-    <div class="catalogue-grid">
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">➕</div>
-        <h4>Calcul Mental CE1</h4>
-        <p class="doc-meta">Maths · 20 pages</p>
+<!-- ===================== LIBRARY SCREEN ===================== -->
+<div class="screen" id="screen-library">
+  <nav>
+    <div class="logo">
+      <span class="logo-icon">📚</span>
+      <div class="logo-text">Bibliothèque<span id="user-label">CONNECTÉ</span></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Quitter</button>
+    </div>
+  </nav>
+
+  <div class="section pb" id="library-content">
+    <!-- Injected dynamically -->
+  </div>
+
+  <nav class="bottom-nav visible">
+    <button class="bnav-item active" onclick="showTab('lib')"><span class="bnav-icon">📖</span><span class="bnav-lbl">Biblio</span></button>
+    <button class="bnav-item" onclick="showTab('sub')"><span class="bnav-icon">💳</span><span class="bnav-lbl">Abonnement</span></button>
+    <button class="bnav-item" onclick="showTab('profil')"><span class="bnav-icon">👤</span><span class="bnav-lbl">Profil</span></button>
+  </nav>
+</div>
+
+<!-- ===================== ADMIN SCREEN ===================== -->
+<div class="screen" id="screen-admin">
+  <div class="admin-header">
+    <div>
+      <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:15px">⚙️ Espace Admin</div>
+      <div style="font-size:11px;color:var(--muted)">Eduking 229 – Accès restreint</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="admin-badge">ADMIN</span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="adminTab(this,'tab-stats')">📊 Tableau de bord</button>
+    <button class="admin-tab" onclick="adminTab(this,'tab-docs')">📁 Documents</button>
+    <button class="admin-tab" onclick="adminTab(this,'tab-users')">👥 Abonnés</button>
+    <button class="admin-tab" onclick="adminTab(this,'tab-add')">➕ Ajouter</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="admin-panel pb" id="tab-stats">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val" id="kpi-docs">0</div><div class="kpi-lbl">Documents</div></div>
+      <div class="kpi"><div class="kpi-val" id="kpi-users">0</div><div class="kpi-lbl">Abonnés</div></div>
+      <div class="kpi"><div class="kpi-val" id="kpi-trial">0</div><div class="kpi-lbl">Essais actifs</div></div>
+      <div class="kpi"><div class="kpi-val" id="kpi-rev">0</div><div class="kpi-lbl">FCFA reçus</div></div>
+    </div>
+    <div class="admin-card">
+      <h3>📋 Actions rapides</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-gold btn-full" onclick="adminTab(document.querySelector('.admin-tab:nth-child(4)'),'tab-add')">➕ Ajouter un document</button>
+        <button class="btn btn-outline btn-full" onclick="adminTab(document.querySelectorAll('.admin-tab')[2],'tab-users')">👥 Voir les abonnés</button>
+        <button class="btn btn-green btn-full" onclick="exportData()">📤 Exporter les données</button>
       </div>
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">📝</div>
-        <h4>Dictée CM2</h4>
-        <p class="doc-meta">Français · 15 pages</p>
+    </div>
+    <div class="admin-card">
+      <h3>📞 Numéro d'essai (Moov)</h3>
+      <div class="pay-number">0145894080</div>
+      <p style="font-size:12px;color:var(--muted);text-align:center">Les essais gratuits sont validés manuellement via ce numéro</p>
+    </div>
+  </div>
+
+  <!-- DOCS -->
+  <div class="admin-panel pb" id="tab-docs" style="display:none">
+    <div class="admin-card">
+      <h3>📁 Documents publiés</h3>
+      <div id="admin-doc-list"></div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="admin-panel pb" id="tab-users" style="display:none">
+    <div class="admin-card">
+      <h3>👥 Liste des abonnés</h3>
+      <div id="admin-user-list"></div>
+    </div>
+  </div>
+
+  <!-- ADD DOC -->
+  <div class="admin-panel pb" id="tab-add" style="display:none">
+    <div class="admin-card">
+      <h3>➕ Ajouter un document</h3>
+
+      <div class="field">
+        <label>Titre du document</label>
+        <input type="text" id="doc-title" placeholder="ex: Fiche de lecture CE2 – Semaine 3">
       </div>
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">🔬</div>
-        <h4>Sciences CE2</h4>
-        <p class="doc-meta">Sciences · 18 pages</p>
+      <div class="field">
+        <label>Catégorie</label>
+        <select id="doc-cat">
+          <option value="">-- Choisir --</option>
+          <option>Fiches pédagogiques</option>
+          <option>Manuels scolaires</option>
+          <option>Guides enseignants</option>
+          <option>Mesures correctives</option>
+          <option>Évaluations</option>
+          <option>Programmes officiels</option>
+        </select>
       </div>
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">🗺️</div>
-        <h4>Géo Bénin CM1</h4>
-        <p class="doc-meta">Histoire-Géo · 12 pages</p>
+      <div class="field">
+        <label>Niveau scolaire</label>
+        <select id="doc-level">
+          <option value="">-- Choisir --</option>
+          <option>CP1</option>
+          <option>CP2</option>
+          <option>CE1</option>
+          <option>CE2</option>
+          <option>CM1</option>
+          <option>CM2</option>
+          <option>Tous niveaux</option>
+        </select>
       </div>
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">🔤</div>
-        <h4>Lecture CI</h4>
-        <p class="doc-meta">Français · 30 pages</p>
+      <div class="field">
+        <label>Matière</label>
+        <select id="doc-subject">
+          <option value="">-- Choisir --</option>
+          <option>Français</option>
+          <option>Mathématiques</option>
+          <option>Sciences</option>
+          <option>Histoire-Géographie</option>
+          <option>Éducation civique</option>
+          <option>Anglais</option>
+          <option>Toutes matières</option>
+        </select>
       </div>
-      <div class="doc-card">
-        <div class="doc-lock">🔒</div>
-        <div class="doc-icon">🔢</div>
-        <h4>Numération CP</h4>
-        <p class="doc-meta">Maths · 22 pages</p>
+      <div class="field">
+        <label>Description courte</label>
+        <textarea id="doc-desc" placeholder="Décrivez le contenu du document..."></textarea>
       </div>
-      <div class="doc-card" style="background:linear-gradient(135deg,var(--vert),#0d4a27);border:none;display:flex;align-items:center;justify-content:center;text-align:center;">
-        <div>
-          <div style="font-size:1.5rem;margin-bottom:8px;">📦</div>
-          <p style="color:white;font-size:0.8rem;font-weight:700;">+ 50 documents disponibles</p>
+      <div class="field">
+        <label>Accès requis</label>
+        <select id="doc-access">
+          <option value="paid">Abonnés uniquement</option>
+          <option value="trial">Essai gratuit + Abonnés</option>
+          <option value="free">Gratuit pour tous</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Lien du document (URL Google Drive, Dropbox…)</label>
+        <input type="url" id="doc-url" placeholder="https://drive.google.com/...">
+      </div>
+      <div class="field">
+        <label>— OU — Téléverser un fichier local</label>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="doc-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" onchange="handleFileSelect(event)">
+          <div class="uz-icon">📂</div>
+          <p><strong>Cliquer pour sélectionner</strong> ou glisser-déposer<br>PDF, Word, PowerPoint, Excel</p>
+        </div>
+        <div id="file-preview" style="display:none;margin-top:8px;background:var(--card);border-radius:8px;padding:10px;font-size:13px"></div>
+      </div>
+
+      <button class="btn btn-gold btn-full btn-lg" onclick="publishDoc()" style="margin-top:4px">📤 Publier le document</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav visible">
+    <button class="bnav-item" onclick="showAdminTab('tab-stats')"><span class="bnav-icon">📊</span><span class="bnav-lbl">Tableau</span></button>
+    <button class="bnav-item" onclick="showAdminTab('tab-docs')"><span class="bnav-icon">📁</span><span class="bnav-lbl">Docs</span></button>
+    <button class="bnav-item" onclick="showAdminTab('tab-users')"><span class="bnav-icon">👥</span><span class="bnav-lbl">Abonnés</span></button>
+    <button class="bnav-item" onclick="showAdminTab('tab-add')"><span class="bnav-icon">➕</span><span class="bnav-lbl">Ajouter</span></button>
+  </nav>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- LOGIN -->
+<div class="overlay" id="modal-login">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-login')">✕</button>
+    <div class="modal-title">🔑 Connexion</div>
+    <div class="field">
+      <label>Numéro de téléphone</label>
+      <input type="tel" id="login-phone" placeholder="ex: 0167899473" maxlength="10">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pass" placeholder="Votre mot de passe">
+    </div>
+    <button class="btn btn-gold btn-full btn-lg" onclick="doLogin()">Se connecter</button>
+    <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:14px">Pas encore inscrit ? <a onclick="closeModal('modal-login');openRegister()" style="color:var(--gold);cursor:pointer">S'inscrire</a></p>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="overlay" id="modal-register">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-register')">✕</button>
+    <div class="modal-title">📝 Créer un compte</div>
+    <div class="field">
+      <label>Prénom et Nom</label>
+      <input type="text" id="reg-name" placeholder="ex: Koffi Akossou">
+    </div>
+    <div class="field">
+      <label>Numéro de téléphone</label>
+      <input type="tel" id="reg-phone" placeholder="ex: 0167899473" maxlength="10">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="reg-pass" placeholder="Choisissez un mot de passe">
+    </div>
+    <div class="field">
+      <label>Type de formule</label>
+      <select id="reg-plan">
+        <option value="trial">✨ Essai gratuit 30 jours</option>
+        <option value="mensuel">📅 Mensuel – 500 FCFA</option>
+        <option value="annuel">⭐ Annuel – 1 000 FCFA</option>
+      </select>
+    </div>
+    <button class="btn btn-gold btn-full btn-lg" onclick="doRegister()">Créer mon compte</button>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<div class="overlay" id="modal-payment">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-payment')">✕</button>
+    <div class="modal-title" id="pay-modal-title">💳 Paiement</div>
+    <div id="pay-modal-body"></div>
+  </div>
+</div>
+
+<!-- DOWNLOAD CONFIRM -->
+<div class="overlay" id="modal-download">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('modal-download')">✕</button>
+    <div class="modal-title">⬇️ Télécharger</div>
+    <div id="dl-body"></div>
+  </div>
+</div>
+
+<!-- SUB TAB CONTENT (injected into library) -->
+<script>
+// ── STATE ──
+const ADMIN_PHONE = '0145894080';
+const ADMIN_PASS  = 'ADMIN';
+
+let currentUser  = null;
+let currentTab   = 'lib';
+
+function ls(k,v){if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}
+function getData(){return ls('ek_data')||{users:[],docs:defaultDocs(),payments:[]}}
+function saveData(d){ls('ek_data',d)}
+
+function defaultDocs(){
+  return [
+    {id:1,title:'Programme Officiel CP1 – Bénin 2024',cat:'Programmes officiels',level:'CP1',subject:'Toutes matières',desc:'Programme officiel du Ministère de l\'Éducation pour le niveau CP1.',access:'free',url:'#',size:'2.4 MB',icon:'📋',date:'2024-09'},
+    {id:2,title:'Fiche de lecture CE2 – Semaine 1',cat:'Fiches pédagogiques',level:'CE2',subject:'Français',desc:'Fiche de lecture complète avec exercices et correction pour la 1re semaine.',access:'trial',url:'#',size:'1.1 MB',icon:'📄',date:'2024-10'},
+    {id:3,title:'Manuels de Mathématiques CM1',cat:'Manuels scolaires',level:'CM1',subject:'Mathématiques',desc:'Manuel complet de mathématiques avec exercices corrigés CM1.',access:'paid',url:'#',size:'5.8 MB',icon:'📘',date:'2024-09'},
+    {id:4,title:'Guide Pédagogique Enseignant CE1',cat:'Guides enseignants',level:'CE1',subject:'Toutes matières',desc:'Guide méthodologique complet pour les enseignants de CE1.',access:'paid',url:'#',size:'3.2 MB',icon:'📗',date:'2024-11'},
+    {id:5,title:'Mesures correctives CM2 – Français',cat:'Mesures correctives',level:'CM2',subject:'Français',desc:'Exercices de remédiation pour élèves en difficulté en CM2.',access:'paid',url:'#',size:'0.9 MB',icon:'✏️',date:'2024-10'},
+    {id:6,title:'Évaluation trimestre 1 – CP2',cat:'Évaluations',level:'CP2',subject:'Mathématiques',desc:'Évaluation formative du 1er trimestre pour CP2.',access:'trial',url:'#',size:'0.5 MB',icon:'📝',date:'2024-11'},
+  ];
+}
+
+// ── AUTH ──
+function openLogin(){document.getElementById('modal-login').classList.add('active')}
+function openRegister(){document.getElementById('modal-register').classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+
+function doLogin(){
+  const phone=document.getElementById('login-phone').value.trim();
+  const pass =document.getElementById('login-pass').value.trim();
+  if(!phone||!pass){toast('Remplissez tous les champs','err');return}
+  // Admin check
+  if(phone===ADMIN_PHONE&&pass===ADMIN_PASS){
+    currentUser={phone,name:'Administrateur',role:'admin',plan:'admin'};
+    closeModal('modal-login');
+    showScreen('admin');
+    refreshAdmin();
+    return;
+  }
+  const d=getData();
+  const u=d.users.find(u=>u.phone===phone&&u.pass===pass);
+  if(!u){toast('Numéro ou mot de passe incorrect','err');return}
+  // Check subscription validity
+  if(u.plan==='trial'){
+    const days=Math.floor((Date.now()-u.joinDate)/86400000);
+    if(days>30){toast('Essai expiré. Veuillez vous abonner.','err');openPayment('mensuel');return}
+  }
+  currentUser=u;
+  closeModal('modal-login');
+  showScreen('library');
+  renderLibrary();
+}
+
+function doRegister(){
+  const name =document.getElementById('reg-name').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const pass =document.getElementById('reg-pass').value.trim();
+  const plan =document.getElementById('reg-plan').value;
+  if(!name||!phone||!pass){toast('Remplissez tous les champs','err');return}
+  if(phone.length<8){toast('Numéro invalide','err');return}
+  const d=getData();
+  if(d.users.find(u=>u.phone===phone)){toast('Ce numéro est déjà inscrit','err');return}
+  const u={id:Date.now(),name,phone,pass,plan,joinDate:Date.now(),active:true};
+  d.users.push(u);
+  saveData(d);
+  currentUser=u;
+  closeModal('modal-register');
+  if(plan!=='trial'){openPayment(plan);return}
+  toast('Compte créé ! Essai gratuit activé ✓');
+  showScreen('library');
+  renderLibrary();
+}
+
+function startTrial(){
+  document.getElementById('reg-plan').value='trial';
+  openRegister();
+}
+
+function logout(){currentUser=null;showScreen('home')}
+
+// ── SCREENS ──
+function showScreen(s){
+  document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
+  document.getElementById('screen-'+s).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── LIBRARY RENDER ──
+function renderLibrary(){
+  const d=getData();
+  const c=document.getElementById('library-content');
+  if(currentTab==='lib') renderLibTab(c,d);
+  else if(currentTab==='sub') renderSubTab(c);
+  else renderProfilTab(c);
+  document.getElementById('user-label').textContent=currentUser?currentUser.name.toUpperCase():'CONNECTÉ';
+}
+
+function showTab(t){
+  currentTab=t;
+  document.querySelectorAll('#screen-library .bnav-item').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderLibrary();
+}
+
+function renderLibTab(c,d){
+  const isActive = canAccess('paid');
+  const isTrial  = canAccess('trial');
+  let html='';
+  if(!isActive&&!isTrial){
+    html+=`<div class="lock-banner">
+      <h3>🔒 Accès restreint</h3>
+      <p>Votre essai a expiré ou vous n'êtes pas encore abonné.</p>
+      <button class="btn btn-gold" onclick="openPayment('mensuel')">Choisir un abonnement</button>
+    </div>`;
+  }
+  html+=`<div class="section-title">📚 Ressources disponibles <span class="tag">${d.docs.length} docs</span></div>`;
+  html+='<div class="library-grid">';
+  d.docs.forEach(doc=>{
+    const locked=!canAccessDoc(doc);
+    html+=`<div class="doc-card">
+      <div class="doc-icon">${doc.icon}</div>
+      <div class="doc-info">
+        <div class="doc-title">${doc.title}</div>
+        <div class="doc-meta">${doc.level} · ${doc.subject} · ${doc.size}</div>
+        <span class="${locked?'doc-locked':'doc-badge'}">${locked?'🔒 Abonné requis':'✓ '+doc.cat}</span>
+      </div>
+      ${locked
+        ? `<button class="btn btn-outline btn-sm" onclick="openPayment('mensuel')">S'abonner</button>`
+        : `<button class="btn btn-green btn-sm" onclick="downloadDoc(${doc.id})">⬇️</button>`
+      }
+    </div>`;
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function renderSubTab(c){
+  const plan=currentUser?currentUser.plan:'trial';
+  const days=currentUser&&plan==='trial'?Math.floor((Date.now()-currentUser.joinDate)/86400000):0;
+  c.innerHTML=`
+  <div class="section-title">💳 Mon abonnement</div>
+  <div class="plan-card" style="margin-bottom:14px">
+    <div class="plan-name">Formule actuelle</div>
+    <div class="plan-price" style="margin-top:8px">${plan==='trial'?'Essai gratuit':plan==='mensuel'?'Mensuel – 500 FCFA':'Annuel – 1 000 FCFA'}</div>
+    ${plan==='trial'?`<div style="font-size:13px;color:var(--muted);margin-top:6px">${30-days} jours restants sur votre essai</div>`:''}
+  </div>
+  <div class="section-title" style="margin-top:24px">📦 Changer de formule</div>
+  <div class="plans">
+    <div class="plan-card">
+      <div class="plan-name">📅 Mensuel – 500 FCFA</div>
+      <div class="plan-desc">Accès complet chaque mois</div>
+      <button class="btn btn-gold btn-full" onclick="openPayment('mensuel')">Payer via Moov Money</button>
+      <div class="plan-number">Envoyez à : <strong>0145894080</strong></div>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-name">⭐ Annuel – 1 000 FCFA</div>
+      <div class="plan-desc">Toute l'année scolaire</div>
+      <button class="btn btn-gold btn-full" onclick="openPayment('annuel')">Payer via MTN MoMo</button>
+      <div class="plan-number">Envoyez à : <strong>0167899473</strong></div>
+    </div>
+  </div>`;
+}
+
+function renderProfilTab(c){
+  const u=currentUser;
+  c.innerHTML=`
+  <div class="section-title">👤 Mon profil</div>
+  <div class="admin-card">
+    <div style="font-size:48px;text-align:center;margin-bottom:12px">👤</div>
+    <div style="text-align:center">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:700">${u.name}</div>
+      <div style="font-size:13px;color:var(--muted)">${u.phone}</div>
+      <span class="sub-badge ${u.plan==='trial'?'sub-trial':u.plan==='mensuel'?'sub-month':'sub-year'}" style="margin-top:8px;display:inline-block">
+        ${u.plan==='trial'?'✨ Essai gratuit':u.plan==='mensuel'?'📅 Mensuel':'⭐ Annuel'}
+      </span>
+    </div>
+  </div>
+  <button class="btn btn-red btn-full btn-lg" onclick="logout()" style="margin-top:16px">🚪 Se déconnecter</button>`;
+}
+
+function canAccess(level){
+  if(!currentUser) return false;
+  if(currentUser.plan==='admin') return true;
+  if(level==='paid') return['mensuel','annuel'].includes(currentUser.plan);
+  if(level==='trial') return['mensuel','annuel','trial'].includes(currentUser.plan);
+  return true;
+}
+
+function canAccessDoc(doc){
+  if(doc.access==='free') return true;
+  if(doc.access==='trial') return canAccess('trial');
+  return canAccess('paid');
+}
+
+// ── DOWNLOAD ──
+function downloadDoc(id){
+  const d=getData();
+  const doc=d.docs.find(doc=>doc.id===id);
+  if(!doc) return;
+  const body=document.getElementById('dl-body');
+  body.innerHTML=`
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:48px">${doc.icon}</div>
+      <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px;margin:8px 0">${doc.title}</div>
+      <div style="font-size:12px;color:var(--muted)">${doc.level} · ${doc.subject} · ${doc.size}</div>
+    </div>
+    ${doc.url&&doc.url!=='#'
+      ? `<a href="${doc.url}" target="_blank" class="btn btn-gold btn-full btn-lg" style="display:block;text-align:center" onclick="closeModal('modal-download')">⬇️ Télécharger maintenant</a>`
+      : `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;margin-bottom:12px">
+          <p style="font-size:13px;color:var(--muted)">Ce document est disponible uniquement en ligne.<br>Contactez l'admin pour l'obtenir.</p>
+         </div>
+         <button class="btn btn-outline btn-full" onclick="closeModal('modal-download')">Fermer</button>`
+    }`;
+  document.getElementById('modal-download').classList.add('active');
+}
+
+// ── PAYMENT ──
+function openPayment(plan){
+  const modal=document.getElementById('modal-payment');
+  const title=document.getElementById('pay-modal-title');
+  const body =document.getElementById('pay-modal-body');
+  if(plan==='mensuel'){
+    title.textContent='📅 Abonnement Mensuel';
+    body.innerHTML=`
+      <div class="pay-amount">500 FCFA</div>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:16px">Paiement via Moov Money</p>
+      <div class="pay-step">
+        <span class="pay-step-num">1</span><strong>Envoyez 500 FCFA</strong>
+        <p>Ouvrez l'app Moov Money ou composez *880# et envoyez <strong>500 FCFA</strong> au numéro :</p>
+        <div class="pay-number">0145894080</div>
+      </div>
+      <div class="pay-step">
+        <span class="pay-step-num">2</span><strong>Notez votre référence</strong>
+        <p>Conservez le code de confirmation envoyé par Moov Money après le paiement.</p>
+      </div>
+      <div class="pay-step">
+        <span class="pay-step-num">3</span><strong>Entrez votre référence</strong>
+        <div class="field" style="margin-top:10px">
+          <input type="text" id="pay-ref" placeholder="ex: TXN-1234567890">
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- FAQ -->
-<div class="faq-section">
-  <h2 class="section-title">Questions fréquentes</h2>
-  <p class="section-sub">Tout ce que vous devez savoir sur la bibliothèque</p>
-
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">
-      Comment accéder aux documents après paiement ?
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">Après confirmation de votre paiement MTN Mobile Money, vous recevrez un lien d'accès par SMS ou WhatsApp dans les 24 heures.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">
-      Puis-je imprimer les documents ?
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">Oui, tous les documents sont au format PDF prêts à imprimer. Vous pouvez les utiliser en classe sans restriction.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">
-      L'abonnement se renouvelle-t-il automatiquement ?
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">Non. Votre abonnement n'est pas automatique. Vous recevrez un rappel avant l'expiration pour renouveler si vous le souhaitez.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">
-      Les programmes sont-ils conformes au Bénin ?
-      <span class="faq-arrow">▼</span>
-    </div>
-    <div class="faq-a">Absolument. Toutes les ressources sont alignées sur les programmes officiels du Ministère des Enseignements Primaire et Secondaire du Bénin.</div>
-  </div>
-</div>
-
-<!-- MODAL PAIEMENT -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <button class="modal-close" onclick="fermerModal()">✕</button>
-    <h2>📚 Abonnement</h2>
-    <p class="plan-info" id="modal-plan">—</p>
-    <div class="mtn-box">
-      <div style="font-size:2rem;margin-bottom:6px;">📱</div>
-      <strong style="color:#e65c00;">MTN Mobile Money</strong>
-      <div class="mtn-numero">+229 XX XX XX XX</div>
-      <div style="font-size:0.8rem;color:#666;">EDUKING RESSOURCES</div>
-      <div class="mtn-montant" id="modal-montant">—</div>
-    </div>
-    <ol class="instructions">
-      <li>Composez <strong>*880#</strong> sur votre téléphone MTN</li>
-      <li>Choisissez <strong>"Transfert"</strong></li>
-      <li>Entrez le numéro ci-dessus</li>
-      <li>Entrez le montant exact</li>
-      <li>Confirmez avec votre PIN</li>
-      <li>Envoyez votre reçu + nom complet par WhatsApp</li>
-    </ol>
-    <button class="btn-confirmer" onclick="confirmer()">✅ J'ai effectué le paiement</button>
-  </div>
-</div>
-
-<footer>
-  <p>© 2026 <a href="index.html">Eduking 229</a> — 🇧🇯 Fait au Bénin avec ❤️</p>
-</footer>
-
-<script>
-function ouvrirModal(plan, montant) {
-  document.getElementById('modal-plan').textContent = plan;
-  document.getElementById('modal-montant').textContent = 'Montant : ' + montant;
-  document.getElementById('modal').classList.add('active');
+      <button class="btn btn-gold btn-full btn-lg" onclick="confirmPayment('mensuel')">✅ Valider mon paiement</button>`;
+  } else {
+    title.textContent='⭐ Abonnement Annuel';
+    body.innerHTML=`
+      <div class="pay-amount">1 000 FCFA</div>
+      <p style="text-align:center;font-size:13px;color:var(--muted);margin-bottom:16px">Paiement via MTN MoMo</p>
+      <div class="pay-step">
+        <span class="pay-step-num">1</span><strong>Envoyez 1 000 FCFA</strong>
+        <p>Ouvrez l'app MTN MoMo ou composez *144# et envoyez <strong>1 000 FCFA</strong> au numéro :</p>
+        <div class="pay-number">0167899473</div>
+      </div>
+      <div class="pay-step">
+        <span class="pay-step-num">2</span><strong>Notez votre référence</strong>
+        <p>Conservez le code de confirmation envoyé par MTN MoMo après le paiement.</p>
+      </div>
+      <div class="pay-step">
+        <span class="pay-step-num">3</span><strong>Entrez votre référence</strong>
+        <div class="field" style="margin-top:10px">
+          <input type="text" id="pay-ref" placeholder="ex: TXN-1234567890">
+        </div>
+      </div>
+      <button class="btn btn-gold btn-full btn-lg" onclick="confirmPayment('annuel')">✅ Valider mon paiement</button>`;
+  }
+  modal.classList.add('active');
 }
-function fermerModal() { document.getElementById('modal').classList.remove('active'); }
-function confirmer() { alert('Merci ! Votre abonnement sera activé après vérification du paiement. 🎉'); fermerModal(); }
-function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
-document.getElementById('modal').addEventListener('click', function(e) { if(e.target===this) fermerModal(); });
+
+function confirmPayment(plan){
+  const ref=document.getElementById('pay-ref')?.value.trim();
+  if(!ref){toast('Entrez votre référence de paiement','err');return}
+  const d=getData();
+  // Save payment
+  d.payments.push({phone:currentUser?.phone||'anonyme',plan,ref,date:Date.now(),amount:plan==='mensuel'?500:1000});
+  // Update user plan
+  if(currentUser){
+    const u=d.users.find(u=>u.phone===currentUser.phone);
+    if(u){u.plan=plan;u.payRef=ref;u.payDate=Date.now();}
+    currentUser.plan=plan;
+  }
+  saveData(d);
+  closeModal('modal-payment');
+  toast('Paiement enregistré ! Abonnement activé ✓');
+  if(currentUser&&document.getElementById('screen-library').classList.contains('active')) renderLibrary();
+}
+
+// ── ADMIN ──
+function refreshAdmin(){
+  const d=getData();
+  document.getElementById('kpi-docs').textContent=d.docs.length;
+  document.getElementById('kpi-users').textContent=d.users.length;
+  document.getElementById('kpi-trial').textContent=d.users.filter(u=>u.plan==='trial').length;
+  document.getElementById('kpi-rev').textContent=d.payments.reduce((s,p)=>s+p.amount,0);
+  // Doc list
+  const dl=document.getElementById('admin-doc-list');
+  if(!dl) return;
+  dl.innerHTML=d.docs.map(doc=>`
+    <div class="doc-admin-row">
+      <span style="font-size:24px">${doc.icon}</span>
+      <div class="doc-admin-info">
+        <div class="t">${doc.title}</div>
+        <div class="s">${doc.level} · ${doc.subject} · ${doc.size}</div>
+      </div>
+      <div class="doc-admin-actions">
+        <button class="btn btn-outline btn-sm" onclick="deleteDoc(${doc.id})">🗑️</button>
+      </div>
+    </div>`).join('');
+  // User list
+  const ul=document.getElementById('admin-user-list');
+  if(!ul) return;
+  if(d.users.length===0){ul.innerHTML='<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Aucun abonné pour l\'instant</p>';return}
+  ul.innerHTML=d.users.map(u=>`
+    <div class="sub-row">
+      <span>👤</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${u.phone}</div>
+      </div>
+      <span class="sub-badge ${u.plan==='trial'?'sub-trial':u.plan==='mensuel'?'sub-month':'sub-year'}">
+        ${u.plan==='trial'?'Essai':u.plan==='mensuel'?'Mensuel':'Annuel'}
+      </span>
+      <button class="btn btn-red btn-sm" onclick="deleteUser(${u.id})">✕</button>
+    </div>`).join('');
+}
+
+function adminTab(btn,tabId){
+  document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('#screen-admin .admin-panel').forEach(p=>p.style.display='none');
+  const tab=document.getElementById(tabId);
+  if(tab){tab.style.display='block';}
+  if(tabId==='tab-docs'||tabId==='tab-users'||tabId==='tab-stats') refreshAdmin();
+}
+
+function showAdminTab(tabId){
+  const tabs=['tab-stats','tab-docs','tab-users','tab-add'];
+  const btnIndex=tabs.indexOf(tabId);
+  document.querySelectorAll('#screen-admin .bnav-item').forEach((b,i)=>b.classList.toggle('active',i===btnIndex));
+  document.querySelectorAll('.admin-tab').forEach((b,i)=>b.classList.toggle('active',i===btnIndex));
+  document.querySelectorAll('#screen-admin .admin-panel').forEach(p=>p.style.display='none');
+  const tab=document.getElementById(tabId);
+  if(tab) tab.style.display='block';
+  if(tabId!=='tab-add') refreshAdmin();
+}
+
+function deleteDoc(id){
+  if(!confirm('Supprimer ce document ?')) return;
+  const d=getData();
+  d.docs=d.docs.filter(doc=>doc.id!==id);
+  saveData(d);
+  refreshAdmin();
+  toast('Document supprimé');
+}
+
+function deleteUser(id){
+  if(!confirm('Supprimer cet abonné ?')) return;
+  const d=getData();
+  d.users=d.users.filter(u=>u.id!==id);
+  saveData(d);
+  refreshAdmin();
+  toast('Abonné supprimé');
+}
+
+let selectedFile=null;
+function handleFileSelect(e){
+  const f=e.target.files[0];
+  if(!f) return;
+  selectedFile=f;
+  const prev=document.getElementById('file-preview');
+  prev.style.display='block';
+  prev.innerHTML=`📎 <strong>${f.name}</strong> — ${(f.size/1024).toFixed(0)} KB`;
+}
+
+function publishDoc(){
+  const title  =document.getElementById('doc-title').value.trim();
+  const cat    =document.getElementById('doc-cat').value;
+  const level  =document.getElementById('doc-level').value;
+  const subject=document.getElementById('doc-subject').value;
+  const desc   =document.getElementById('doc-desc').value.trim();
+  const access =document.getElementById('doc-access').value;
+  const url    =document.getElementById('doc-url').value.trim();
+  if(!title||!cat||!level||!subject){toast('Remplissez tous les champs obligatoires','err');return}
+  if(!url&&!selectedFile){toast('Ajoutez un lien ou un fichier','err');return}
+  const d=getData();
+  const icons={'Fiches pédagogiques':'📄','Manuels scolaires':'📘','Guides enseignants':'📗','Mesures correctives':'✏️','Évaluations':'📝','Programmes officiels':'📋'};
+  const size=selectedFile?`${(selectedFile.size/1024).toFixed(0)} KB`:'—';
+  const fileUrl=selectedFile?URL.createObjectURL(selectedFile):(url||'#');
+  const doc={id:Date.now(),title,cat,level,subject,desc,access,url:fileUrl,size,icon:icons[cat]||'📄',date:new Date().toISOString().slice(0,7)};
+  d.docs.unshift(doc);
+  saveData(d);
+  // Reset form
+  ['doc-title','doc-desc','doc-url'].forEach(id=>document.getElementById(id).value='');
+  ['doc-cat','doc-level','doc-subject'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  document.getElementById('file-preview').style.display='none';
+  selectedFile=null;
+  toast(`"${title}" publié avec succès ✓`);
+  refreshAdmin();
+  showAdminTab('tab-docs');
+}
+
+function exportData(){
+  const d=getData();
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='eduking229-data.json';
+  a.click();
+  toast('Export téléchargé ✓');
+}
+
+// ── TOAST ──
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(type==='err'?' error':'');
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ── CLOSE OVERLAY ON OUTSIDE CLICK ──
+document.querySelectorAll('.overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('active')});
+});
+
+// ── UPLOAD ZONE DRAG ──
+const uz=document.getElementById('upload-zone');
+if(uz){
+  uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
+  uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+  uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f){selectedFile=f;const prev=document.getElementById('file-preview');prev.style.display='block';prev.innerHTML=`📎 <strong>${f.name}</strong> — ${(f.size/1024).toFixed(0)} KB`;}});
+}
 </script>
 </body>
 </html>
