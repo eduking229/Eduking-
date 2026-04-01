@@ -1,1423 +1,1086 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Eduking 229 — Bibliothèque Pédagogique Bénin</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* ════════════════════════════════════════════
-   VARIABLES
-════════════════════════════════════════════ */
-:root{
-  --vert:#0A6E3F; --vert2:#12b558; --vert3:#e8f7ef;
-  --jaune:#F5C518; --jaune2:#fef3c7;
-  --rouge:#C8202A; --rouge2:#fee2e2;
-  --bleu:#1A5FA8;  --bleu2:#e5eefa;
-  --orange:#C96A1F;--orange2:#fff0e0;
-  --violet:#6B3FA0;--violet2:#f0ebff;
-  --nuit:#0F1E2D;  --nuit2:#1C2F42; --nuit3:#243850;
-  --fond:#F7F3EC;  --blanc:#FFF;
-  --gris:#6B7B8D;  --gris2:#EEF1F4; --gris3:#dde3ec;
-  --txt:#1A2633;
-  --sh:0 4px 20px rgba(15,30,45,.1);
-  --sh2:0 12px 40px rgba(15,30,45,.18);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{font-family:'Outfit',sans-serif;background:var(--fond);color:var(--txt);overflow-x:hidden;}
-button,input,select,textarea{font-family:'Outfit',sans-serif;cursor:pointer;}
-input[type=file]{display:none;}
-a{color:inherit;text-decoration:none;}
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DocShield — Protection de documents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET & VARIABLES ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ════════════════════════════════════════════
-   SPLASH
-════════════════════════════════════════════ */
-.splash{position:fixed;inset:0;background:var(--nuit);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .6s,visibility .6s;}
-.splash.off{opacity:0;visibility:hidden;pointer-events:none;}
-.sp-box{text-align:center;}
-.sp-logo{width:76px;height:76px;border-radius:22px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 18px;box-shadow:0 8px 28px rgba(245,197,24,.35);animation:logoPop 2s ease-in-out infinite;}
-@keyframes logoPop{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.07) rotate(-2deg)}}
-.sp-t{font-family:'Fraunces',serif;font-size:28px;color:white;font-weight:900;margin-bottom:5px;}
-.sp-s{color:rgba(255,255,255,.4);font-size:12px;font-family:'JetBrains Mono',monospace;letter-spacing:2.5px;margin-bottom:28px;}
-.sp-bar{width:200px;height:4px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:0 auto;}
-.sp-fill{height:100%;background:linear-gradient(90deg,var(--vert),var(--jaune));border-radius:4px;animation:barLoad 1.6s ease forwards;}
-@keyframes barLoad{from{width:0}to{width:100%}}
+    :root {
+      --bg:        #0b0c0f;
+      --surface:   #13151a;
+      --surface2:  #1b1e26;
+      --border:    #2a2d38;
+      --accent:    #00e5a0;
+      --accent2:   #005f43;
+      --warn:      #ff6b35;
+      --text:      #e8eaf0;
+      --muted:     #6b7080;
+      --code:      #Space Mono, monospace;
+      --radius:    6px;
+      --shadow:    0 8px 32px rgba(0,0,0,0.5);
+    }
 
-/* ════════════════════════════════════════════
-   VUES (layer system)
-════════════════════════════════════════════ */
-.view{display:none;min-height:100vh;}
-.view.on{display:block;}
+    html { scroll-behavior: smooth; }
 
-/* ════════════════════════════════════════════
-   ══ VUE ACCUEIL PUBLIC ══
-════════════════════════════════════════════ */
-/* HERO */
-.hero{background:var(--nuit);position:relative;overflow:hidden;padding:0;}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0f1e2d 0%,#163d5a 50%,#1a4d30 100%);}
-.hero-pattern{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:26px 26px;}
-.hero-glow{position:absolute;top:-80px;right:-40px;width:320px;height:320px;border-radius:50%;background:radial-gradient(rgba(245,197,24,.1),transparent 70%);}
-.hero-inner{position:relative;z-index:2;padding:52px 24px 40px;}
-.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.22);color:var(--jaune);font-size:11px;padding:5px 14px;border-radius:20px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
-.hero h1{font-family:'Fraunces',serif;font-size:32px;font-weight:900;color:white;line-height:1.15;margin-bottom:12px;}
-.hero h1 em{color:var(--jaune);font-style:italic;}
-.hero-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;max-width:480px;margin-bottom:28px;}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
-.btn-hero-main{display:flex;align-items:center;gap:9px;background:var(--jaune);color:var(--nuit);border:none;border-radius:13px;padding:14px 24px;font-size:14px;font-weight:800;transition:all .25s;box-shadow:0 4px 18px rgba(245,197,24,.4);}
-.btn-hero-main:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,197,24,.5);}
-.btn-hero-sec{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);border:1.5px solid rgba(255,255,255,.15);border-radius:13px;padding:14px 22px;font-size:14px;font-weight:700;transition:all .2s;}
-.btn-hero-sec:hover{background:rgba(255,255,255,.14);}
-.hero-kpis{display:flex;gap:28px;margin-top:36px;padding-top:28px;border-top:1px solid rgba(255,255,255,.07);}
-.hk .hk-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:white;line-height:1;}
-.hk .hk-val em{color:var(--jaune);font-style:normal;}
-.hk .hk-l{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
 
-/* SEARCH BAR (homepage) */
-.search-section{padding:24px 20px 0;}
-.search-box{
-  display:flex;align-items:center;gap:12px;
-  background:white;border:2px solid rgba(0,0,0,.08);
-  border-radius:16px;padding:14px 18px;
-  box-shadow:var(--sh);transition:border-color .2s;
-}
-.search-box:focus-within{border-color:var(--vert);}
-.search-box .s-ico{font-size:20px;flex-shrink:0;}
-.search-box input{border:none;outline:none;background:none;font-size:15px;flex:1;color:var(--txt);}
-.search-box input::placeholder{color:var(--gris);}
-.search-box .s-btn{background:var(--vert);color:white;border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:800;flex-shrink:0;transition:all .2s;}
-.search-box .s-btn:hover{background:var(--vert2);}
-.search-results{padding:14px 20px 0;display:none;}
-.search-results.on{display:block;}
-.sr-label{font-size:12px;color:var(--gris);font-family:'JetBrains Mono',monospace;margin-bottom:10px;font-weight:700;}
-.sr-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:white;border-radius:12px;margin-bottom:8px;border:1.5px solid transparent;cursor:pointer;transition:all .2s;}
-.sr-item:hover{border-color:var(--vert);box-shadow:var(--sh);}
-.sr-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.sr-title{font-size:13.5px;font-weight:700;color:var(--txt);}
-.sr-meta{font-size:11px;color:var(--gris);}
-.sr-cat{margin-left:auto;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+    /* ── GRID BACKGROUND ────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* CATÉGORIES GRID (accueil) */
-.cats-section{padding:28px 20px;}
-.section-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;margin-bottom:4px;}
-.section-title em{color:var(--vert);font-style:normal;}
-.section-sub{font-size:13px;color:var(--gris);margin-bottom:20px;}
-.cats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-.cat-card{
-  background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:20px;
-  padding:20px 16px;text-align:center;transition:all .25s;cursor:pointer;
-  position:relative;overflow:hidden;
-}
-.cat-card:hover{transform:translateY(-4px);box-shadow:var(--sh2);}
-.cat-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s;}
-.cat-card:hover::before{opacity:1;}
-.cat-card.manuel::before{background:linear-gradient(135deg,rgba(10,110,63,.04),transparent);}
-.cat-card.guide::before{background:linear-gradient(135deg,rgba(26,95,168,.04),transparent);}
-.cat-card.fiche::before{background:linear-gradient(135deg,rgba(200,32,42,.04),transparent);}
-.cat-card.mc::before{background:linear-gradient(135deg,rgba(201,106,31,.04),transparent);}
-.cat-card.img::before{background:linear-gradient(135deg,rgba(107,63,160,.04),transparent);}
-.cat-card.autre::before{background:linear-gradient(135deg,rgba(245,197,24,.06),transparent);}
+    /* ── HEADER ─────────────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 28px 40px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(10px);
+      background: rgba(11,12,15,0.8);
+    }
 
-.cat-ico{font-size:44px;margin-bottom:12px;display:block;}
-.cat-name{font-size:15px;font-weight:800;margin-bottom:6px;}
-.cat-desc{font-size:12px;color:var(--gris);line-height:1.5;}
-.cat-count{
-  display:inline-flex;align-items:center;gap:4px;
-  margin-top:10px;padding:4px 10px;border-radius:8px;
-  font-size:10.5px;font-weight:700;font-family:'JetBrains Mono',monospace;
-}
-.cat-count.vert{background:var(--vert3);color:var(--vert);}
-.cat-count.bleu{background:var(--bleu2);color:var(--bleu);}
-.cat-count.rouge{background:var(--rouge2);color:var(--rouge);}
-.cat-count.orange{background:var(--orange2);color:var(--orange);}
-.cat-count.violet{background:var(--violet2);color:var(--violet);}
-.cat-count.jaune{background:var(--jaune2);color:#92400e;}
-.cat-lock{position:absolute;top:10px;right:10px;font-size:16px;opacity:.4;}
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
 
-/* NAVBAR (publique) */
-.nav{background:var(--nuit);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:500;border-bottom:3px solid var(--jaune);}
-.nav-brand{display:flex;align-items:center;gap:10px;}
-.nav-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;font-size:19px;}
-.nav-name strong{display:block;font-family:'Fraunces',serif;color:white;font-size:16px;font-weight:900;line-height:1;}
-.nav-name small{color:var(--jaune);font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;}
-.nav-btns{display:flex;gap:8px;}
-.nav-btn{padding:8px 16px;border-radius:9px;font-size:12.5px;font-weight:700;border:none;transition:all .2s;}
-.nav-btn.login{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
-.nav-btn.login:hover{background:rgba(255,255,255,.18);}
-.nav-btn.subscribe{background:var(--jaune);color:var(--nuit);}
-.nav-btn.subscribe:hover{box-shadow:0 4px 14px rgba(245,197,24,.45);}
+    .logo-icon svg { width: 22px; height: 22px; }
 
-/* ════════════════════════════════════════════
-   ══ VUE CONNEXION ══
-════════════════════════════════════════════ */
-.login-view{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--fond);}
-.login-card{background:white;border-radius:24px;padding:36px 28px;width:100%;max-width:400px;box-shadow:var(--sh2);border:1.5px solid rgba(0,0,0,.06);}
-.lc-logo{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;box-shadow:0 6px 20px rgba(245,197,24,.3);}
-.lc-title{font-family:'Fraunces',serif;font-size:22px;font-weight:900;text-align:center;margin-bottom:4px;}
-.lc-sub{color:var(--gris);font-size:13px;text-align:center;margin-bottom:26px;}
-.lc-tabs{display:flex;background:var(--gris2);border-radius:12px;padding:4px;margin-bottom:22px;}
-.lc-tab{flex:1;padding:9px;border-radius:10px;border:none;background:none;font-size:13px;font-weight:700;color:var(--gris);transition:all .2s;}
-.lc-tab.on{background:white;color:var(--txt);box-shadow:0 2px 8px rgba(0,0,0,.1);}
-.lf{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.lf label{font-size:10.5px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:1.2px;font-family:'JetBrains Mono',monospace;}
-.lf input{padding:13px 14px;border-radius:12px;border:1.5px solid rgba(0,0,0,.1);font-size:15px;outline:none;transition:all .2s;background:white;}
-.lf input:focus{border-color:var(--vert);box-shadow:0 0 0 3px rgba(10,110,63,.1);}
-.lc-btn{width:100%;padding:15px;border-radius:14px;border:none;font-size:15px;font-weight:800;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,var(--vert),var(--vert2));color:white;}
-.lc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,110,63,.4);}
-/* CODE D'ACCÈS VISIBLE */
-.access-code-bar{margin-top:18px;padding:12px 16px;background:var(--jaune2);border:1.5px solid var(--jaune);border-radius:12px;text-align:center;}
-.acb-label{font-size:11px;color:#92400e;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
-.acb-codes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
-.acb-code{padding:4px 12px;border-radius:8px;background:var(--jaune);color:var(--nuit);font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+    .logo-text { display: flex; flex-direction: column; }
+    .logo-text h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      color: var(--text);
+    }
+    .logo-text span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
 
-/* ════════════════════════════════════════════
-   ══ APP PRINCIPALE (adhérent) ══
-════════════════════════════════════════════ */
-/* TOPBAR */
-.app-top{background:var(--nuit);padding:12px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:400;border-bottom:3px solid var(--jaune);}
-.at-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--jaune),var(--orange));display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
-.at-info strong{display:block;font-family:'Fraunces',serif;color:white;font-size:16px;font-weight:900;line-height:1;}
-.at-info small{color:var(--jaune);font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;}
-.at-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.at-user{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);padding:6px 12px;border-radius:10px;}
-.at-user-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--vert),var(--jaune));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.at-user-name{color:white;font-size:12.5px;font-weight:700;}
-.at-logout{background:rgba(200,32,42,.2);color:#f87171;border:none;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:700;transition:all .2s;}
-.at-logout:hover{background:rgba(200,32,42,.35);}
+    .header-badge {
+      margin-left: auto;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border: 1px solid var(--accent2);
+      color: var(--accent);
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
 
-/* APP SEARCH */
-.app-search{padding:16px 18px 0;}
-.app-search-box{display:flex;align-items:center;gap:10px;background:white;border:1.5px solid rgba(0,0,0,.09);border-radius:14px;padding:11px 14px;transition:border-color .2s;}
-.app-search-box:focus-within{border-color:var(--vert);}
-.app-search-box input{border:none;outline:none;background:none;font-size:14px;flex:1;color:var(--txt);}
-.app-search-box input::placeholder{color:var(--gris);}
-.app-search-box .clr{background:none;border:none;font-size:18px;color:var(--gris);transition:color .2s;padding:2px;}
-.app-search-box .clr:hover{color:var(--rouge);}
+    /* ── MAIN LAYOUT ────────────────────────────────────── */
+    main {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 40px 24px;
+      gap: 32px;
+    }
 
-/* TABS */
-.app-tabs{display:flex;overflow-x:auto;scrollbar-width:none;background:white;border-bottom:1.5px solid var(--gris2);position:sticky;top:63px;z-index:300;}
-.app-tabs::-webkit-scrollbar{display:none;}
-.app-tab{flex:0 0 auto;padding:11px 16px;border:none;background:none;font-size:12.5px;font-weight:700;color:var(--gris);border-bottom:3px solid transparent;white-space:nowrap;transition:all .18s;}
-.app-tab.on{color:var(--nuit);border-bottom-color:var(--jaune);}
+    /* ── LEFT PANEL ─────────────────────────────────────── */
+    .left-panel { display: flex; flex-direction: column; gap: 24px; }
 
-/* PAGE */
-.app-page{display:none;padding:18px 16px 90px;}
-.app-page.on{display:block;}
+    .section-title {
+      font-size: 0.7rem;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
 
-/* SECTION HEADER */
-.sec-hdr{margin-bottom:20px;}
-.sec-hdr h2{font-family:'Fraunces',serif;font-size:20px;font-weight:900;margin-bottom:3px;}
-.sec-hdr h2 em{color:var(--vert);font-style:normal;}
-.sec-hdr p{font-size:12.5px;color:var(--gris);}
+    /* ── DROP ZONE ──────────────────────────────────────── */
+    #drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 60px 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
 
-/* SUB-CATÉGORIES */
-.sub-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;}
-.sub-card{background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;transition:all .22s;}
-.sub-card:hover{box-shadow:var(--sh);transform:translateY(-2px);}
-.sub-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;}
-.sh-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.sh-ico.math{background:var(--vert3);} .sh-ico.fr{background:var(--rouge2);} .sh-ico.sci{background:var(--bleu2);}
-.sh-ico.hist{background:var(--orange2);} .sh-ico.eps{background:#f0ebff;} .sh-ico.est{background:#fef9c3;}
-.sh-ico.gen{background:var(--gris2);}
-.sh-info strong{display:block;font-size:14px;font-weight:800;margin-bottom:2px;}
-.sh-info span{font-size:12px;color:var(--gris);}
-.sh-arr{margin-left:auto;font-size:18px;color:var(--gris);transition:transform .2s;}
-.sub-card.open .sh-arr{transform:rotate(90deg);}
-.sub-body{display:none;padding:0 16px 14px;}
-.sub-card.open .sub-body{display:block;}
-.doc-list{display:flex;flex-direction:column;gap:8px;}
-.doc-item{display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--fond);border-radius:12px;transition:all .2s;cursor:pointer;}
-.doc-item:hover{background:var(--vert3);border-color:rgba(10,110,63,.15);}
-.di-ico{font-size:22px;flex-shrink:0;}
-.di-name{flex:1;font-size:13.5px;font-weight:700;color:var(--txt);}
-.di-meta{font-size:11px;color:var(--gris);font-family:'JetBrains Mono',monospace;margin-top:2px;}
-.di-dl{background:var(--vert);color:white;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;flex-shrink:0;transition:all .2s;}
-.di-dl:hover{background:var(--vert2);}
-.class-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
-.cb{padding:2px 7px;border-radius:5px;font-size:9.5px;font-weight:700;font-family:'JetBrains Mono',monospace;background:var(--gris2);color:var(--gris);}
+    #drop-zone::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(0,229,160,0.05) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
 
-/* ════════════════════════════════════════════
-   ══ ADMIN ══
-════════════════════════════════════════════ */
-.admin-view{min-height:100vh;background:var(--nuit);}
-.admin-top{background:#0a1520;padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:3px solid var(--rouge);}
-.admin-top .at2-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--rouge),#e84d56);display:flex;align-items:center;justify-content:center;font-size:19px;}
-.admin-top strong{font-family:'Fraunces',serif;color:white;font-size:16px;font-weight:900;}
-.admin-top small{color:#f87171;font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;display:block;}
-.admin-badge{display:flex;align-items:center;gap:6px;background:rgba(200,32,42,.2);color:#f87171;border:1px solid rgba(200,32,42,.3);padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
-.admin-logout{margin-left:auto;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:none;padding:7px 14px;border-radius:9px;font-size:12px;font-weight:700;}
+    #drop-zone:hover::before,
+    #drop-zone.drag-over::before { opacity: 1; }
 
-.admin-nav{display:flex;overflow-x:auto;scrollbar-width:none;background:#0d1b2a;border-bottom:1px solid rgba(255,255,255,.07);}
-.admin-nav::-webkit-scrollbar{display:none;}
-.admin-tab{flex:0 0 auto;padding:12px 18px;border:none;background:none;color:rgba(255,255,255,.45);font-size:13px;font-weight:700;border-bottom:3px solid transparent;transition:all .18s;white-space:nowrap;}
-.admin-tab.on{color:var(--rouge);border-bottom-color:var(--rouge);}
+    #drop-zone:hover,
+    #drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--surface2);
+    }
 
-.admin-section{display:none;padding:22px 20px 80px;}
-.admin-section.on{display:block;}
+    #drop-zone.drag-over {
+      transform: scale(1.01);
+      box-shadow: 0 0 0 4px rgba(0,229,160,0.1), var(--shadow);
+    }
 
-/* STATS */
-.admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px;}
-.ast{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;}
-.ast-ico{font-size:24px;margin-bottom:8px;}
-.ast-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:white;margin-bottom:3px;}
-.ast-lab{font-size:12px;color:rgba(255,255,255,.35);}
+    .drop-icon {
+      width: 56px; height: 56px;
+      margin: 0 auto 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      transition: all 0.3s;
+    }
 
-/* MEMBRES TABLE */
-.admin-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;margin-bottom:18px;}
-.ac-hdr{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;}
-.ac-title{color:white;font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.ac-btn{padding:7px 14px;border-radius:9px;font-size:12px;font-weight:800;border:none;transition:all .2s;font-family:'Outfit',sans-serif;}
-.ac-btn.ok{background:rgba(10,110,63,.2);color:#4ade80;}
-.ac-btn.ok:hover{background:rgba(10,110,63,.35);}
-.ac-btn.rouge{background:rgba(200,32,42,.2);color:#f87171;}
-.ac-btn.rouge:hover{background:rgba(200,32,42,.32);}
-.ac-btn.primary{background:var(--rouge);color:white;}
-.ac-btn.primary:hover{background:#a01820;}
+    #drop-zone:hover .drop-icon,
+    #drop-zone.drag-over .drop-icon {
+      background: var(--accent2);
+      border-color: var(--accent);
+    }
 
-.membre-row{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;}
-.membre-row:last-child{border-bottom:none;}
-.membre-row:hover{background:rgba(255,255,255,.03);}
-.mr-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.mr-info{flex:1;}
-.mr-name{color:white;font-size:13.5px;font-weight:700;}
-.mr-meta{font-size:11.5px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace;margin-top:2px;}
-.mr-code{background:rgba(245,197,24,.12);color:var(--jaune);border:1px solid rgba(245,197,24,.2);padding:3px 9px;border-radius:7px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
-.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.status-dot.wait{background:var(--jaune);}
-.status-dot.ok{background:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,.2);}
-.status-dot.no{background:#f87171;}
+    .drop-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
 
-/* UPLOAD ADMIN */
-.admin-upload-zone{border:2.5px dashed rgba(200,32,42,.3);border-radius:18px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .25s;background:rgba(200,32,42,.04);margin-bottom:16px;}
-.admin-upload-zone:hover,.admin-upload-zone.drag{border-color:var(--rouge);background:rgba(200,32,42,.08);}
-.auz-ico{font-size:52px;margin-bottom:12px;}
-.auz-t{font-size:17px;font-weight:800;color:white;margin-bottom:6px;}
-.auz-s{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:16px;}
-.auz-btn{display:inline-flex;align-items:center;gap:8px;background:var(--rouge);color:white;border:none;border-radius:12px;padding:13px 26px;font-size:14px;font-weight:800;transition:all .2s;width:100%;justify-content:center;}
-.auz-btn:hover{background:#a01820;}
+    .drop-subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
 
-/* DOCS ADMIN TABLE */
-.admin-doc-row{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.04);}
-.admin-doc-row:last-child{border-bottom:none;}
-.adr-ico{font-size:24px;flex-shrink:0;}
-.adr-info{flex:1;}
-.adr-name{color:white;font-size:13.5px;font-weight:700;}
-.adr-meta{font-size:11px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace;margin-top:2px;}
-.adr-dl{background:rgba(10,110,63,.2);color:#4ade80;border:none;border-radius:8px;padding:6px 12px;font-size:11.5px;font-weight:700;transition:all .2s;}
-.adr-dl:hover{background:rgba(10,110,63,.35);}
-.adr-del{background:rgba(200,32,42,.15);color:#f87171;border:none;border-radius:8px;padding:6px 10px;font-size:13px;transition:all .2s;margin-left:4px;}
-.adr-del:hover{background:rgba(200,32,42,.28);}
+    .drop-formats {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
 
-/* FORM ADMIN */
-.af{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.af label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.2px;font-family:'JetBrains Mono',monospace;}
-.af input,.af select{padding:12px 14px;border-radius:11px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:white;font-size:14px;outline:none;transition:border-color .2s;}
-.af input:focus,.af select:focus{border-color:var(--rouge);}
-.af select option{background:#1e3349;}
-.af2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.af2 .af{margin-bottom:0;}
-.admin-submit{width:100%;padding:14px;border-radius:13px;border:none;background:var(--rouge);color:white;font-size:14.5px;font-weight:800;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;}
-.admin-submit:hover{background:#a01820;}
+    .fmt-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      padding: 3px 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
 
-/* FILE QUEUE (admin) */
-.afq{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
-.afq-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;}
-.afq-item.done{border-color:rgba(10,110,63,.3);background:rgba(10,110,63,.07);}
-.afq-ico{font-size:24px;}
-.afq-info{flex:1;}
-.afq-name{color:white;font-size:13px;font-weight:700;}
-.afq-size{font-size:11px;color:rgba(255,255,255,.35);font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
-.afq-bar{height:4px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
-.afq-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--rouge),#e84d56);transition:width .3s;}
-.afq-st{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;flex-shrink:0;}
-.afq-st.wait{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);}
-.afq-st.ok{background:rgba(10,110,63,.2);color:#4ade80;}
+    #file-input { display: none; }
 
-/* ════════════════════════════════════════════
-   TOAST
-════════════════════════════════════════════ */
-.toasts{position:fixed;bottom:20px;left:16px;right:16px;z-index:9999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
-.toast{background:var(--nuit2);color:white;padding:13px 18px;border-radius:14px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;max-width:420px;width:100%;transform:translateY(16px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;box-shadow:var(--sh2);}
-.toast.show{transform:translateY(0);opacity:1;}
-.toast.ok{border-left:4px solid #4ade80;}
-.toast.err{border-left:4px solid #f87171;}
-.toast.info{border-left:4px solid var(--jaune);}
+    /* ── FILE PREVIEW ───────────────────────────────────── */
+    #file-preview {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      align-items: center;
+      gap: 14px;
+    }
 
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:8000;align-items:flex-end;justify-content:center;padding:0;}
-.overlay.on{display:flex;}
-.modal{background:white;border-radius:24px 24px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:20px 18px 40px;animation:slideUp .35s cubic-bezier(.34,1.56,.64,1);}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-drag{width:40px;height:4px;background:rgba(0,0,0,.12);border-radius:4px;margin:0 auto 18px;}
-.modal-title{font-family:'Fraunces',serif;font-size:20px;font-weight:900;margin-bottom:16px;}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--gris2);border:none;width:34px;height:34px;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;}
+    #file-preview.visible { display: flex; }
 
-/* ANIM */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.fu{animation:fadeUp .4s ease forwards;}
-.d1{animation-delay:.06s;opacity:0}.d2{animation-delay:.12s;opacity:0}.d3{animation-delay:.18s;opacity:0}
+    .file-icon {
+      width: 44px; height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
 
-@media(min-width:600px){
-  .cats-grid{grid-template-columns:repeat(3,1fr);}
-  .admin-stats{grid-template-columns:repeat(4,1fr);}
-}
-</style>
+    .file-icon.pdf  { background: #3a1a1a; color: #ff6b6b; border: 1px solid #5a2a2a; }
+    .file-icon.docx { background: #1a2a3a; color: #6bb5ff; border: 1px solid #2a3a5a; }
+    .file-icon.img  { background: #1a3a2a; color: #6bffb5; border: 1px solid #2a5a3a; }
+
+    .file-info { flex: 1; overflow: hidden; }
+    .file-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-size {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .file-remove {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    .file-remove:hover { border-color: var(--warn); color: var(--warn); }
+
+    /* ── OPTIONS ────────────────────────────────────────── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .option-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .option-card:hover { border-color: var(--accent2); }
+    .option-card.selected {
+      border-color: var(--accent);
+      background: var(--surface2);
+      box-shadow: 0 0 0 1px var(--accent2);
+    }
+
+    .option-card input[type="radio"] { display: none; }
+
+    .option-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .option-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 2px solid var(--muted);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .option-card.selected .option-dot {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .option-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── SUBMIT BUTTON ──────────────────────────────────── */
+    #btn-protect {
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--accent);
+      color: #0b0c0f;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #btn-protect:hover { background: #00ffb3; transform: translateY(-1px); }
+    #btn-protect:active { transform: translateY(0); }
+    #btn-protect:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ── PROGRESS ───────────────────────────────────────── */
+    #progress-area { display: none; }
+    #progress-area.visible { display: block; }
+
+    .progress-track {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.4s ease;
+      animation: pulse-bar 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-bar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .progress-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    /* ── RIGHT PANEL ────────────────────────────────────── */
+    .right-panel { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── RESULT CARD ────────────────────────────────────── */
+    #result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #result-card.visible { display: flex; }
+
+    .result-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(0,229,160,0.12);
+      border: 1px solid var(--accent2);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .result-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .result-subtitle {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .result-meta {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .meta-val {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 2px 0;
+    }
+
+    /* ── BARCODE PREVIEW ────────────────────────────────── */
+    #barcode-preview {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    #barcode-preview img {
+      width: 100%;
+      display: block;
+    }
+
+    /* ── DOWNLOAD BUTTON ────────────────────────────────── */
+    #btn-download {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    #btn-download:hover {
+      background: var(--accent);
+      color: #0b0c0f;
+    }
+
+    /* ── INFO CARDS (right) ─────────────────────────────── */
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .info-card h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card h3 span { color: var(--accent); }
+
+    .tech-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tech-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tech-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .tech-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── VERIFY SECTION ─────────────────────────────────── */
+    .verify-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .verify-input input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .verify-input input:focus { border-color: var(--accent); }
+    .verify-input input::placeholder { color: var(--muted); }
+
+    .verify-input button {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .verify-input button:hover { border-color: var(--accent); color: var(--accent); }
+
+    #verify-result {
+      margin-top: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 10px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    #verify-result.ok   { background: rgba(0,229,160,0.08); border: 1px solid var(--accent2); color: var(--accent); }
+    #verify-result.err  { background: rgba(255,107,53,0.08); border: 1px solid #5a2a1a; color: var(--warn); }
+
+    /* ── ERROR TOAST ────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--warn);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--warn);
+      max-width: 320px;
+      z-index: 100;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    #toast.visible { transform: translateY(0); opacity: 1; }
+
+    /* ── FOOTER ─────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 10;
+      padding: 16px 40px;
+      border-top: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11,12,15,0.8);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      header { padding: 16px 20px; }
+      main { grid-template-columns: 1fr; padding: 20px 16px; }
+      .options-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 4px; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ════ SPLASH ════ -->
-<div class="splash" id="splash">
-  <div class="sp-box">
-    <div class="sp-logo">📚</div>
-    <div class="sp-t">Eduking 229</div>
-    <div class="sp-s">BIBLIOTHÈQUE PÉDAGOGIQUE BÉNIN</div>
-    <div class="sp-bar"><div class="sp-fill"></div></div>
+<!-- ── HEADER ────────────────────────────────────────────── -->
+<header>
+  <div class="logo-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#0b0c0f" stroke-width="2.5" stroke-linecap="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      <circle cx="12" cy="16" r="1.5" fill="#0b0c0f" stroke="none"/>
+    </svg>
   </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     VUE ACCUEIL PUBLIC
-══════════════════════════════════════ -->
-<div class="view on" id="v-accueil">
-  <nav class="nav">
-    <div class="nav-brand">
-      <div class="nav-logo">📚</div>
-      <div class="nav-name"><strong>Eduking 229</strong><small>PRIMAIRE BÉNIN</small></div>
-    </div>
-    <div class="nav-btns">
-      <button class="nav-btn login" onclick="allerConnexion()">🔑 Connexion</button>
-      <button class="nav-btn subscribe" onclick="allerConnexion('inscription')">S'inscrire</button>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-pattern"></div>
-    <div class="hero-glow"></div>
-    <div class="hero-inner fu">
-      <div class="hero-badge">🇧🇯 PROGRAMME OFFICIEL BÉNIN · CP1 → CM2</div>
-      <h1>La bibliothèque<br>pédagogique du <em>Bénin</em></h1>
-      <p class="hero-sub">Manuels, guides, fiches, mesures correctives et ressources pédagogiques pour tous les enseignants du primaire béninois.</p>
-      <div class="hero-btns">
-        <button class="btn-hero-main" onclick="allerConnexion()">🔓 Accéder aux ressources</button>
-        <button class="btn-hero-sec" onclick="allerConnexion('inscription')">✨ Essai gratuit 30 jours</button>
-      </div>
-      <div class="hero-kpis">
-        <div class="hk"><div class="hk-val">6</div><div class="hk-l">Catégories</div></div>
-        <div class="hk"><div class="hk-val">284<em>+</em></div><div class="hk-l">Ressources</div></div>
-        <div class="hk"><div class="hk-val">6</div><div class="hk-l">Niveaux CP→CM2</div></div>
-      </div>
-    </div>
+  <div class="logo-text">
+    <h1>DocShield</h1>
+    <span>HMAC-SHA256 · CODE 128</span>
   </div>
+  <div class="header-badge">v1.0.0</div>
+</header>
 
-  <!-- BARRE DE RECHERCHE PUBLIQUE -->
-  <div class="search-section fu d1">
-    <div class="search-box">
-      <span class="s-ico">🔍</span>
-      <input type="text" id="pub-search" placeholder="Rechercher : manuel, fiche, exercice, classe..." oninput="rechercherPublic(this.value)" autocomplete="off">
-      <button class="s-btn" onclick="rechercherPublic(document.getElementById('pub-search').value)">Chercher</button>
-    </div>
-  </div>
-  <div class="search-results" id="pub-results">
-    <div style="padding:0 20px">
-      <div class="sr-label" id="sr-label">Résultats</div>
-      <div id="sr-list"></div>
-    </div>
-  </div>
+<!-- ── MAIN ──────────────────────────────────────────────── -->
+<main>
 
-  <!-- CATÉGORIES -->
-  <div class="cats-section fu d2">
-    <div class="section-title">Nos <em>ressources</em></div>
-    <p class="section-sub">Connectez-vous pour accéder aux contenus complets</p>
+  <!-- LEFT: Upload & Options -->
+  <div class="left-panel">
 
-    <div class="cats-grid">
-      <div class="cat-card manuel" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">📘</span>
-        <div class="cat-name">Manuels</div>
-        <div class="cat-desc">Manuels de Mathématiques et Français pour toutes les classes CP1 à CM2</div>
-        <div class="cat-count vert">📘 12 manuels</div>
-      </div>
-      <div class="cat-card guide" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">📗</span>
-        <div class="cat-name">Guides</div>
-        <div class="cat-desc">Guides pédagogiques de toutes matières pour tous les niveaux</div>
-        <div class="cat-count bleu">📗 24 guides</div>
-      </div>
-      <div class="cat-card fiche" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">📝</span>
-        <div class="cat-name">Fiches</div>
-        <div class="cat-desc">Fiches pédagogiques par discipline pour toutes les classes</div>
-        <div class="cat-count rouge">📝 89 fiches</div>
-      </div>
-      <div class="cat-card mc" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">📋</span>
-        <div class="cat-name">Mesures correctives</div>
-        <div class="cat-desc">Mesures correctives EPS-ES et EST/EA pour le primaire</div>
-        <div class="cat-count orange">📋 18 documents</div>
-      </div>
-      <div class="cat-card img" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">🖼️</span>
-        <div class="cat-name">Images</div>
-        <div class="cat-desc">Images pédagogiques classées par discipline</div>
-        <div class="cat-count violet">🖼️ 142 images</div>
-      </div>
-      <div class="cat-card autre" onclick="allerConnexion()">
-        <span class="cat-lock">🔒</span>
-        <span class="cat-ico">📁</span>
-        <div class="cat-name">Autres ressources</div>
-        <div class="cat-desc">Cahiers journaux, calendrier scolaire, tableaux d'affichage</div>
-        <div class="cat-count jaune">📁 31 ressources</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     VUE CONNEXION
-══════════════════════════════════════ -->
-<div class="view" id="v-connexion">
-  <div style="background:var(--nuit);padding:12px 18px;display:flex;align-items:center;gap:10px;border-bottom:3px solid var(--jaune)">
-    <button onclick="allerAccueil()" style="background:rgba(255,255,255,.1);color:white;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700">← Retour</button>
-    <div style="margin-left:auto"><strong style="color:white;font-family:'Fraunces',serif;font-size:16px">Eduking 229</strong></div>
-  </div>
-  <div class="login-view">
-    <div class="login-card">
-      <div class="lc-logo">📚</div>
-      <div class="lc-title">Bienvenue</div>
-      <div class="lc-sub">Connectez-vous ou créez votre compte</div>
-
-      <div class="lc-tabs">
-        <button class="lc-tab on" id="lt-login" onclick="switchLoginTab('login')">Connexion</button>
-        <button class="lc-tab" id="lt-register" onclick="switchLoginTab('register')">Inscription</button>
-      </div>
-
-      <!-- CONNEXION -->
-      <div id="form-login">
-        <div class="lf"><label>Email ou identifiant</label><input type="text" id="li-user" placeholder="email@ecole.bj"></div>
-        <div class="lf"><label>Mot de passe</label><input type="password" id="li-pass" placeholder="••••••••"></div>
-        <button class="lc-btn" onclick="seConnecter()">🔑 Se connecter</button>
-        <div style="text-align:center;margin-top:12px;font-size:12.5px;color:var(--gris)">
-          Accès admin : <span style="font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--gris2);padding:2px 7px;border-radius:5px">admin / eduking229</span>
+    <div>
+      <p class="section-title">01 — Document à protéger</p>
+      <div id="drop-zone" role="button" aria-label="Zone de dépôt de fichier">
+        <div class="drop-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
         </div>
-      </div>
-
-      <!-- INSCRIPTION -->
-      <div id="form-register" style="display:none">
-        <div class="lf"><label>Nom complet</label><input type="text" id="ri-nom" placeholder="Mme Adjoua Kossou"></div>
-        <div class="lf"><label>Email</label><input type="email" id="ri-email" placeholder="adjoua@ecole.bj"></div>
-        <div class="lf"><label>Classe enseignée</label>
-          <select id="ri-classe" style="padding:13px 14px;border-radius:12px;border:1.5px solid rgba(0,0,0,.1);font-size:15px;outline:none;transition:all .2s;background:white;width:100%">
-            <option value="">-- Sélectionner --</option>
-            <option value="CP1">CP1</option><option value="CP2">CP2</option>
-            <option value="CE1">CE1</option><option value="CE2">CE2</option>
-            <option value="CM1">CM1</option><option value="CM2">CM2</option>
-          </select>
+        <p class="drop-title">Glisser-déposer un fichier</p>
+        <p class="drop-subtitle">ou cliquer pour parcourir<br>Max. 50 MB</p>
+        <div class="drop-formats">
+          <span class="fmt-badge">PDF</span>
+          <span class="fmt-badge">DOCX</span>
+          <span class="fmt-badge">PNG</span>
+          <span class="fmt-badge">JPG</span>
+          <span class="fmt-badge">WEBP</span>
         </div>
-        <div class="lf"><label>Mot de passe</label><input type="password" id="ri-pass" placeholder="Minimum 6 caractères"></div>
-        <button class="lc-btn" onclick="sInscrire()" style="background:linear-gradient(135deg,var(--bleu),#3a8fd4)">✨ Créer mon compte</button>
-      </div>
-
-      <!-- CODE D'ACCÈS VISIBLE EN BAS -->
-      <div class="access-code-bar" style="margin-top:18px">
-        <div class="acb-label">📍 Codes d'accès par classe</div>
-        <div class="acb-codes">
-          <span class="acb-code">CP1-1234</span>
-          <span class="acb-code">CP2-1234</span>
-          <span class="acb-code">CE1-1234</span>
-          <span class="acb-code">CE2-1234</span>
-          <span class="acb-code">CM1-1234</span>
-          <span class="acb-code">CM2-1234</span>
-        </div>
-        <div style="font-size:11px;color:#92400e;margin-top:6px">Ce code vous est attribué après validation de votre inscription par l'admin</div>
+        <input type="file" id="file-input" accept=".pdf,.docx,.png,.jpg,.jpeg,.webp"/>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ══════════════════════════════════════
-     APP ADHÉRENT
-══════════════════════════════════════ -->
-<div class="view" id="v-app">
-  <div class="app-top">
-    <div class="at-logo">📚</div>
-    <div class="at-info"><strong>Eduking 229</strong><small>BIBLIOTHÈQUE</small></div>
-    <div class="at-right">
-      <div class="at-user">
-        <div class="at-user-av">👩‍🏫</div>
-        <div class="at-user-name" id="appUserName">Enseignant</div>
+    <div id="file-preview">
+      <div class="file-icon" id="file-icon-badge">???</div>
+      <div class="file-info">
+        <div class="file-name" id="file-name-label">—</div>
+        <div class="file-size" id="file-size-label">—</div>
       </div>
-      <button class="at-logout" onclick="seDeconnecter()">↩</button>
+      <button class="file-remove" id="btn-remove">✕ Retirer</button>
     </div>
-  </div>
 
-  <!-- SEARCH APP -->
-  <div class="app-search">
-    <div class="app-search-box">
-      <span style="font-size:18px">🔍</span>
-      <input type="text" id="app-search-in" placeholder="Rechercher par nom, matière, classe..." oninput="rechercherApp(this.value)" autocomplete="off">
-      <button class="clr" onclick="clearSearch()" title="Effacer">✕</button>
-    </div>
-  </div>
-  <div id="app-search-results" style="display:none;padding:12px 16px 0">
-    <div class="sr-label" id="app-sr-label">Résultats</div>
-    <div id="app-sr-list" style="display:flex;flex-direction:column;gap:8px"></div>
-  </div>
-
-  <!-- TABS -->
-  <nav class="app-tabs">
-    <button class="app-tab on" onclick="showAppPage('accueil',this)">🏠 Accueil</button>
-    <button class="app-tab" onclick="showAppPage('manuels',this)">📘 Manuels</button>
-    <button class="app-tab" onclick="showAppPage('guides',this)">📗 Guides</button>
-    <button class="app-tab" onclick="showAppPage('fiches',this)">📝 Fiches</button>
-    <button class="app-tab" onclick="showAppPage('mc',this)">📋 Mesures correctives</button>
-    <button class="app-tab" onclick="showAppPage('images',this)">🖼️ Images</button>
-    <button class="app-tab" onclick="showAppPage('autres',this)">📁 Autres</button>
-    <button class="app-tab" onclick="showAppPage('compte',this)">👤 Compte</button>
-  </nav>
-
-  <!-- ── PAGE ACCUEIL APP ── -->
-  <div class="app-page on" id="pg-accueil">
-    <div class="sec-hdr fu"><h2>Bonjour <em id="app-hello">Enseignant</em> 👋</h2><p id="app-plan-status">Chargement...</p></div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px" class="fu d1">
-      <div style="background:white;border-radius:16px;padding:16px;border:1.5px solid rgba(0,0,0,.07);text-align:center">
-        <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace" id="stat-docs">284</div>
-        <div style="font-size:12px;color:var(--gris);margin-top:3px">Ressources</div>
-      </div>
-      <div style="background:white;border-radius:16px;padding:16px;border:1.5px solid rgba(0,0,0,.07);text-align:center">
-        <div style="font-size:28px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--vert)" id="stat-days">—</div>
-        <div style="font-size:12px;color:var(--gris);margin-top:3px" id="stat-days-lab">jours restants</div>
-      </div>
-    </div>
-    <!-- Récap catégories -->
-    <div class="sec-hdr fu d2"><h2>Accès <em>rapide</em></h2></div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" class="fu d3">
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('manuels')">
-        <div style="font-size:32px;margin-bottom:6px">📘</div><div style="font-size:12.5px;font-weight:700">Manuels</div>
-      </div>
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('guides')">
-        <div style="font-size:32px;margin-bottom:6px">📗</div><div style="font-size:12.5px;font-weight:700">Guides</div>
-      </div>
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('fiches')">
-        <div style="font-size:32px;margin-bottom:6px">📝</div><div style="font-size:12.5px;font-weight:700">Fiches</div>
-      </div>
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('mc')">
-        <div style="font-size:32px;margin-bottom:6px">📋</div><div style="font-size:12.5px;font-weight:700">Mesures</div>
-      </div>
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('images')">
-        <div style="font-size:32px;margin-bottom:6px">🖼️</div><div style="font-size:12.5px;font-weight:700">Images</div>
-      </div>
-      <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:all .2s" onclick="showAppPage('autres')">
-        <div style="font-size:32px;margin-bottom:6px">📁</div><div style="font-size:12.5px;font-weight:700">Autres</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── PAGE MANUELS ── -->
-  <div class="app-page" id="pg-manuels">
-    <div class="sec-hdr fu"><h2>📘 <em>Manuels</em></h2><p>Manuels de Mathématiques et Français — CP1 à CM2</p></div>
-    <div class="sub-grid" id="manuels-grid"></div>
-  </div>
-
-  <!-- ── PAGE GUIDES ── -->
-  <div class="app-page" id="pg-guides">
-    <div class="sec-hdr fu"><h2>📗 <em>Guides</em></h2><p>Guides pédagogiques — toutes matières, toutes classes</p></div>
-    <div class="sub-grid" id="guides-grid"></div>
-  </div>
-
-  <!-- ── PAGE FICHES ── -->
-  <div class="app-page" id="pg-fiches">
-    <div class="sec-hdr fu"><h2>📝 <em>Fiches</em></h2><p>Fiches par discipline et pour toutes les classes</p></div>
-    <div class="sub-grid" id="fiches-grid"></div>
-  </div>
-
-  <!-- ── PAGE MESURES CORRECTIVES ── -->
-  <div class="app-page" id="pg-mc">
-    <div class="sec-hdr fu"><h2>📋 <em>Mesures correctives</em></h2><p>EPS-ES · EST/EA</p></div>
-    <div class="sub-grid" id="mc-grid"></div>
-  </div>
-
-  <!-- ── PAGE IMAGES ── -->
-  <div class="app-page" id="pg-images">
-    <div class="sec-hdr fu"><h2>🖼️ <em>Images pédagogiques</em></h2><p>Images classées par discipline</p></div>
-    <div class="sub-grid" id="images-grid"></div>
-  </div>
-
-  <!-- ── PAGE AUTRES ── -->
-  <div class="app-page" id="pg-autres">
-    <div class="sec-hdr fu"><h2>📁 <em>Autres ressources</em></h2><p>Cahiers journaux · Calendrier scolaire · Tableaux d'affichage</p></div>
-    <div class="sub-grid" id="autres-grid"></div>
-  </div>
-
-  <!-- ── PAGE COMPTE ── -->
-  <div class="app-page" id="pg-compte">
-    <div class="sec-hdr fu"><h2>Mon <em>compte</em></h2></div>
-    <div style="background:white;border:1.5px solid rgba(0,0,0,.07);border-radius:18px;padding:20px;margin-bottom:14px" class="fu d1">
-      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--vert),var(--jaune));display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px">👩‍🏫</div>
-      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;text-align:center;margin-bottom:14px" id="cp-name">Enseignant</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--gris2);border-radius:11px">
-          <span style="font-size:13px;color:var(--gris)">Classe</span>
-          <span style="font-size:13.5px;font-weight:800;font-family:'JetBrains Mono',monospace" id="cp-classe">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--gris2);border-radius:11px">
-          <span style="font-size:13px;color:var(--gris)">Abonnement</span>
-          <span style="font-size:13.5px;font-weight:800;font-family:'JetBrains Mono',monospace" id="cp-plan">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--gris2);border-radius:11px">
-          <span style="font-size:13px;color:var(--gris)">Expire le</span>
-          <span style="font-size:13.5px;font-weight:800;font-family:'JetBrains Mono',monospace" id="cp-exp">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--jaune2);border:1.5px solid var(--jaune);border-radius:11px">
-          <span style="font-size:13px;color:#92400e;font-weight:700">Code d'accès</span>
-          <span style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#92400e" id="cp-code">—</span>
-        </div>
-      </div>
-    </div>
-    <button style="width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--rouge2);background:white;color:var(--rouge);font-size:14px;font-weight:700;margin-top:8px" onclick="seDeconnecter()">↩ Se déconnecter</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     ESPACE ADMIN
-══════════════════════════════════════ -->
-<div class="view" id="v-admin">
-  <div class="admin-top">
-    <div class="at2-logo">⚙️</div>
-    <div><strong style="font-family:'Fraunces',serif;color:white;font-size:16px;font-weight:900">Admin Eduking 229</strong><small style="color:#f87171;font-size:9px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px">ESPACE PRIVÉ</small></div>
-    <div class="admin-badge" style="margin-left:12px">🔴 ADMIN</div>
-    <button class="admin-logout" onclick="seDeconnecter()">↩ Quitter</button>
-  </div>
-
-  <nav class="admin-nav">
-    <button class="admin-tab on" onclick="showAdminTab('dashboard',this)">📊 Tableau de bord</button>
-    <button class="admin-tab" onclick="showAdminTab('membres',this)">👥 Membres</button>
-    <button class="admin-tab" onclick="showAdminTab('upload',this)">⬆️ Upload documents</button>
-    <button class="admin-tab" onclick="showAdminTab('documents',this)">📂 Bibliothèque</button>
-  </nav>
-
-  <!-- DASHBOARD -->
-  <div class="admin-section on" id="as-dashboard">
-    <div class="admin-stats" id="admin-stats-grid">
-      <div class="ast"><div class="ast-ico">👥</div><div class="ast-val" id="stat-membres">0</div><div class="ast-lab">Membres inscrits</div></div>
-      <div class="ast"><div class="ast-ico">⏳</div><div class="ast-val" id="stat-attente">0</div><div class="ast-lab">En attente</div></div>
-      <div class="ast"><div class="ast-ico">✅</div><div class="ast-val" id="stat-valides">0</div><div class="ast-lab">Validés</div></div>
-      <div class="ast"><div class="ast-ico">📂</div><div class="ast-val" id="stat-docs-admin">0</div><div class="ast-lab">Documents</div></div>
-    </div>
-    <div class="admin-card">
-      <div class="ac-hdr"><div class="ac-title">⏳ Inscriptions en attente</div><button class="ac-btn primary" onclick="validerTous()">✅ Tout valider</button></div>
-      <div id="admin-attente-list"><div style="padding:20px;text-align:center;color:rgba(255,255,255,.3)">Aucune inscription en attente</div></div>
-    </div>
-    <div class="admin-card" style="margin-top:16px">
-      <div class="ac-hdr"><div class="ac-title">📋 Activité récente</div></div>
-      <div id="admin-activity"></div>
-    </div>
-  </div>
-
-  <!-- MEMBRES -->
-  <div class="admin-section" id="as-membres">
-    <div class="admin-card">
-      <div class="ac-hdr">
-        <div class="ac-title">👥 Tous les membres (<span id="total-membres">0</span>)</div>
-        <button class="ac-btn ok" onclick="exporterMembres()">📊 Exporter</button>
-      </div>
-      <div id="admin-membres-list"></div>
-    </div>
-  </div>
-
-  <!-- UPLOAD -->
-  <div class="admin-section" id="as-upload">
-    <div class="admin-upload-zone" id="adminDropZone"
-      onclick="document.getElementById('adminFileIn').click()"
-      ondragover="adminDragOver(event)" ondragleave="adminDragLeave()" ondrop="adminDrop(event)">
-      <div class="auz-ico">📂</div>
-      <div class="auz-t">Téléverser des documents</div>
-      <div class="auz-s">PDF · Word · Images · Audio · Vidéo<br>Glissez ou cliquez pour sélectionner</div>
-      <button class="auz-btn" onclick="event.stopPropagation();document.getElementById('adminFileIn').click()">⬆️ Choisir des fichiers</button>
-    </div>
-    <input type="file" id="adminFileIn" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp3,.mp4,.xlsx,.pptx,.odt" onchange="handleAdminFiles(this.files)">
-
-    <div class="afq" id="admin-fq"></div>
-
-    <div id="admin-upload-form" style="display:none">
-      <div class="admin-card" style="padding:18px">
-        <div class="ac-title" style="margin-bottom:16px">📝 Informations du document</div>
-        <div class="af"><label>Titre du document</label><input type="text" id="au-titre" placeholder="Ex : Manuel de Mathématiques CP1"></div>
-        <div class="af2">
-          <div class="af"><label>Catégorie</label>
-            <select id="au-cat">
-              <option value="manuels">📘 Manuels</option>
-              <option value="guides">📗 Guides</option>
-              <option value="fiches">📝 Fiches</option>
-              <option value="mc">📋 Mesures correctives</option>
-              <option value="images">🖼️ Images</option>
-              <option value="autres">📁 Autres ressources</option>
-            </select>
+    <div>
+      <p class="section-title">02 — Position du code-barres</p>
+      <div class="options-grid">
+        <label class="option-card selected" id="opt-bottom">
+          <input type="radio" name="position" value="bottom" checked/>
+          <div class="option-label">
+            <span class="option-dot"></span>
+            En bas
           </div>
-          <div class="af"><label>Sous-catégorie</label>
-            <select id="au-souscat">
-              <option value="math">Mathématiques</option>
-              <option value="fr">Français</option>
-              <option value="sci">Sciences</option>
-              <option value="hist">Histoire-Géo</option>
-              <option value="eps">EPS-ES</option>
-              <option value="est">EST/EA</option>
-              <option value="gen">Général</option>
-            </select>
+          <p class="option-desc">Code-barres ajouté en<br>bas de chaque page</p>
+        </label>
+        <label class="option-card" id="opt-top">
+          <input type="radio" name="position" value="top"/>
+          <div class="option-label">
+            <span class="option-dot"></span>
+            En haut
           </div>
-        </div>
-        <div class="af2">
-          <div class="af"><label>Classe(s)</label>
-            <select id="au-classe">
-              <option value="CP1">CP1</option><option value="CP2">CP2</option>
-              <option value="CE1">CE1</option><option value="CE2">CE2</option>
-              <option value="CM1">CM1</option><option value="CM2">CM2</option>
-              <option value="Toutes">Toutes classes</option>
-            </select>
-          </div>
-          <div class="af"><label>Trimestre</label>
-            <select id="au-tri"><option value="T1">T1</option><option value="T2">T2</option><option value="T3">T3</option><option value="">Général</option></select>
-          </div>
-        </div>
-        <button class="admin-submit" onclick="publierDocAdmin()">📤 Publier dans la bibliothèque</button>
+          <p class="option-desc">Code-barres ajouté en<br>tête de chaque page</p>
+        </label>
       </div>
     </div>
-  </div>
 
-  <!-- BIBLIOTHÈQUE ADMIN -->
-  <div class="admin-section" id="as-documents">
-    <div class="admin-card">
-      <div class="ac-hdr">
-        <div class="ac-title">📂 Documents publiés (<span id="total-docs-admin">0</span>)</div>
-        <button class="ac-btn rouge" onclick="viderBibliotheque()">🗑 Tout vider</button>
+    <div id="progress-area">
+      <div class="progress-track">
+        <div class="progress-bar" id="progress-bar"></div>
       </div>
-      <div id="admin-docs-list"></div>
+      <p class="progress-label" id="progress-label">Traitement en cours…</p>
     </div>
+
+    <button id="btn-protect" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Protéger le document
+    </button>
+
   </div>
-</div>
 
-<!-- TOASTS -->
-<div class="toasts" id="toasts"></div>
+  <!-- RIGHT: Result & Info -->
+  <div class="right-panel">
 
+    <!-- Résultat -->
+    <div id="result-card">
+      <div class="result-status">
+        <div class="status-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5a0" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="result-title">Document protégé ✓</div>
+          <div class="result-subtitle" id="result-filename">—</div>
+        </div>
+      </div>
+
+      <div id="barcode-preview">
+        <img id="barcode-img" src="" alt="Code-barres généré" loading="lazy"/>
+      </div>
+
+      <div class="result-meta">
+        <div class="meta-row">
+          <span class="meta-key">Document ID</span>
+          <span class="meta-val" id="meta-docid">—</span>
+        </div>
+        <div class="divider"></div>
+        <div class="meta-row">
+          <span class="meta-key">Timestamp</span>
+          <span class="meta-val" id="meta-ts">—</span>
+        </div>
+        <div class="divider"></div>
+        <div class="meta-row">
+          <span class="meta-key">Signature HMAC-SHA256</span>
+          <span class="meta-val" id="meta-sig">—</span>
+        </div>
+        <div class="divider"></div>
+        <div class="meta-row">
+          <span class="meta-key">Taille du fichier</span>
+          <span class="meta-val" id="meta-size">—</span>
+        </div>
+      </div>
+
+      <button id="btn-download">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Télécharger le document
+      </button>
+    </div>
+
+    <!-- Info technique -->
+    <div class="info-card">
+      <h3><span>⟡</span> Fonctionnement</h3>
+      <div class="tech-list">
+        <div class="tech-item">
+          <div class="tech-dot"></div>
+          <p class="tech-text">Génération d'un <strong>ID unique</strong> par document (UUID16)</p>
+        </div>
+        <div class="tech-item">
+          <div class="tech-dot"></div>
+          <p class="tech-text">Signature <strong>HMAC-SHA256</strong> avec clé secrète serveur</p>
+        </div>
+        <div class="tech-item">
+          <div class="tech-dot"></div>
+          <p class="tech-text">Encodage <strong>Code 128</strong> — 128 caractères ASCII, haute densité</p>
+        </div>
+        <div class="tech-item">
+          <div class="tech-dot"></div>
+          <p class="tech-text">Estampillage natif : <strong>PDF</strong> (reportlab+pypdf), <strong>DOCX</strong> (python-docx), <strong>Images</strong> (Pillow)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vérification -->
+    <div class="info-card">
+      <h3><span>⟡</span> Vérifier un code-barres</h3>
+      <div class="verify-input">
+        <input type="text" id="verify-input" placeholder="DS-XXXXXXXXXXXXXXXX-…"/>
+        <button id="btn-verify">Vérifier</button>
+      </div>
+      <div id="verify-result"></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <span>DocShield © 2025 — Protection documentaire HMAC-SHA256</span>
+  <span>Flask · python-barcode · reportlab · pypdf · python-docx · Pillow</span>
+</footer>
+
+<!-- ── TOAST ──────────────────────────────────────────────── -->
+<div id="toast"></div>
+
+<!-- ── SCRIPT ─────────────────────────────────────────────── -->
 <script>
-/* ══════════════════════════════════════════════
-   DONNÉES & STORAGE
-══════════════════════════════════════════════ */
-const K_USER    = 'edu229_user';
-const K_MEMBRES = 'edu229_membres';
-const K_DOCS    = 'edu229_docs';
+(function () {
+  /* ─── State ─── */
+  let selectedFile = null;
+  let downloadData = null;  // {b64, mime, filename}
 
-const CAT_ICO = { manuels:'📘', guides:'📗', fiches:'📝', mc:'📋', images:'🖼️', autres:'📁' };
-const CAT_LABEL = { manuels:'Manuels', guides:'Guides', fiches:'Fiches', mc:'Mesures correctives', images:'Images', autres:'Autres ressources' };
-const SOUSCAT_ICO   = { math:'🔢', fr:'🔤', sci:'🔬', hist:'🌍', eps:'⚽', est:'🔧', gen:'📎' };
-const SOUSCAT_LABEL = { math:'Mathématiques', fr:'Français / Lecture', sci:'Sciences & Éveil', hist:'Histoire-Géo Bénin', eps:'EPS-ES', est:'EST/EA', gen:'Général' };
-const SOUSCAT_CLS   = { math:'math', fr:'fr', sci:'sci', hist:'hist', eps:'eps', est:'est', gen:'gen' };
-const EXT_ICO = { pdf:'📄', doc:'📝', docx:'📝', mp3:'🎵', mp4:'🎬', jpg:'🖼️', jpeg:'🖼️', png:'🖼️', odt:'📝', xlsx:'📊', pptx:'📊' };
+  /* ─── DOM refs ─── */
+  const dropZone   = document.getElementById('drop-zone');
+  const fileInput  = document.getElementById('file-input');
+  const filePrev   = document.getElementById('file-preview');
+  const fileIcon   = document.getElementById('file-icon-badge');
+  const fileName   = document.getElementById('file-name-label');
+  const fileSize   = document.getElementById('file-size-label');
+  const btnRemove  = document.getElementById('btn-remove');
+  const btnProtect = document.getElementById('btn-protect');
+  const btnDl      = document.getElementById('btn-download');
+  const btnVerify  = document.getElementById('btn-verify');
+  const verifyIn   = document.getElementById('verify-input');
+  const verifyRes  = document.getElementById('verify-result');
+  const optBottom  = document.getElementById('opt-bottom');
+  const optTop     = document.getElementById('opt-top');
+  const progressA  = document.getElementById('progress-area');
+  const progressB  = document.getElementById('progress-bar');
+  const progressL  = document.getElementById('progress-label');
+  const resultCard = document.getElementById('result-card');
+  const barcodeImg = document.getElementById('barcode-img');
+  const toast      = document.getElementById('toast');
 
-/* DEMO DOCS (bibliothèque par défaut) */
-const DOCS_DEMO = [
-  // MANUELS
-  {id:'d01',titre:'Manuel de Mathématiques CP1',cat:'manuels',souscat:'math',classe:'CP1',tri:'',ext:'pdf',filename:'Manuel_Maths_CP1.pdf',size:2400000,date:'2025-01-15',demo:true},
-  {id:'d02',titre:'Manuel de Mathématiques CP2',cat:'manuels',souscat:'math',classe:'CP2',tri:'',ext:'pdf',filename:'Manuel_Maths_CP2.pdf',size:2500000,date:'2025-01-15',demo:true},
-  {id:'d03',titre:'Manuel de Français CP1',cat:'manuels',souscat:'fr',classe:'CP1',tri:'',ext:'pdf',filename:'Manuel_Francais_CP1.pdf',size:3100000,date:'2025-01-15',demo:true},
-  {id:'d04',titre:'Manuel de Mathématiques CE1',cat:'manuels',souscat:'math',classe:'CE1',tri:'',ext:'pdf',filename:'Manuel_Maths_CE1.pdf',size:2800000,date:'2025-01-15',demo:true},
-  {id:'d05',titre:'Manuel de Français CE1',cat:'manuels',souscat:'fr',classe:'CE1',tri:'',ext:'pdf',filename:'Manuel_Francais_CE1.pdf',size:3200000,date:'2025-01-15',demo:true},
-  {id:'d06',titre:'Manuel de Mathématiques CM1',cat:'manuels',souscat:'math',classe:'CM1',tri:'',ext:'pdf',filename:'Manuel_Maths_CM1.pdf',size:2900000,date:'2025-01-15',demo:true},
-  {id:'d07',titre:'Manuel de Français CM2',cat:'manuels',souscat:'fr',classe:'CM2',tri:'',ext:'pdf',filename:'Manuel_Francais_CM2.pdf',size:3500000,date:'2025-01-15',demo:true},
-  // GUIDES
-  {id:'d08',titre:'Guide pédagogique Mathématiques CP',cat:'guides',souscat:'math',classe:'CP1',tri:'',ext:'pdf',filename:'Guide_Maths_CP.pdf',size:1800000,date:'2025-01-20',demo:true},
-  {id:'d09',titre:'Guide pédagogique Français CE',cat:'guides',souscat:'fr',classe:'CE1',tri:'',ext:'pdf',filename:'Guide_Francais_CE.pdf',size:2100000,date:'2025-01-20',demo:true},
-  {id:'d10',titre:'Guide Sciences & Éveil CM',cat:'guides',souscat:'sci',classe:'CM1',tri:'',ext:'pdf',filename:'Guide_Sciences_CM.pdf',size:1600000,date:'2025-01-20',demo:true},
-  {id:'d11',titre:'Guide Histoire-Géographie Bénin CE2',cat:'guides',souscat:'hist',classe:'CE2',tri:'',ext:'pdf',filename:'Guide_Hist_Geo_CE2.pdf',size:2200000,date:'2025-01-20',demo:true},
-  // FICHES
-  {id:'d12',titre:'Fiches de Mathématiques CP1 — T1',cat:'fiches',souscat:'math',classe:'CP1',tri:'T1',ext:'pdf',filename:'Fiches_Maths_CP1_T1.pdf',size:1200000,date:'2025-02-01',demo:true},
-  {id:'d13',titre:'Fiches de Lecture CP2 — T2',cat:'fiches',souscat:'fr',classe:'CP2',tri:'T2',ext:'pdf',filename:'Fiches_Lecture_CP2_T2.pdf',size:1100000,date:'2025-02-01',demo:true},
-  {id:'d14',titre:'Fiches Sciences CE2 — T1',cat:'fiches',souscat:'sci',classe:'CE2',tri:'T1',ext:'pdf',filename:'Fiches_Sciences_CE2_T1.pdf',size:980000,date:'2025-02-01',demo:true},
-  {id:'d15',titre:'Fiches Histoire-Géo CM1 — T2',cat:'fiches',souscat:'hist',classe:'CM1',tri:'T2',ext:'pdf',filename:'Fiches_Hist_CM1_T2.pdf',size:1050000,date:'2025-02-01',demo:true},
-  // MESURES CORRECTIVES
-  {id:'d16',titre:'Mesures correctives EPS-ES CP1-CP2',cat:'mc',souscat:'eps',classe:'CP1',tri:'',ext:'pdf',filename:'MC_EPS_ES_CP.pdf',size:850000,date:'2025-02-10',demo:true},
-  {id:'d17',titre:'Mesures correctives EPS-ES CE',cat:'mc',souscat:'eps',classe:'CE1',tri:'',ext:'pdf',filename:'MC_EPS_ES_CE.pdf',size:890000,date:'2025-02-10',demo:true},
-  {id:'d18',titre:'Mesures correctives EPS-ES CM',cat:'mc',souscat:'eps',classe:'CM1',tri:'',ext:'pdf',filename:'MC_EPS_ES_CM.pdf',size:920000,date:'2025-02-10',demo:true},
-  {id:'d19',titre:'Mesures correctives EST/EA CP',cat:'mc',souscat:'est',classe:'CP1',tri:'',ext:'pdf',filename:'MC_EST_EA_CP.pdf',size:780000,date:'2025-02-10',demo:true},
-  {id:'d20',titre:'Mesures correctives EST/EA CE-CM',cat:'mc',souscat:'est',classe:'CE1',tri:'',ext:'pdf',filename:'MC_EST_EA_CE_CM.pdf',size:820000,date:'2025-02-10',demo:true},
-  // IMAGES
-  {id:'d21',titre:'Images Mathématiques CP-CE',cat:'images',souscat:'math',classe:'CP1',tri:'',ext:'jpg',filename:'Images_Maths_CP_CE.jpg',size:3200000,date:'2025-02-15',demo:true},
-  {id:'d22',titre:'Images Sciences & Éveil',cat:'images',souscat:'sci',classe:'Toutes',tri:'',ext:'jpg',filename:'Images_Sciences.jpg',size:4100000,date:'2025-02-15',demo:true},
-  {id:'d23',titre:'Images Histoire-Géo Bénin',cat:'images',souscat:'hist',classe:'Toutes',tri:'',ext:'jpg',filename:'Images_Hist_Geo.jpg',size:3800000,date:'2025-02-15',demo:true},
-  // AUTRES
-  {id:'d24',titre:'Cahier journal CP1-CP2',cat:'autres',souscat:'gen',classe:'CP1',tri:'',ext:'pdf',filename:'Cahier_Journal_CP.pdf',size:650000,date:'2025-03-01',demo:true},
-  {id:'d25',titre:'Cahier journal CE1-CE2',cat:'autres',souscat:'gen',classe:'CE1',tri:'',ext:'pdf',filename:'Cahier_Journal_CE.pdf',size:670000,date:'2025-03-01',demo:true},
-  {id:'d26',titre:'Cahier journal CM1-CM2',cat:'autres',souscat:'gen',classe:'CM1',tri:'',ext:'pdf',filename:'Cahier_Journal_CM.pdf',size:660000,date:'2025-03-01',demo:true},
-  {id:'d27',titre:'Calendrier scolaire 2024-2025 Bénin',cat:'autres',souscat:'gen',classe:'Toutes',tri:'',ext:'pdf',filename:'Calendrier_Scolaire_2024_2025.pdf',size:420000,date:'2025-03-01',demo:true},
-  {id:'d28',titre:"Tableau d'affichage CP",cat:'autres',souscat:'gen',classe:'CP1',tri:'',ext:'pdf',filename:'Tableau_Affichage_CP.pdf',size:530000,date:'2025-03-01',demo:true},
-  {id:'d29',titre:"Tableau d'affichage CE",cat:'autres',souscat:'gen',classe:'CE1',tri:'',ext:'pdf',filename:'Tableau_Affichage_CE.pdf',size:540000,date:'2025-03-01',demo:true},
-  {id:'d30',titre:"Tableau d'affichage CM",cat:'autres',souscat:'gen',classe:'CM1',tri:'',ext:'pdf',filename:'Tableau_Affichage_CM.pdf',size:545000,date:'2025-03-01',demo:true},
-];
-
-/* ÉTAT */
-let user      = null;
-let membres   = [];
-let docs      = [];
-let pendAdmin = [];
-let loginTab  = 'login';
-
-/* STORAGE */
-function lUser()  { try{user     = JSON.parse(localStorage.getItem(K_USER))||null;}catch{user=null;} }
-function lMembres(){ try{membres  = JSON.parse(localStorage.getItem(K_MEMBRES))||[];}catch{membres=[];} }
-function lDocs()  { try{docs     = JSON.parse(localStorage.getItem(K_DOCS))||[];}catch{docs=[];} }
-function sUser()  { try{localStorage.setItem(K_USER,    JSON.stringify(user));}catch(e){} }
-function sMembres(){ try{localStorage.setItem(K_MEMBRES, JSON.stringify(membres));}catch(e){} }
-function sDocs()  { try{localStorage.setItem(K_DOCS,    JSON.stringify(docs));}catch(e){} }
-function genId()  { return 'id'+Date.now()+Math.random().toString(36).slice(2,5); }
-
-function tousLcsDocs(){ return [...DOCS_DEMO, ...docs]; }
-
-/* ══════════════════════════════════════════════
-   NAVIGATION VUES
-══════════════════════════════════════════════ */
-function allerAccueil()         { showView('v-accueil'); }
-function allerConnexion(tab)    { showView('v-connexion'); if(tab) switchLoginTab(tab); }
-function allerApp()             { showView('v-app'); majAppUI(); }
-function allerAdmin()           { showView('v-admin'); majAdminUI(); }
-
-function showView(id){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  window.scrollTo(0,0);
-}
-
-/* ══════════════════════════════════════════════
-   CONNEXION / INSCRIPTION
-══════════════════════════════════════════════ */
-function switchLoginTab(tab){
-  loginTab = tab;
-  ['login','register'].forEach(t=>{
-    document.getElementById('lt-'+t).classList.toggle('on', t===tab);
-    document.getElementById('form-'+t).style.display = t===tab ? 'block' : 'none';
-  });
-}
-
-function seConnecter(){
-  const u = document.getElementById('li-user').value.trim();
-  const p = document.getElementById('li-pass').value.trim();
-  if(!u||!p){ toast('⚠️ Remplissez tous les champs','err'); return; }
-
-  // ADMIN SECRET
-  if(u==='admin' && p==='eduking229'){
-    user = {role:'admin',nom:'Administrateur',email:'admin@eduking229.bj',classe:'',plan:'admin',dateExp:'2099-12-31',code:'ADMIN',ref:'ADMIN'};
-    sUser(); allerAdmin(); toast('⚙️ Bienvenue dans l\'espace Admin','ok'); return;
+  /* ─── Utilities ─── */
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 4000);
   }
 
-  // MEMBRE
-  lMembres();
-  const m = membres.find(x=>(x.email===u||x.nom===u) && x.pass===p);
-  if(!m){ toast('❌ Identifiants incorrects','err'); return; }
-  if(m.status==='attente'){ toast('⏳ Votre compte est en attente de validation','info'); return; }
-  if(m.status!=='valide')  { toast('❌ Compte non validé','err'); return; }
-
-  user = {role:'membre',nom:m.nom,email:m.email,classe:m.classe,plan:m.plan,dateExp:m.dateExp,code:m.code,ref:m.ref};
-  sUser(); allerApp(); toast('✅ Bienvenue '+m.nom.split(' ')[0]+' !','ok');
-}
-
-function sInscrire(){
-  const nom   = document.getElementById('ri-nom').value.trim();
-  const email = document.getElementById('ri-email').value.trim();
-  const classe= document.getElementById('ri-classe').value;
-  const pass  = document.getElementById('ri-pass').value.trim();
-  if(!nom||!email||!classe||!pass){ toast('⚠️ Remplissez tous les champs','err'); return; }
-  if(pass.length<6){ toast('⚠️ Mot de passe trop court (min 6)','err'); return; }
-
-  lMembres();
-  if(membres.find(m=>m.email===email)){ toast('⚠️ Email déjà utilisé','err'); return; }
-
-  const now   = new Date();
-  const exp   = new Date(now.getTime()+30*24*60*60*1000);
-  const code  = classe+'-1234';
-  const ref   = 'EDK-'+Date.now().toString().slice(-6);
-
-  membres.push({
-    id:genId(), nom, email, pass, classe,
-    status:'attente', plan:'trial',
-    dateIns:now.toISOString(), dateExp:exp.toISOString(),
-    code, ref,
-  });
-  sMembres();
-
-  toast('✅ Inscription envoyée ! En attente de validation admin.','ok');
-  document.getElementById('ri-nom').value='';
-  document.getElementById('ri-email').value='';
-  document.getElementById('ri-pass').value='';
-  document.getElementById('ri-classe').value='';
-  switchLoginTab('login');
-}
-
-function seDeconnecter(){
-  user=null; sUser(); allerAccueil(); toast('↩ Déconnecté','info');
-}
-
-/* ══════════════════════════════════════════════
-   APP ADHÉRENT — UI
-══════════════════════════════════════════════ */
-function majAppUI(){
-  if(!user) return;
-  document.getElementById('appUserName').textContent = user.nom.split(' ')[0];
-  document.getElementById('app-hello').textContent   = user.nom.split(' ')[0];
-  document.getElementById('cp-name').textContent     = user.nom;
-  document.getElementById('cp-classe').textContent   = user.classe||'—';
-  document.getElementById('cp-code').textContent     = user.code||'—';
-
-  const jr  = Math.max(0, Math.ceil((new Date(user.dateExp)-new Date())/(1000*60*60*24)));
-  const exp = new Date(user.dateExp).toLocaleDateString('fr-FR');
-  const planLabel = {trial:'🎁 Essai 30j',mensuel:'📅 Mensuel 500F',annuel:'📚 Annuel 1000F',admin:'⚙️ Admin'}[user.plan]||user.plan;
-  document.getElementById('cp-plan').textContent  = planLabel;
-  document.getElementById('cp-exp').textContent   = exp;
-  document.getElementById('stat-days').textContent = jr;
-  document.getElementById('app-plan-status').textContent = planLabel + ' · Expire le ' + exp;
-
-  renderManuels(); renderGuides(); renderFiches();
-  renderMC(); renderImages(); renderAutres();
-}
-
-function showAppPage(id, btn){
-  document.querySelectorAll('.app-page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('pg-'+id).classList.add('on');
-  if(btn) btn.classList.add('on');
-  window.scrollTo(0,0);
-}
-
-/* ══════════════════════════════════════════════
-   RENDU DES CATÉGORIES
-══════════════════════════════════════════════ */
-function buildSubGrid(containerId, cat, sousGrps){
-  const all = tousLcsDocs().filter(d=>d.cat===cat);
-  const cont = document.getElementById(containerId);
-  if(!all.length){ cont.innerHTML=`<div style="text-align:center;padding:40px;color:var(--gris)"><div style="font-size:44px;opacity:.3;margin-bottom:12px">${CAT_ICO[cat]}</div><div style="font-size:15px;font-weight:700">Aucun document</div><div style="font-size:12.5px;margin-top:6px">L'admin n'a pas encore publié de documents ici</div></div>`; return; }
-
-  cont.innerHTML = sousGrps.map(sg=>{
-    const items = all.filter(d=>d.souscat===sg.key || sg.key==='*');
-    if(!items.length) return '';
-    return `
-    <div class="sub-card" id="sc-${cat}-${sg.key}">
-      <div class="sub-head" onclick="toggleSubCard('sc-${cat}-${sg.key}')">
-        <div class="sh-ico ${SOUSCAT_CLS[sg.key]||'gen'}">${sg.ico}</div>
-        <div class="sh-info"><strong>${sg.label}</strong><span>${items.length} document${items.length>1?'s':''}</span></div>
-        <span class="sh-arr">›</span>
-      </div>
-      <div class="sub-body">
-        <div class="doc-list">${items.map(d=>docItem(d)).join('')}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function docItem(d){
-  const ico = EXT_ICO[d.ext]||'📄';
-  const sz  = d.size>1048576?(d.size/1048576).toFixed(1)+' MB':Math.round(d.size/1024)+' KB';
-  return `
-  <div class="doc-item">
-    <span class="di-ico">${ico}</span>
-    <div style="flex:1">
-      <div class="di-name">${d.titre}</div>
-      <div class="di-meta">${d.classe||''} ${d.tri?'· '+d.tri:''} · ${sz}</div>
-    </div>
-    <button class="di-dl" onclick="telecharger('${d.id}','${escHtml(d.titre)}')">⬇️ Télécharger</button>
-  </div>`;
-}
-
-function escHtml(s){ return s.replace(/'/g,"'"); }
-
-function toggleSubCard(id){
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
-}
-
-function telecharger(id, titre){
-  toast('⬇️ Téléchargement : '+titre,'ok');
-}
-
-function renderManuels(){
-  buildSubGrid('manuels-grid','manuels',[
-    {key:'math',ico:'🔢',label:'Manuels de Mathématiques'},
-    {key:'fr',  ico:'🔤',label:'Manuels de Français / Lecture'},
-  ]);
-}
-function renderGuides(){
-  buildSubGrid('guides-grid','guides',[
-    {key:'math',ico:'🔢',label:'Guides Mathématiques'},
-    {key:'fr',  ico:'🔤',label:'Guides Français'},
-    {key:'sci', ico:'🔬',label:'Guides Sciences & Éveil'},
-    {key:'hist',ico:'🌍',label:'Guides Histoire-Géo Bénin'},
-    {key:'eps', ico:'⚽',label:'Guides EPS'},
-    {key:'est', ico:'🔧',label:'Guides EST/EA'},
-  ]);
-}
-function renderFiches(){
-  buildSubGrid('fiches-grid','fiches',[
-    {key:'math',ico:'🔢',label:'Fiches de Mathématiques'},
-    {key:'fr',  ico:'🔤',label:'Fiches de Français / Lecture'},
-    {key:'sci', ico:'🔬',label:'Fiches de Sciences & Éveil'},
-    {key:'hist',ico:'🌍',label:'Fiches Histoire-Géo Bénin'},
-    {key:'eps', ico:'⚽',label:'Fiches EPS'},
-    {key:'est', ico:'🔧',label:'Fiches EST/EA'},
-  ]);
-}
-function renderMC(){
-  buildSubGrid('mc-grid','mc',[
-    {key:'eps',ico:'⚽',label:'Mesures correctives EPS-ES'},
-    {key:'est',ico:'🔧',label:'Mesures correctives EST/EA'},
-  ]);
-}
-function renderImages(){
-  buildSubGrid('images-grid','images',[
-    {key:'math',ico:'🔢',label:'Images Mathématiques'},
-    {key:'fr',  ico:'🔤',label:'Images Français'},
-    {key:'sci', ico:'🔬',label:'Images Sciences & Éveil'},
-    {key:'hist',ico:'🌍',label:'Images Histoire-Géo Bénin'},
-    {key:'eps', ico:'⚽',label:'Images EPS'},
-    {key:'est', ico:'🔧',label:'Images EST/EA'},
-  ]);
-}
-function renderAutres(){
-  buildSubGrid('autres-grid','autres',[
-    {key:'gen',ico:'📒',label:'Cahiers journaux'},
-    {key:'gen',ico:'📅',label:'Calendrier scolaire'},
-    {key:'gen',ico:'📌',label:"Tableaux d'affichage"},
-  ]);
-}
-
-/* ══════════════════════════════════════════════
-   RECHERCHE FONCTIONNELLE
-══════════════════════════════════════════════ */
-function rechercherPublic(q){
-  const box   = document.getElementById('pub-results');
-  const label = document.getElementById('sr-label');
-  const list  = document.getElementById('sr-list');
-  q = q.trim().toLowerCase();
-  if(!q || q.length < 2){ box.classList.remove('on'); return; }
-  box.classList.add('on');
-
-  // Recherche dans les catégories publiques (titres + descriptions)
-  const catItems = [
-    {titre:'Manuels de Mathématiques et Français',cat:'Manuels',ico:'📘',color:'#dcfce7',col:'var(--vert)'},
-    {titre:'Guides pédagogiques toutes matières',cat:'Guides',ico:'📗',color:'#dbeafe',col:'var(--bleu)'},
-    {titre:'Fiches par discipline et classes',cat:'Fiches',ico:'📝',color:'#fee2e2',col:'var(--rouge)'},
-    {titre:'Mesures correctives EPS-ES et EST/EA',cat:'Mesures correctives',ico:'📋',color:'#ffedd5',col:'var(--orange)'},
-    {titre:'Images pédagogiques par discipline',cat:'Images',ico:'🖼️',color:'#f0ebff',col:'var(--violet)'},
-    {titre:'Cahiers journaux, calendrier, tableaux affichage',cat:'Autres ressources',ico:'📁',color:'#fef9c3',col:'#92400e'},
-    {titre:'Manuel Mathématiques CP1 CP2 CE1 CE2 CM1 CM2',cat:'Manuels',ico:'📘',color:'#dcfce7',col:'var(--vert)'},
-    {titre:'Manuel Français Lecture toutes classes',cat:'Manuels',ico:'📘',color:'#dcfce7',col:'var(--vert)'},
-    {titre:'Fiche exercice mathématiques',cat:'Fiches',ico:'📝',color:'#fee2e2',col:'var(--rouge)'},
-    {titre:'Fiche lecture Français CP CE CM',cat:'Fiches',ico:'📝',color:'#fee2e2',col:'var(--rouge)'},
-    {titre:'Cahier journal enseignant primaire Bénin',cat:'Autres',ico:'📁',color:'#fef9c3',col:'#92400e'},
-    {titre:'Calendrier scolaire 2024 2025 Bénin primaire',cat:'Autres',ico:'📅',color:'#fef9c3',col:'#92400e'},
-  ];
-
-  const found = catItems.filter(item =>
-    item.titre.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q)
-  ).slice(0,6);
-
-  label.textContent = found.length ? found.length+' résultat(s) pour "'+q+'"' : 'Aucun résultat pour "'+q+'"';
-  list.innerHTML = found.map(r=>`
-    <div class="sr-item" onclick="allerConnexion()">
-      <div class="sr-ico" style="background:${r.color}">${r.ico}</div>
-      <div>
-        <div class="sr-title">${r.titre}</div>
-        <div class="sr-meta">🔒 Connexion requise pour accéder</div>
-      </div>
-      <span class="sr-cat" style="background:${r.color};color:${r.col}">${r.cat}</span>
-    </div>`).join('');
-}
-
-function rechercherApp(q){
-  const resSec = document.getElementById('app-search-results');
-  const list   = document.getElementById('app-sr-list');
-  const label  = document.getElementById('app-sr-label');
-  q = q.trim().toLowerCase();
-
-  if(!q || q.length < 2){ resSec.style.display='none'; return; }
-  resSec.style.display='block';
-
-  const found = tousLcsDocs().filter(d=>
-    d.titre.toLowerCase().includes(q) ||
-    (SOUSCAT_LABEL[d.souscat]||'').toLowerCase().includes(q) ||
-    (CAT_LABEL[d.cat]||'').toLowerCase().includes(q) ||
-    d.classe.toLowerCase().includes(q) ||
-    (d.tri||'').toLowerCase().includes(q) ||
-    d.filename.toLowerCase().includes(q)
-  ).slice(0,10);
-
-  label.textContent = found.length+' résultat'+(found.length>1?'s':'')+' pour "'+q+'"';
-  if(!found.length){
-    list.innerHTML=`<div style="padding:16px;text-align:center;color:var(--gris);font-size:13.5px">😕 Aucun document trouvé pour "${q}"</div>`;
-    return;
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+    return (b / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
-  list.innerHTML = found.map(d=>{
-    const ico  = EXT_ICO[d.ext]||'📄';
-    const sz   = d.size>1048576?(d.size/1048576).toFixed(1)+' MB':Math.round(d.size/1024)+' KB';
-    const matCls = {math:'vert',fr:'rouge',sci:'bleu',hist:'orange',eps:'violet',est:'jaune',gen:''}[d.souscat]||'';
-    return `
-    <div class="sr-item" onclick="telecharger('${d.id}','${escHtml(d.titre)}')">
-      <div class="sr-ico" style="background:var(--${matCls||'gris'}3,var(--gris2))">${ico}</div>
-      <div style="flex:1">
-        <div class="sr-title">${d.titre}</div>
-        <div class="sr-meta">${CAT_LABEL[d.cat]} · ${d.classe} ${d.tri?'· '+d.tri:''} · ${sz}</div>
-      </div>
-      <button class="di-dl" style="font-size:11px;padding:6px 11px" onclick="event.stopPropagation();telecharger('${d.id}','${escHtml(d.titre)}')">⬇️</button>
-    </div>`;
-  }).join('');
-}
+  function getFileType(name) {
+    const ext = name.split('.').pop().toLowerCase();
+    if (ext === 'pdf')  return 'pdf';
+    if (ext === 'docx') return 'docx';
+    return 'img';
+  }
 
-function clearSearch(){
-  document.getElementById('app-search-in').value='';
-  document.getElementById('app-search-results').style.display='none';
-}
+  function setFile(file) {
+    selectedFile = file;
+    const type = getFileType(file.name);
+    fileIcon.textContent = type.toUpperCase();
+    fileIcon.className = 'file-icon ' + type;
+    fileName.textContent = file.name;
+    fileSize.textContent = formatBytes(file.size);
+    filePrev.classList.add('visible');
+    btnProtect.disabled = false;
+    resultCard.classList.remove('visible');
+    downloadData = null;
+  }
 
-/* ══════════════════════════════════════════════
-   ADMIN — UI
-══════════════════════════════════════════════ */
-function showAdminTab(id, btn){
-  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('as-'+id).classList.add('on');
-  if(btn) btn.classList.add('on');
-}
+  function clearFile() {
+    selectedFile = null;
+    filePrev.classList.remove('visible');
+    btnProtect.disabled = true;
+    fileInput.value = '';
+    resultCard.classList.remove('visible');
+    progressA.classList.remove('visible');
+  }
 
-function majAdminUI(){
-  lMembres(); lDocs();
-  const attente = membres.filter(m=>m.status==='attente');
-  const valides = membres.filter(m=>m.status==='valide');
-
-  document.getElementById('stat-membres').textContent    = membres.length;
-  document.getElementById('stat-attente').textContent    = attente.length;
-  document.getElementById('stat-valides').textContent    = valides.length;
-  document.getElementById('stat-docs-admin').textContent = docs.length + DOCS_DEMO.length;
-  document.getElementById('total-membres').textContent   = membres.length;
-  document.getElementById('total-docs-admin').textContent= docs.length + DOCS_DEMO.length;
-
-  renderAdminAttente(attente);
-  renderAdminMembres();
-  renderAdminDocs();
-  renderAdminActivity();
-}
-
-function renderAdminAttente(liste){
-  const cont = document.getElementById('admin-attente-list');
-  if(!liste.length){ cont.innerHTML='<div style="padding:20px;text-align:center;color:rgba(255,255,255,.3)">✅ Aucune inscription en attente</div>'; return; }
-  cont.innerHTML = liste.map(m=>`
-  <div class="membre-row">
-    <div class="status-dot wait"></div>
-    <div class="mr-av" style="background:rgba(245,197,24,.15)">👩‍🏫</div>
-    <div class="mr-info">
-      <div class="mr-name">${m.nom}</div>
-      <div class="mr-meta">${m.email} · ${m.classe} · ${new Date(m.dateIns).toLocaleDateString('fr-FR')}</div>
-    </div>
-    <span class="mr-code">${m.code}</span>
-    <button class="ac-btn ok" onclick="validerMembre('${m.id}')">✅ Valider</button>
-    <button class="ac-btn rouge" onclick="refuserMembre('${m.id}')" style="margin-left:6px">❌</button>
-  </div>`).join('');
-}
-
-function renderAdminMembres(){
-  const cont = document.getElementById('admin-membres-list');
-  if(!membres.length){ cont.innerHTML='<div style="padding:20px;text-align:center;color:rgba(255,255,255,.3)">Aucun membre</div>'; return; }
-  cont.innerHTML = membres.map(m=>{
-    const bgCol = {valide:'rgba(10,110,63,.15)',attente:'rgba(245,197,24,.12)',refuse:'rgba(200,32,42,.12)'}[m.status]||'rgba(255,255,255,.05)';
-    const stDot = {valide:'ok',attente:'wait',refuse:'no'}[m.status]||'no';
-    return `
-    <div class="membre-row">
-      <div class="status-dot ${stDot}"></div>
-      <div class="mr-av" style="background:${bgCol}">👩‍🏫</div>
-      <div class="mr-info">
-        <div class="mr-name">${m.nom}</div>
-        <div class="mr-meta">${m.email} · Classe ${m.classe} · ${m.plan}</div>
-      </div>
-      <span class="mr-code">${m.code}</span>
-      ${m.status==='attente'?`<button class="ac-btn ok" onclick="validerMembre('${m.id}')">✅ Valider</button>`:''}
-      ${m.status==='valide'?`<button class="ac-btn rouge" onclick="revoquerMembre('${m.id}')" style="font-size:11px">Révoquer</button>`:''}
-    </div>`;
-  }).join('');
-}
-
-function validerMembre(id){
-  const m = membres.find(x=>x.id===id);
-  if(!m) return;
-  m.status = 'valide';
-  sMembres(); majAdminUI();
-  toast('✅ '+m.nom+' validé(e) — Code : '+m.code,'ok');
-}
-
-function refuserMembre(id){
-  membres = membres.filter(m=>m.id!==id);
-  sMembres(); majAdminUI();
-  toast('❌ Inscription refusée et supprimée','err');
-}
-
-function revoquerMembre(id){
-  const m = membres.find(x=>x.id===id);
-  if(!m) return;
-  m.status = 'refuse';
-  sMembres(); majAdminUI();
-  toast('🔒 Accès de '+m.nom+' révoqué','info');
-}
-
-function validerTous(){
-  const attente = membres.filter(m=>m.status==='attente');
-  attente.forEach(m=>m.status='valide');
-  sMembres(); majAdminUI();
-  toast('✅ '+attente.length+' membre(s) validé(s)','ok');
-}
-
-function exporterMembres(){
-  const data = membres.map(m=>`${m.nom}\t${m.email}\t${m.classe}\t${m.status}\t${m.code}\t${m.plan}`).join('\n');
-  const blob = new Blob(['Nom\tEmail\tClasse\tStatut\tCode\tPlan\n'+data],{type:'text/plain'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='eduking229_membres.tsv'; a.click();
-  toast('📊 Liste des membres exportée','ok');
-}
-
-/* ══════════════════════════════════════════════
-   ADMIN — UPLOAD
-══════════════════════════════════════════════ */
-function adminDragOver(e){e.preventDefault(); document.getElementById('adminDropZone').classList.add('drag');}
-function adminDragLeave(){ document.getElementById('adminDropZone').classList.remove('drag');}
-function adminDrop(e){e.preventDefault();adminDragLeave();handleAdminFiles(e.dataTransfer.files);}
-
-function handleAdminFiles(files){
-  if(!files||!files.length) return;
-  pendAdmin = Array.from(files);
-  const f = pendAdmin[0];
-  document.getElementById('au-titre').value = f.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
-  renderAdminFQ();
-  document.getElementById('admin-upload-form').style.display = 'block';
-}
-
-function renderAdminFQ(){
-  const q = document.getElementById('admin-fq');
-  q.innerHTML = '';
-  pendAdmin.forEach((f,i)=>{
-    const ext = f.name.split('.').pop().toLowerCase();
-    const ico = EXT_ICO[ext]||'📁';
-    const sz  = f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.round(f.size/1024)+' KB';
-    const d   = document.createElement('div');
-    d.className='afq-item'; d.id='afqi'+i;
-    d.innerHTML=`<div class="afq-ico">${ico}</div><div class="afq-info"><div class="afq-name">${f.name}</div><div class="afq-size">${sz}</div><div class="afq-bar"><div class="afq-fill" id="af${i}" style="width:0%"></div></div></div><div class="afq-st wait" id="afs${i}">⏳</div>`;
-    q.appendChild(d);
-    let p=0; const iv=setInterval(()=>{
-      p=Math.min(100,p+Math.random()*35+5);
-      const el=document.getElementById('af'+i); if(el) el.style.width=p+'%';
-      if(p>=100){clearInterval(iv);
-        const it=document.getElementById('afqi'+i); if(it) it.classList.add('done');
-        const st=document.getElementById('afs'+i); if(st){st.className='afq-st ok';st.textContent='✅';}
-      }
-    },120);
+  /* ─── Drag & Drop ─── */
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) validateAndSet(file);
   });
-}
 
-function publierDocAdmin(){
-  const titre = document.getElementById('au-titre').value.trim();
-  if(!titre){ toast('⚠️ Saisissez un titre','err'); return; }
-  if(!pendAdmin.length){ toast('⚠️ Aucun fichier','err'); return; }
-  const f   = pendAdmin[0];
-  const ext = f.name.split('.').pop().toLowerCase();
-  const doc = {
-    id:genId(), titre, cat:document.getElementById('au-cat').value,
-    souscat:document.getElementById('au-souscat').value,
-    classe:document.getElementById('au-classe').value,
-    tri:document.getElementById('au-tri').value,
-    ext, filename:f.name, size:f.size,
-    date:new Date().toISOString(), demo:false,
-  };
-  docs.push(doc); sDocs();
-  pendAdmin=[];
-  document.getElementById('admin-fq').innerHTML='';
-  document.getElementById('admin-upload-form').style.display='none';
-  document.getElementById('au-titre').value='';
-  document.getElementById('adminFileIn').value='';
-  majAdminUI();
-  toast('✅ "'+titre+'" publié dans la bibliothèque !','ok');
-}
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) validateAndSet(fileInput.files[0]);
+  });
 
-function renderAdminDocs(){
-  const all  = tousLcsDocs();
-  const cont = document.getElementById('admin-docs-list');
-  if(!all.length){ cont.innerHTML='<div style="padding:20px;text-align:center;color:rgba(255,255,255,.3)">Aucun document</div>'; return; }
-  cont.innerHTML = all.map(d=>{
-    const ico = EXT_ICO[d.ext]||'📄';
-    const sz  = d.size>1048576?(d.size/1048576).toFixed(1)+' MB':Math.round(d.size/1024)+' KB';
-    return `
-    <div class="admin-doc-row">
-      <div class="adr-ico">${ico}</div>
-      <div class="adr-info">
-        <div class="adr-name">${d.titre}</div>
-        <div class="adr-meta">${CAT_LABEL[d.cat]} · ${SOUSCAT_LABEL[d.souscat]||d.souscat} · ${d.classe} ${d.tri?'· '+d.tri:''} · ${sz}</div>
-      </div>
-      <button class="adr-dl" onclick="toast('⬇️ Téléchargement PDF : ${escHtml(d.titre)}','ok')">⬇️ PDF</button>
-      ${!d.demo?`<button class="adr-del" onclick="supprimerDoc('${d.id}')">🗑</button>`:'<span style="width:34px"></span>'}
-    </div>`;
-  }).join('');
-}
+  function validateAndSet(file) {
+    const allowed = ['pdf', 'docx', 'png', 'jpg', 'jpeg', 'webp'];
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (!allowed.includes(ext)) {
+      showToast('❌ Format non supporté : ' + ext.toUpperCase());
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('❌ Fichier trop volumineux (max 50 MB)');
+      return;
+    }
+    setFile(file);
+  }
 
-function supprimerDoc(id){
-  docs = docs.filter(d=>d.id!==id);
-  sDocs(); majAdminUI();
-  toast('🗑 Document supprimé','err');
-}
+  btnRemove.addEventListener('click', clearFile);
 
-function viderBibliotheque(){
-  if(!docs.length){ toast('Aucun document ajouté à vider','info'); return; }
-  if(!confirm('Supprimer les '+docs.length+' documents ajoutés ? (Les documents de base restent)')) return;
-  docs=[]; sDocs(); majAdminUI();
-  toast('🗑 Bibliothèque personnelle vidée','err');
-}
+  /* ─── Position options ─── */
+  document.querySelectorAll('input[name="position"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      optBottom.classList.toggle('selected', radio.value === 'bottom' && radio.checked);
+      optTop.classList.toggle('selected', radio.value === 'top' && radio.checked);
+    });
+  });
 
-function renderAdminActivity(){
-  const logs = [
-    ...membres.slice(-3).map(m=>`👤 Inscription : <strong>${m.nom}</strong> · ${m.classe} · ${m.status==='valide'?'✅ Validé':'⏳ En attente'}`),
-    ...docs.slice(-3).map(d=>`📂 Document ajouté : <strong>${d.titre}</strong> · ${CAT_LABEL[d.cat]}`),
-  ].slice(0,6);
-  document.getElementById('admin-activity').innerHTML = logs.length
-    ? logs.map(l=>`<div style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:rgba(255,255,255,.7)">${l}</div>`).join('')
-    : '<div style="padding:18px;text-align:center;color:rgba(255,255,255,.3)">Aucune activité</div>';
-}
+  optBottom.addEventListener('click', () => {
+    document.querySelector('input[name="position"][value="bottom"]').checked = true;
+    optBottom.classList.add('selected');
+    optTop.classList.remove('selected');
+  });
+  optTop.addEventListener('click', () => {
+    document.querySelector('input[name="position"][value="top"]').checked = true;
+    optTop.classList.add('selected');
+    optBottom.classList.remove('selected');
+  });
 
-/* ══════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════ */
-function toast(msg,type='ok'){
-  const icons={ok:'✅',err:'⚠️',info:'💡'};
-  const c=document.getElementById('toasts');
-  const el=document.createElement('div');
-  el.className=`toast ${type}`;
-  el.innerHTML=`<span style="font-size:22px">${icons[type]||'💡'}</span><span style="flex:1">${msg}</span>`;
-  c.appendChild(el);
-  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
-  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400);},4200);
-}
+  /* ─── Protect ─── */
+  btnProtect.addEventListener('click', async () => {
+    if (!selectedFile) return;
 
-/* ══════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════ */
-window.addEventListener('DOMContentLoaded',()=>{
-  lUser(); lMembres(); lDocs();
+    const position = document.querySelector('input[name="position"]:checked')?.value || 'bottom';
 
-  // Splash 1.8s
-  setTimeout(()=>{
-    document.getElementById('splash').classList.add('off');
-    setTimeout(()=>{
-      if(user){
-        if(user.role==='admin') allerAdmin();
-        else if(Math.max(0,Math.ceil((new Date(user.dateExp)-new Date())/(1000*60*60*24)))>0) allerApp();
-        else allerAccueil();
+    btnProtect.disabled = true;
+    progressA.classList.add('visible');
+    progressB.style.width = '0%';
+    progressL.textContent = 'Envoi du fichier…';
+
+    // Simulate progress
+    let prog = 0;
+    const tick = setInterval(() => {
+      prog = Math.min(prog + Math.random() * 8, 85);
+      progressB.style.width = prog + '%';
+    }, 200);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('position', position);
+
+      progressL.textContent = 'Génération du code-barres…';
+
+      const resp = await fetch('/api/protect', { method: 'POST', body: formData });
+      const data = await resp.json();
+
+      clearInterval(tick);
+
+      if (!resp.ok || !data.success) {
+        showToast('❌ ' + (data.error || 'Erreur inconnue'));
+        progressA.classList.remove('visible');
+        btnProtect.disabled = false;
+        return;
       }
-    },600);
-  },1800);
-});
+
+      progressB.style.width = '100%';
+      progressL.textContent = 'Document protégé avec succès !';
+
+      // Fill result
+      downloadData = { b64: data.data, mime: data.mime, filename: data.filename };
+
+      document.getElementById('result-filename').textContent = data.filename;
+      document.getElementById('meta-docid').textContent = data.doc_id;
+      document.getElementById('meta-ts').textContent = data.timestamp;
+      document.getElementById('meta-sig').textContent = data.signature;
+      document.getElementById('meta-size').textContent = formatBytes(data.size);
+
+      // Load barcode preview
+      await loadBarcodePreview(selectedFile.name);
+
+      resultCard.classList.add('visible');
+      resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      setTimeout(() => {
+        progressA.classList.remove('visible');
+        btnProtect.disabled = false;
+      }, 1500);
+
+    } catch (err) {
+      clearInterval(tick);
+      showToast('❌ Erreur réseau : ' + err.message);
+      progressA.classList.remove('visible');
+      btnProtect.disabled = false;
+    }
+  });
+
+  async function loadBarcodePreview(filename) {
+    try {
+      const resp = await fetch('/api/preview-barcode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename }),
+      });
+      const data = await resp.json();
+      if (data.barcode_image) {
+        barcodeImg.src = data.barcode_image;
+      }
+    } catch (_) {}
+  }
+
+  /* ─── Download ─── */
+  btnDl.addEventListener('click', () => {
+    if (!downloadData) return;
+    const binary = atob(downloadData.b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const blob = new Blob([bytes], { type: downloadData.mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = downloadData.filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  /* ─── Verify ─── */
+  btnVerify.addEventListener('click', async () => {
+    const bc = verifyIn.value.trim();
+    if (!bc) { showToast('Entrez un code-barres à vérifier'); return; }
+
+    try {
+      const resp = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ barcode: bc }),
+      });
+      const data = await resp.json();
+
+      verifyRes.style.display = 'block';
+      if (data.valid) {
+        verifyRes.className = 'ok';
+        verifyRes.textContent = `✓ Valide — ID: ${data.doc_id} | SIG: ${data.signature}`;
+      } else {
+        verifyRes.className = 'err';
+        verifyRes.textContent = '✗ Invalide — ' + (data.error || 'Signature non reconnue');
+      }
+    } catch (err) {
+      verifyRes.style.display = 'block';
+      verifyRes.className = 'err';
+      verifyRes.textContent = '✗ Erreur réseau';
+    }
+  });
+
+  verifyIn.addEventListener('keydown', e => { if (e.key === 'Enter') btnVerify.click(); });
+
+})();
 </script>
 </body>
 </html>
