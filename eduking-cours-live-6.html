@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Eduking 229 — Cours en Direct</title>
+<meta name="theme-color" content="#1B5E20">
+<style>
+:root{
+  --g:#1B5E20;--g2:#2E7D32;--g3:#43A047;--gbg:#E8F5E9;
+  --am:#E65100;--am2:#FF8F00;--ambg:#FFF3E0;
+  --bl:#1565C0;--blbg:#E3F2FD;
+  --re:#C62828;--rebg:#FFEBEE;
+  --bg:#F0F2F5;--card:#fff;
+  --tx:#1A1A2E;--tx2:#5C677D;
+  --br:#E2E8F0;--rad:13px;--sh:0 2px 12px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:15px;min-height:100vh}
+.hdr{background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 3px 12px rgba(0,0,0,.2)}
+.logo{font-size:19px;font-weight:900}.logo em{color:#FFD54F;font-style:normal}
+.hdr-r{display:flex;gap:8px;align-items:center}
+.livepill{display:none;align-items:center;gap:5px;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.lpd{width:8px;height:8px;border-radius:50%;background:#69F0AE;animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-adm{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.mtabs{display:flex;background:#fff;border-bottom:2px solid var(--br);position:sticky;top:49px;z-index:200;overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtab{flex:none;padding:11px 14px;font-size:12px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;color:var(--tx2);white-space:nowrap;transition:.15s;-webkit-tap-highlight-color:rgba(27,94,32,.1)}
+.mtab.active{color:var(--g2);border-bottom-color:var(--g2)}
+.panel{display:none;padding:14px;max-width:860px;margin:0 auto}
+.panel.active{display:block}
+.card{background:var(--card);border-radius:var(--rad);box-shadow:var(--sh);padding:16px;margin-bottom:13px;border:1px solid var(--br)}
+.card-t{font-size:14px;font-weight:800;color:var(--g);margin-bottom:12px}
+label{font-size:11px;font-weight:700;color:var(--tx2);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+input,textarea,select{width:100%;padding:9px 11px;border:1.5px solid var(--br);border-radius:9px;font-size:14px;font-family:inherit;background:#FAFBFC;color:var(--tx);transition:border-color .2s;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C677D' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--g3);background:#fff}
+textarea{min-height:80px;resize:vertical}
+.fr{margin-bottom:11px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.fg{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;-webkit-tap-highlight-color:rgba(0,0,0,.1)}
+.btn:active{opacity:.8;transform:scale(.97)}
+.bg{background:var(--g2);color:#fff}
+.ba{background:var(--am2);color:#fff}
+.br2{background:#EF5350;color:#fff}
+.bn{background:#ECEFF1;color:var(--tx2)}
+.bbl{background:var(--bl);color:#fff}
+.sm{padding:5px 10px;font-size:11px}
+.bw{width:100%;justify-content:center;padding:12px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.b-live{background:#E8F5E9;color:#1B5E20;border:1.5px solid #A5D6A7}
+.b-next{background:#E3F2FD;color:#1565C0;border:1.5px solid #90CAF9}
+.b-done{background:#F5F5F5;color:#9E9E9E;border:1.5px solid #E0E0E0}
+.b-pend{background:#FFF8E7;color:#E65100;border:1.5px solid #FFCC80}
+.b-appr{background:#E8F5E9;color:#2E7D32;border:1.5px solid #A5D6A7}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--gbg);color:var(--g)}
+.tag-o{background:var(--ambg);color:var(--am)}
+.tag-b{background:var(--blbg);color:var(--bl)}
+.daybar{background:var(--card);border-radius:var(--rad);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;box-shadow:var(--sh);border:1px solid var(--br)}
+.day-nm{font-size:21px;font-weight:900;color:var(--g)}
+.day-dt{font-size:12px;color:var(--tx2);margin-top:2px}
+.srow{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;text-align:right}
+.sdot{width:11px;height:11px;border-radius:50%;background:#BDBDBD;flex-shrink:0}
+.sdot.gr{background:#4CAF50;animation:blink 1.2s infinite}
+.sdot.bl{background:#2196F3}
+.sdot.or{background:#FF9800}
+.cdown{background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border-radius:var(--rad);padding:16px;text-align:center;margin-bottom:13px;display:none}
+.cdown-t{font-size:30px;font-weight:900;letter-spacing:4px;font-variant-numeric:tabular-nums;margin:5px 0}
+.live-wrap{background:linear-gradient(135deg,#1B5E20,#2E7D32);border-radius:var(--rad);overflow:hidden;margin-bottom:13px;box-shadow:0 4px 20px rgba(27,94,32,.3)}
+.live-hd{padding:14px 16px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(255,255,255,.12)}
+.live-dot{width:12px;height:12px;border-radius:50%;background:#69F0AE;animation:blink 1s infinite;flex-shrink:0}
+.live-title{font-size:17px;font-weight:900;color:#fff;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.live-time{background:rgba(255,255,255,.15);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.live-bd{padding:14px 16px}
+.live-mat{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px}
+.live-meta{font-size:12px;color:rgba(255,255,255,.8);margin-bottom:13px;display:flex;gap:12px;flex-wrap:wrap}
+.media-grid{display:grid;gap:8px;margin-bottom:11px}
+.media-card{background:rgba(255,255,255,.12);border-radius:11px;padding:12px 10px;cursor:pointer;text-align:center;border:1.5px solid rgba(255,255,255,.18)}
+.media-card:active{background:rgba(255,255,255,.28);transform:scale(.95)}
+.mc-icon{font-size:24px;margin-bottom:5px}
+.mc-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.mc-title{font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:3px}
+.mc-tap{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px}
+.fiche-card{background:rgba(255,255,255,.1);border-radius:11px;padding:13px;border-left:3px solid #A5D6A7;cursor:pointer;margin-bottom:10px}
+.fiche-card:active{background:rgba(255,255,255,.2)}
+.fiche-lbl{font-size:10px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fiche-titre{font-size:15px;font-weight:900;color:#fff;margin-bottom:4px}
+.fiche-prev{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5}
+.resume-box{background:rgba(255,143,0,.2);border-radius:10px;padding:12px;border-left:3px solid #FFD54F;margin-top:8px}
+.resume-lbl{font-size:10px;font-weight:800;color:rgba(255,213,79,.9);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.resume-txt{font-size:13px;color:#fff;line-height:1.6;white-space:pre-wrap}
+.audio-wrap{background:linear-gradient(135deg,#1A237E,#283593);border-radius:var(--rad);padding:16px;margin-bottom:13px}
+.audio-hd{font-size:14px;font-weight:800;color:#fff;margin-bottom:12px}
+.audio-item{background:rgba(255,255,255,.1);border-radius:11px;padding:12px;margin-bottom:9px}
+.audio-item:last-child{margin-bottom:0}
+.audio-nm{font-weight:700;font-size:14px;color:#fff;margin-bottom:3px}
+.audio-meta{font-size:11px;color:rgba(255,255,255,.7);margin-bottom:8px}
+.audio-item audio{width:100%;border-radius:7px}
+.ext-link{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);color:#fff;padding:7px 12px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:700;margin-top:6px}
+.vid-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:380px){.vid-grid{grid-template-columns:1fr}}
+.vid-card{background:var(--card);border-radius:11px;border:1px solid var(--br);overflow:hidden;cursor:pointer}
+.vid-card:active{transform:scale(.97)}
+.vid-thumb{background:linear-gradient(135deg,#212121,#37474F);height:88px;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative}
+.vid-play{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:16px}
+.vid-info{padding:9px 11px}
+.vid-nm{font-size:12px;font-weight:700;color:var(--tx)}
+.vid-dur{font-size:11px;color:var(--tx2);margin-top:2px}
+.img-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.img-card{border-radius:11px;overflow:hidden;border:1px solid var(--br);cursor:pointer;background:#F5F5F5}
+.img-card:active{transform:scale(.97)}
+.img-card img{width:100%;height:110px;object-fit:cover;display:block}
+.img-info{padding:7px 10px;font-size:12px;font-weight:700;color:var(--tx)}
+.cc{background:var(--card);border-radius:var(--rad);border:1px solid var(--br);margin-bottom:10px;overflow:hidden}
+.cc.live{border-left:4px solid #4CAF50}
+.cc.next{border-left:4px solid #2196F3}
+.cc.done{border-left:4px solid #E0E0E0;opacity:.75}
+.cc-hd{padding:12px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--br);flex-wrap:wrap}
+.cc-time{font-size:12px;font-weight:700;color:var(--tx2);white-space:nowrap}
+.cc-mat{font-size:15px;font-weight:900;color:var(--g);flex:1;min-width:80px}
+.cc-bd{padding:13px 14px}
+.wknav{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:13px;scrollbar-width:none}
+.wknav::-webkit-scrollbar{display:none}
+.wday{padding:7px 13px;border-radius:9px;border:1.5px solid var(--br);background:var(--card);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--tx2)}
+.wday.active{background:var(--g2);color:#fff;border-color:var(--g2)}
+.wday.has{border-color:var(--g3);color:var(--g2)}
+.ir{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--br);border-radius:9px;margin-bottom:7px;background:var(--card);gap:8px}
+.ir-i{flex:1;min-width:0}
+.ir-t{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ir-s{font-size:12px;color:var(--tx2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ir-a{display:flex;gap:5px;flex-shrink:0}
+.sbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.sbox{background:var(--card);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--br);box-shadow:var(--sh)}
+.sval{font-size:22px;font-weight:900;color:var(--g)}
+.slbl{font-size:11px;color:var(--tx2);font-weight:600;margin-top:2px}
+.mtbl{width:100%;border-collapse:collapse;font-size:12px}
+.mtbl th{padding:8px 9px;text-align:left;background:var(--gbg);color:var(--g);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;border-bottom:2px solid var(--g3)}
+.mtbl td{padding:8px 9px;border-bottom:1px solid var(--br);vertical-align:middle}
+.abo-hero{background:linear-gradient(135deg,#1B5E20,#388E3C);color:#fff;border-radius:var(--rad);padding:24px;text-align:center;margin-bottom:13px}
+.plan-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.plan{background:rgba(255,255,255,.12);border-radius:11px;padding:14px;text-align:center;cursor:pointer;border:2px solid transparent}
+.plan.sel{border-color:#FFD54F;background:rgba(255,213,79,.15)}
+.plan-p{font-size:24px;font-weight:900;color:#FFD54F}
+.plan-n{font-size:12px;opacity:.85;margin-top:2px}
+.arch-item{border:1px solid #CE93D8;border-radius:11px;padding:13px;margin-bottom:9px;background:var(--card)}
+.arch-dt{font-size:12px;color:#6A1B9A;font-weight:700;margin-bottom:5px}
+.adm-ov{display:none;position:fixed;inset:0;z-index:400;background:var(--bg);overflow-y:auto}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:var(--card);border-radius:18px;padding:32px 24px;box-shadow:0 12px 50px rgba(0,0,0,.12);max-width:300px;width:100%;text-align:center;border:1px solid var(--br)}
+.adm-hdr{background:var(--card);border-bottom:2px solid var(--br);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.adm-htit{font-weight:900;color:var(--g);font-size:14px}
+.atabs{display:flex;gap:3px;overflow-x:auto;padding:9px 13px 0;scrollbar-width:none;background:var(--card);border-bottom:1px solid var(--br);position:sticky;top:49px;z-index:9}
+.atabs::-webkit-scrollbar{display:none}
+.atab{padding:6px 11px;border-radius:8px 8px 0 0;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;background:#F5F7FA;border:1.5px solid var(--br);border-bottom:none;color:var(--tx2)}
+.atab.active{background:var(--g2);color:#fff;border-color:var(--g2)}
+.apanel{display:none;padding:13px;max-width:860px;margin:0 auto}
+.apanel.active{display:block}
+.gen-hero{background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;border-radius:var(--rad);padding:20px;text-align:center;margin-bottom:13px}
+.gen-hero h2{font-size:18px;margin-bottom:5px}
+.gen-hero p{opacity:.85;font-size:12px;margin-bottom:14px}
+.gsw{background:rgba(255,255,255,.13);border-radius:10px;padding:11px;margin-bottom:9px;text-align:left}
+.gsw label{color:rgba(255,255,255,.8)}
+.gsw select{background:#fff;margin-top:5px;color:var(--tx)}
+.btn-gen{background:var(--am2);color:#fff;font-size:15px;font-weight:900;padding:13px 32px;border-radius:13px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.25);display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+.btn-gen:active{transform:scale(.95)}
+.prev-box{border:2px dashed var(--g3);border-radius:var(--rad);padding:13px;background:#F1F8E9}
+.activ{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--br)}
+.activ-msg{font-size:13px;font-weight:600}
+.activ-time{font-size:11px;color:var(--tx2);margin-top:2px}
+.rbar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.rbtn{background:#F5F5F5;border:1.5px solid var(--br);border-radius:20px;padding:5px 11px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;font-weight:700;font-family:inherit}
+.rbtn:active{background:var(--gbg)}
+.comment{background:#FAFBFC;border-radius:9px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--br)}
+.cm-hd{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.cm-av{width:28px;height:28px;border-radius:50%;background:var(--g2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.cm-nm{font-size:13px;font-weight:700}
+.cm-ti{font-size:11px;color:var(--tx2);margin-left:auto}
+.cm-tx{font-size:13px;line-height:1.5}
+.cfb{background:var(--gbg);border-radius:10px;padding:12px;margin-bottom:11px;font-size:13px;color:var(--g)}
+.url-hlp{font-size:11px;color:var(--tx2);margin-top:4px;padding:6px 9px;background:#F5F5F5;border-radius:7px;line-height:1.55}
+.empty{text-align:center;padding:34px 16px;color:var(--tx2)}
+.ei{font-size:34px;margin-bottom:8px}
+.et{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--tx)}
+.es{font-size:12px}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:none;align-items:flex-end;justify-content:center;padding:10px}
+@media(min-width:500px){.mbg{align-items:center}}
+.mbg.active{display:flex}
+.modal{background:var(--card);border-radius:18px 18px 14px 14px;padding:20px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+@media(min-width:500px){.modal{border-radius:18px}}
+.modal-t{font-size:16px;font-weight:900;color:var(--g);margin-bottom:13px}
+.modal-f{display:flex;gap:7px;margin-top:13px;flex-wrap:wrap}
+.vidframe{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;background:#000}
+.vidframe iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:10px;color:#fff;font-weight:700;font-size:13px;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.ts{background:var(--g2)}.te{background:var(--re)}.ti{background:var(--bl)}
+.toast.active{display:block;animation:tsh 4s forwards}
+@keyframes tsh{0%{opacity:0;transform:translateX(-50%) translateY(14px)}8%{opacity:1;transform:translateX(-50%)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(6px)}}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<header class="hdr">
+  <div class="logo">Edu<em>king</em> 229</div>
+  <div class="hdr-r">
+    <div id="livepill" class="livepill"><div class="lpd"></div>EN DIRECT</div>
+    <button class="btn-adm" onclick="openAdmin()">&#9881;&#65039; Admin</button>
+  </div>
+</header>
+
+<nav class="mtabs">
+  <div class="mtab active" data-pnl="pnl-direct">&#128225; Direct</div>
+  <div class="mtab" data-pnl="pnl-archives">&#128230; Archives</div>
+  <div class="mtab" data-pnl="pnl-semaine">&#128197; Semaine</div>
+  <div class="mtab" data-pnl="pnl-ressources">&#128218; Ressources</div>
+  <div class="mtab" data-pnl="pnl-abo">&#11088; Abonnement</div>
+</nav>
+
+<!-- EN DIRECT -->
+<div class="panel active" id="pnl-direct">
+  <div class="daybar">
+    <div><div class="day-nm" id="d-name">---</div><div class="day-dt" id="d-date"></div></div>
+    <div class="srow"><div class="sdot" id="d-dot"></div><span id="d-status">Chargement...</span></div>
+  </div>
+  <div class="cdown" id="cdown">
+    <div style="font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:.5px">Prochain cours dans</div>
+    <div class="cdown-t" id="cd-time">--:--:--</div>
+    <div id="cd-next" style="font-size:12px;opacity:.85;margin-top:4px"></div>
+  </div>
+  <div id="live-zone"></div>
+  <div id="audio-zone"></div>
+  <div id="video-zone"></div>
+  <div id="image-zone"></div>
+  <div id="react-zone"></div>
+  <div id="cours-list"></div>
+</div>
+
+<!-- ARCHIVES -->
+<div class="panel" id="pnl-archives">
+  <p style="font-size:13px;color:var(--tx2);margin-bottom:13px">Sessions passees - acces selon autorisation admin</p>
+  <div id="arch-pub-list"></div>
+</div>
+
+<!-- SEMAINE -->
+<div class="panel" id="pnl-semaine">
+  <div class="wknav" id="wknav"></div>
+  <div id="sem-content"></div>
+</div>
+
+<!-- RESSOURCES -->
+<div class="panel" id="pnl-ressources">
+  <div class="fr"><input type="text" id="srch" placeholder="&#128269; Rechercher fiches, resumes, videos..." oninput="filterRes()"></div>
+  <div id="res-list"></div>
+</div>
+
+<!-- ABONNEMENT -->
+<div class="panel" id="pnl-abo"><div id="abo-content"></div></div>
+
+<!-- ADMIN OVERLAY -->
+<div class="adm-ov" id="adm-ov">
+  <div id="adm-login">
+    <div class="login-wrap"><div class="login-card">
+      <div style="font-size:44px;margin-bottom:10px">&#128272;</div>
+      <div style="font-size:18px;font-weight:900;color:var(--g);margin-bottom:4px">Espace Admin</div>
+      <div style="font-size:13px;color:var(--tx2);margin-bottom:20px">Eduking 229</div>
+      <div class="fr"><label>Mot de passe</label><input type="password" id="pwd-input" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn bg bw" onclick="doLogin()">Connexion</button>
+      <button class="btn bn bw" style="margin-top:7px" onclick="closeAdmin()">&#8617; Retour</button>
+    </div></div>
+  </div>
+  <div id="adm-dash" style="display:none">
+    <div class="adm-hdr">
+      <div class="adm-htit">&#128295; Admin - Eduking 229</div>
+      <button class="btn br2 sm" onclick="doLogout()">Fermer</button>
+    </div>
+    <div class="atabs" id="atabs">
+      <div class="atab active" data-ap="ap-diff">&#128225; Diffusion</div>
+      <div class="atab" data-ap="ap-arch">&#128230; Archives</div>
+      <div class="atab" data-ap="ap-edt">&#128197; Emploi</div>
+      <div class="atab" data-ap="ap-prog">&#128218; Prog.</div>
+      <div class="atab" data-ap="ap-fich">&#128221; Fiches</div>
+      <div class="atab" data-ap="ap-res">&#128211; Resumes</div>
+      <div class="atab" data-ap="ap-vid">&#127909; Videos</div>
+      <div class="atab" data-ap="ap-aud">&#128266; Audio</div>
+      <div class="atab" data-ap="ap-img">&#128444;&#65039; Images</div>
+      <div class="atab" data-ap="ap-gen">&#128640; Generer</div>
+      <div class="atab" data-ap="ap-mem">&#128101; Membres</div>
+      <div class="atab" data-ap="ap-com">&#128172; Comments</div>
+      <div class="atab" data-ap="ap-stat">&#128202; Stats</div>
+      <div class="atab" data-ap="ap-activ">&#128220; Activites</div>
+      <div class="atab" data-ap="ap-cfg">&#9881;&#65039; Config</div>
+    </div>
+
+    <div class="apanel active" id="ap-diff">
+      <div class="card"><div class="card-t">&#128225; Cours en cours de diffusion</div><div id="adm-live-zone"></div></div>
+      <div class="card"><div class="card-t">&#9203; Sequences a approuver</div><div id="adm-pend-zone"></div></div>
+      <div class="card"><div class="card-t">&#128276; Notifier les membres</div>
+        <div class="fr"><label>Message</label><textarea id="notif-msg" placeholder="Le cours de Francais CE2 commence dans 10 min..." style="min-height:60px"></textarea></div>
+        <button class="btn bg" onclick="notifyAll()">&#128228; Envoyer la notification</button>
+      </div>
+    </div>
+
+    <div class="apanel" id="ap-arch">
+      <div class="card"><div class="card-t">&#128230; Controle acces archives</div>
+        <div class="cfb">Apres la duree de diffusion, le contenu est archive. <b>Autorisez ou bloquez l'acces public a chaque session.</b></div>
+        <div id="adm-arch-zone"></div>
+      </div>
+    </div>
+
+    <div class="apanel" id="ap-edt">
+      <div class="card"><div class="card-t">&#128197; Ajouter un creneau</div>
+        <div class="fg">
+          <div class="fr"><label>Jour</label><select id="e-jour"><option value="lundi">Lundi</option><option value="mardi">Mardi</option><option value="mercredi">Mercredi</option><option value="jeudi">Jeudi</option><option value="vendredi">Vendredi</option><option value="samedi">Samedi</option></select></div>
+          <div class="fr"><label>Matiere *</label><input type="text" id="e-mat" placeholder="Francais, Maths..."></div>
+        </div>
+        <div class="fg">
+          <div class="fr"><label>H. debut *</label><input type="time" id="e-deb" value="07:30"></div>
+          <div class="fr"><label>H. fin *</label><input type="time" id="e-fin" value="09:00"></div>
+        </div>
+        <div class="fg">
+          <div class="fr"><label>Niveau *</label><select id="e-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div>
+          <div class="fr"><label>Enseignant</label><input type="text" id="e-ens" placeholder="Nom (opt.)"></div>
+        </div>
+        <div class="fg">
+          <div class="fr"><label>Fiche liee</label><select id="e-fid"><option value="">-- aucune --</option></select></div>
+          <div class="fr"><label>Resume lie</label><select id="e-rid"><option value="">-- aucun --</option></select></div>
+        </div>
+        <div class="fg">
+          <div class="fr"><label>Programme lie</label><select id="e-pid"><option value="">-- aucun --</option></select></div>
+          <div class="fr"><label>Video liee</label><select id="e-vid"><option value="">-- aucune --</option></select></div>
+        </div>
+        <div class="fg">
+          <div class="fr"><label>Audio lie</label><select id="e-aid"><option value="">-- aucun --</option></select></div>
+          <div class="fr"><label>Image liee</label><select id="e-iid"><option value="">-- aucune --</option></select></div>
+        </div>
+        <button class="btn bg" onclick="saveSlot()">&#10133; Ajouter le creneau</button>
+      </div>
+      <div id="edt-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-prog">
+      <div class="card"><div class="card-t">&#128218; Nouveau programme</div>
+        <div class="fg"><div class="fr"><label>Matiere *</label><input type="text" id="p-mat" placeholder="Francais..."></div><div class="fr"><label>Niveau</label><select id="p-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div></div>
+        <div class="fr"><label>Titre *</label><input type="text" id="p-tit" placeholder="Programme CE2 - Trim. 1"></div>
+        <div class="fr"><label>Contenu</label><textarea id="p-con" placeholder="Competences visees, objectifs..."></textarea></div>
+        <div class="fr"><label>Periode</label><input type="text" id="p-per" placeholder="Trim. 1 - Sept. a Dec."></div>
+        <button class="btn bg" onclick="saveProg()">&#128190; Enregistrer</button>
+      </div><div id="prog-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-fich">
+      <div class="card"><div class="card-t">&#128221; Nouvelle fiche</div>
+        <div class="fg"><div class="fr"><label>Titre *</label><input type="text" id="f-tit" placeholder="La phrase verbale..."></div><div class="fr"><label>Matiere *</label><input type="text" id="f-mat" placeholder="Francais..."></div></div>
+        <div class="fg"><div class="fr"><label>Niveau</label><select id="f-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div><div class="fr"><label>Duree</label><input type="text" id="f-dur" placeholder="1h30"></div></div>
+        <div class="fr"><label>Objectifs pedagogiques</label><textarea id="f-obj" style="min-height:65px" placeholder="A la fin de la lecon, l'eleve sera capable de..."></textarea></div>
+        <div class="fr"><label>Contenu complet</label><textarea id="f-con" style="min-height:160px" placeholder="Introduction, developpement, exemples..."></textarea></div>
+        <div class="fr"><label>Materiel necessaire</label><input type="text" id="f-mtr" placeholder="Tableau, craies, ardoises..."></div>
+        <button class="btn bg" onclick="saveFiche()">&#128190; Enregistrer la fiche</button>
+      </div><div id="fich-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-res">
+      <div class="card"><div class="card-t">&#128211; Nouveau resume</div>
+        <div class="fg"><div class="fr"><label>Titre *</label><input type="text" id="r-tit" placeholder="Resume - La phrase verbale"></div><div class="fr"><label>Matiere *</label><input type="text" id="r-mat" placeholder="Francais..."></div></div>
+        <div class="fr"><label>Niveau</label><select id="r-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div>
+        <div class="fr"><label>Texte *</label><textarea id="r-tex" style="min-height:120px" placeholder="Ce que les eleves doivent retenir..."></textarea></div>
+        <button class="btn bg" onclick="saveResume()">&#128190; Enregistrer</button>
+      </div><div id="res-adm-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-vid">
+      <div class="card"><div class="card-t">&#127909; Ajouter une video</div>
+        <div class="fg"><div class="fr"><label>Titre *</label><input type="text" id="v-tit" placeholder="Lecon - La phrase verbale"></div><div class="fr"><label>Matiere *</label><input type="text" id="v-mat" placeholder="Francais..."></div></div>
+        <div class="fg"><div class="fr"><label>Niveau</label><select id="v-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div><div class="fr"><label>Duree</label><input type="text" id="v-dur" placeholder="12:35"></div></div>
+        <div class="fr"><label>URL YouTube ou Google Drive *</label>
+          <input type="url" id="v-url" placeholder="https://youtube.com/watch?v=XXX  ou  https://drive.google.com/file/d/ID/view">
+          <div class="url-hlp">OK: youtube.com/watch?v=ID &nbsp; OK: drive.google.com/file/d/ID/view &nbsp; ERREUR: /folders/</div>
+        </div>
+        <div class="fr"><label>Description</label><textarea id="v-desc" style="min-height:55px"></textarea></div>
+        <button class="btn bg" onclick="saveVid()">&#128190; Enregistrer</button>
+      </div><div id="vid-adm-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-aud">
+      <div class="card"><div class="card-t">&#128266; Ajouter un audio</div>
+        <div class="cfb">Inserez un lien Google Drive vers un <b>fichier audio</b> (.mp3, .m4a) partage publiquement, ou un lien YouTube.</div>
+        <div class="fg"><div class="fr"><label>Titre *</label><input type="text" id="a-tit" placeholder="Dictee Lecon 3 - CE2"></div><div class="fr"><label>Matiere *</label><input type="text" id="a-mat" placeholder="Francais..."></div></div>
+        <div class="fg"><div class="fr"><label>Niveau</label><select id="a-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div><div class="fr"><label>Duree</label><input type="text" id="a-dur" placeholder="5:30"></div></div>
+        <div class="fr"><label>URL Google Drive ou YouTube *</label>
+          <input type="url" id="a-url" placeholder="https://drive.google.com/file/d/ID/view">
+          <div class="url-hlp">OK: drive.google.com/file/d/ID/view &nbsp; OK: youtube.com/watch?v=ID &nbsp; ERREUR: /folders/</div>
+        </div>
+        <div class="fr"><label>Description</label><input type="text" id="a-desc" placeholder="Dictee du cours..."></div>
+        <button class="btn bg" onclick="saveAudio()">&#128190; Enregistrer l'audio</button>
+      </div><div id="aud-adm-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-img">
+      <div class="card"><div class="card-t">&#128444;&#65039; Ajouter une image</div>
+        <div class="cfb">Collez un lien Google Drive vers une <b>image</b> (.jpg, .png) partage publiquement ou un lien direct.</div>
+        <div class="fg"><div class="fr"><label>Titre *</label><input type="text" id="im-tit" placeholder="Schema de la digestion"></div><div class="fr"><label>Matiere *</label><input type="text" id="im-mat" placeholder="EST..."></div></div>
+        <div class="fg"><div class="fr"><label>Niveau</label><select id="im-niv"><option>CP1</option><option>CP2</option><option>CE1</option><option selected>CE2</option><option>CM1</option><option>CM2</option></select></div><div class="fr"><label>Legende</label><input type="text" id="im-leg" placeholder="Fig. 1 - Appareil digestif"></div></div>
+        <div class="fr"><label>URL image *</label>
+          <input type="url" id="im-url" placeholder="https://drive.google.com/file/d/ID/view  ou  lien direct .jpg">
+          <div class="url-hlp">OK: drive.google.com/file/d/ID/view &nbsp; OK: .jpg/.png direct &nbsp; ERREUR: /folders/</div>
+        </div>
+        <button class="btn bg" onclick="saveImage()">&#128190; Enregistrer l'image</button>
+      </div><div id="img-adm-list"></div>
+    </div>
+
+    <div class="apanel" id="ap-gen">
+      <div class="gen-hero">
+        <h2>&#128225; Diffuser les cours du jour</h2>
+        <p>Selectionnez le jour, verifiez l'apercu, puis GENERER</p>
+        <div class="gsw"><label>Jour a diffuser</label><select id="gen-jour" onchange="loadPreview()"><option value="">-- Selectionner --</option><option value="lundi">Lundi</option><option value="mardi">Mardi</option><option value="mercredi">Mercredi</option><option value="jeudi">Jeudi</option><option value="vendredi">Vendredi</option><option value="samedi">Samedi</option></select></div>
+        <div class="gsw"><label>Duree de diffusion</label><select id="gen-duree"><option value="24">24 heures</option><option value="48">48 heures</option><option value="72">72 heures</option><option value="168">1 semaine</option></select></div>
+        <div class="gsw"><label>Statut</label><select id="gen-stat"><option value="approved">Approuve - diffuser immediatement</option><option value="pending">En attente d'approbation</option></select></div>
+        <button class="btn-gen" onclick="generer()">&#128225; GENERER &amp; DIFFUSER</button>
+      </div>
+      <div id="prev-zone"><div class="empty"><div class="ei">&#128065;&#65039;</div><div class="et">Selectionnez un jour ci-dessus</div></div></div>
+      <div class="card" style="margin-top:13px"><div class="card-t">&#128220; Historique</div><div id="histo-list"></div></div>
+    </div>
+
+    <div class="apanel" id="ap-mem">
+      <div class="sbar"><div class="sbox"><div class="sval" id="m-tot">0</div><div class="slbl">Total</div></div><div class="sbox"><div class="sval" id="m-act">0</div><div class="slbl">Actifs</div></div><div class="sbox"><div class="sval" id="m-pnd">0</div><div class="slbl">En attente</div></div></div>
+      <div class="card"><div class="card-t">&#10133; Ajouter un membre</div>
+        <div class="fg"><div class="fr"><label>Nom *</label><input type="text" id="m-nom" placeholder="Kouassi Akossiwa..."></div><div class="fr"><label>Tel. *</label><input type="tel" id="m-tel" placeholder="97XXXXXXXX"></div></div>
+        <div class="fg"><div class="fr"><label>Plan</label><select id="m-plan"><option value="mensuel">Mensuel - 500 FCFA</option><option value="annuel">Annuel - 1 000 FCFA</option><option value="essai">Essai 24h</option></select></div><div class="fr"><label>Statut</label><select id="m-stat"><option value="pending">En attente</option><option value="paid">Paye</option><option value="free">Gratuit</option></select></div></div>
+        <button class="btn bg" onclick="saveMembre()">&#10133; Ajouter</button>
+      </div>
+      <div class="card"><div class="card-t">&#128101; Liste</div><div style="overflow-x:auto"><table class="mtbl"><thead><tr><th>Nom</th><th>Tel.</th><th>Plan</th><th>Statut</th><th>Expire</th><th>Actions</th></tr></thead><tbody id="mem-tbody"></tbody></table></div></div>
+    </div>
+
+    <div class="apanel" id="ap-com"><div class="card"><div class="card-t">&#128172; Moderation commentaires</div><div id="com-adm-list"></div></div></div>
+
+    <div class="apanel" id="ap-stat">
+      <div class="sbar"><div class="sbox"><div class="sval" id="st-slots">0</div><div class="slbl">Creneaux</div></div><div class="sbox"><div class="sval" id="st-fiches">0</div><div class="slbl">Fiches</div></div><div class="sbox"><div class="sval" id="st-diffs">0</div><div class="slbl">Diffusions</div></div></div>
+      <div class="sbar"><div class="sbox"><div class="sval" id="st-mems">0</div><div class="slbl">Membres</div></div><div class="sbox"><div class="sval" id="st-vids">0</div><div class="slbl">Videos</div></div><div class="sbox"><div class="sval" id="st-auds">0</div><div class="slbl">Audios</div></div></div>
+      <div class="card"><div class="card-t">Cours par jour</div><div id="chart-edt"></div></div>
+    </div>
+
+    <div class="apanel" id="ap-activ">
+      <div class="card"><div class="card-t">&#128220; Journal</div>
+        <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+          <button class="btn bn sm" onclick="filtActiv('all')">Tout</button>
+          <button class="btn bg sm" onclick="filtActiv('diffusion')">Diffusions</button>
+          <button class="btn bbl sm" onclick="filtActiv('membre')">Membres</button>
+          <button class="btn ba sm" onclick="filtActiv('contenu')">Contenu</button>
+        </div>
+        <div id="activ-list"></div>
+      </div>
+    </div>
+
+    <div class="apanel" id="ap-cfg">
+      <div class="card"><div class="card-t">&#127979; Etablissement</div>
+        <div class="fr"><label>Nom de l'ecole</label><input type="text" id="c-ecole" placeholder="Ecole Primaire..."></div>
+        <div class="fg"><div class="fr"><label>Commune</label><input type="text" id="c-ville" placeholder="Cotonou..."></div><div class="fr"><label>Annee scolaire</label><input type="text" id="c-annee" placeholder="2025-2026"></div></div>
+        <div class="fr"><label>Nouveau mot de passe (vide = inchange)</label><input type="password" id="c-pwd" placeholder="..."></div>
+        <button class="btn bg" onclick="saveConfig()">&#128190; Enregistrer</button>
+      </div>
+      <div class="card"><div class="card-t">&#128293; Firebase REST API</div>
+        <div class="cfb"><b>Zero SDK.</b> REST directe - fonctionne sur 3G. Polling toutes les 30s.</div>
+        <div class="fr"><label>Config Firebase JSON</label><textarea id="c-fb" style="min-height:120px;font-size:12px;font-family:monospace" placeholder='{"apiKey":"...","databaseURL":"https://xxx.firebaseio.com","projectId":"xxx"}'></textarea></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn bg" onclick="connectFirebase()">&#128293; Connecter</button><button class="btn bn" onclick="testFirebase()">Tester</button></div>
+        <div id="fb-status" style="margin-top:10px;font-size:13px;color:var(--tx2)"></div>
+      </div>
+      <div class="card"><div class="card-t">&#128190; Sauvegarde</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn bg sm" onclick="exportData()">Exporter JSON</button><button class="btn bn sm" onclick="document.getElementById('imp-f').click()">Importer</button><input type="file" id="imp-f" style="display:none" accept=".json" onchange="importData(event)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mbg" id="mbg">
+  <div class="modal">
+    <div class="modal-t" id="m-tit"></div>
+    <div id="m-body"></div>
+    <div class="modal-f"><button class="btn bn" onclick="closeModal()">Fermer</button></div>
+  </div>
+</div>
+
+<script>
+const DAYS=['lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const DF={lundi:'Lundi',mardi:'Mardi',mercredi:'Mercredi',jeudi:'Jeudi',vendredi:'Vendredi',samedi:'Samedi'};
+const JSD=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const DEFPWD='eduking229', LSK='ek229v6', FBK='ek229fb';
+const EMOJIS=['\uD83D\uDC4D','\u2764\uFE0F','\uD83D\uDD25','\uD83D\uDCA1','\uD83D\uDE2E','\uD83D\uDC4F'];
+const OLDKEYS=['ek229_cours_v2','ek229v2','ek229v3','ek229v4','ek229v5'];
+const PRIX={mensuel:{jours:30},annuel:{jours:365},essai:{jours:1}};
+
+let D={
+  config:{ecole:'',ville:'Benin',annee:'2025-2026',pwd:DEFPWD},
+  slots:[],programmes:[],fiches:[],resumes:[],videos:[],audios:[],images:[],
+  membres:[],coursJour:{},historique:[],commentaires:[],reactions:{},activites:[]
+};
+let fbUrl=null, cdInt=null, pollInt=null, chkInt=null;
+let lastSlotId='', activFil='all', _modalDel=null;
+
+// ── STORAGE ──
+function load(){
+  for(var i=0;i<OLDKEYS.length;i++){
+    try{var o=localStorage.getItem(OLDKEYS[i]);if(o){localStorage.setItem(LSK,o);localStorage.removeItem(OLDKEYS[i]);break;}}catch(e){}
+  }
+  try{
+    var s=localStorage.getItem(LSK);if(!s)return;
+    var p=JSON.parse(s);
+    D.config=p.config||D.config;
+    var arr=['slots','programmes','fiches','resumes','videos','audios','images','membres','historique','commentaires','activites'];
+    for(var j=0;j<arr.length;j++){D[arr[j]]=Array.isArray(p[arr[j]])?p[arr[j]]:[];}
+    D.coursJour=p.coursJour||{};D.reactions=p.reactions||{};
+  }catch(e){}
+}
+function save(){try{localStorage.setItem(LSK,JSON.stringify(D));}catch(e){}}
+function uid(p){return p+'_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);}
+function logA(type,msg){D.activites.unshift({id:uid('ac'),type:type,msg:msg,ts:Date.now()});if(D.activites.length>200)D.activites=D.activites.slice(0,200);save();fbPush('activites',D.activites.slice(0,60));}
+
+// ── PARSE URL MEDIA ──
+function parseUrl(url){
+  if(!url||!url.trim())return{type:'none'};
+  url=url.trim();
+  var yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if(yt)return{type:'youtube',embed:'https://www.youtube.com/embed/'+yt[1],url:url};
+  if(url.indexOf('/folders/')>-1)return{type:'folder',url:url};
+  var gf=url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if(gf){var id=gf[1];return{type:'drive',id:id,embed:'https://drive.google.com/file/d/'+id+'/preview',open:'https://drive.google.com/file/d/'+id+'/view',url:url};}
+  var go=url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(url.indexOf('drive.google.com')>-1&&go){var id2=go[1];return{type:'drive',id:id2,embed:'https://drive.google.com/file/d/'+id2+'/preview',open:url,url:url};}
+  if(url.match(/\.(mp3|wav|ogg|m4a|aac)(\?.*)?$/i))return{type:'audio',url:url};
+  if(url.match(/\.(mp4|webm|ogv)(\?.*)?$/i))return{type:'video',url:url};
+  if(url.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i))return{type:'image',url:url};
+  return{type:'link',url:url};
+}
+function imgSrc(url){
+  var m=parseUrl(url);
+  if(m.type==='drive')return'https://drive.google.com/thumbnail?id='+m.id+'&sz=w800';
+  return url;
+}
+function renderEmbed(url){
+  var m=parseUrl(url);
+  if(m.type==='youtube'||m.type==='drive')return'<div class="vidframe"><iframe src="'+m.embed+'" allowfullscreen allow="autoplay"></iframe></div>';
+  if(m.type==='folder')return'<div style="text-align:center;padding:16px;background:#F3E5F5;border-radius:10px"><b style="color:#6A1B9A">Dossier Google Drive</b><br><div style="font-size:12px;color:var(--tx2);margin:6px 0 10px">Utilisez un lien de FICHIER (/file/d/ID/view)</div><a href="'+url+'" target="_blank" style="background:#6A1B9A;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Ouvrir le dossier</a></div>';
+  if(m.type==='audio')return'<audio controls style="width:100%"><source src="'+url+'"></audio>';
+  if(m.type==='video')return'<video controls style="width:100%;border-radius:8px"><source src="'+url+'"></video>';
+  if(m.type==='image')return'<img src="'+url+'" style="width:100%;border-radius:8px">';
+  return'<a href="'+url+'" target="_blank" style="color:var(--bl)">Ouvrir</a>';
+}
+function renderAudioWidget(url){
+  var m=parseUrl(url);
+  if(m.type==='drive')return'<iframe src="'+m.embed+'" style="width:100%;height:80px;border:none;border-radius:8px" allow="autoplay"></iframe><br><a href="'+m.open+'" target="_blank" class="ext-link">Ouvrir dans Drive</a>';
+  if(m.type==='audio')return'<audio controls style="width:100%"><source src="'+url+'"></audio>';
+  if(m.type==='youtube')return'<div class="vidframe"><iframe src="'+m.embed+'" allowfullscreen></iframe></div>';
+  if(m.type==='folder')return'<a href="'+url+'" target="_blank" class="ext-link">Ouvrir dossier audio</a>';
+  return'<a href="'+url+'" target="_blank" class="ext-link">Ecouter</a>';
+}
+
+// ── FIREBASE REST ──
+function connectFirebase(auto){
+  var raw=(gel('c-fb')||{}).value||'';
+  if(!raw.trim()){if(!auto)toast('Collez la config Firebase','e');return;}
+  var cfg;try{cfg=JSON.parse(raw.trim());}catch(e){toast('JSON invalide','e');return;}
+  var url=cfg.databaseURL?(cfg.databaseURL.replace(/\/$/,'')):('https://'+cfg.projectId+'-default-rtdb.firebaseio.com');
+  if(!url){toast('databaseURL introuvable','e');return;}
+  fbUrl=url;localStorage.setItem(FBK,JSON.stringify(cfg));
+  fbGet('ek229/coursJour').then(function(data){
+    if(data){D.coursJour=data;save();renderDisplay();}
+    var el=gel('fb-status');if(el)el.innerHTML='Firebase connecte';
+    gel('livepill').style.display='flex';
+    if(!auto)toast('Firebase connecte!','s');
+    logA('config','Firebase connecte');
+    startPolling();
+  }).catch(function(e){var el=gel('fb-status');if(el)el.textContent='Erreur: '+e.message;if(!auto)toast('Erreur: '+e.message,'e');fbUrl=null;});
+}
+function testFirebase(){if(!fbUrl){toast('Firebase non connecte','e');return;}fbGet('ek229/coursJour').then(function(){toast('Connexion OK!','s');}).catch(function(e){toast('Erreur: '+e.message,'e');});}
+function fbGet(path){return fetch(fbUrl+'/'+path+'.json').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function fbPush(path,data){if(!fbUrl)return;fetch(fbUrl+'/ek229/'+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(){});}
+function startPolling(){
+  if(pollInt)clearInterval(pollInt);
+  if(chkInt)clearInterval(chkInt);
+  pollInt=setInterval(function(){
+    if(!fbUrl)return;
+    fbGet('ek229/coursJour').then(function(d){
+      if(!d)return;
+      var old=JSON.stringify(D.coursJour);D.coursJour=d;save();
+      if(JSON.stringify(d)!==old)renderDisplay();
+    }).catch(function(){});
+  },30000);
+  chkInt=setInterval(checkTimeSwitch,30000);
+}
+
+// ── TEMPS REEL ──
+function checkTimeSwitch(){
+  var active=getActiveBroadcast();if(!active)return;
+  var slots=(active.cj.slots||[]).filter(function(s){return s.statut!=='rejected';});
+  var live=null;
+  for(var i=0;i<slots.length;i++){if(slotStatus(slots[i].heureDebut,slots[i].heureFin)==='encours'){live=slots[i];break;}}
+  var cur=live?live.id:'';
+  if(cur!==lastSlotId){lastSlotId=cur;renderDisplay();}
+}
+
+// ── BROADCAST 24H ──
+function getActiveBroadcast(){
+  var dates=Object.keys(D.coursJour||{}).sort().reverse();
+  for(var i=0;i<dates.length;i++){
+    var dt=dates[i],cj=D.coursJour[dt];
+    if(!cj||!cj.genere||!cj.slots||!cj.slots.length)continue;
+    if(Date.now()-(cj.genereA||0)<(cj.dureeH||24)*3600000)return{dt:dt,cj:cj};
+  }
+  return null;
+}
+function getArchived(){
+  return Object.keys(D.coursJour||{}).sort().reverse().filter(function(dt){
+    var cj=D.coursJour[dt];if(!cj||!cj.genere)return false;
+    return Date.now()-(cj.genereA||0)>=(cj.dureeH||24)*3600000;
+  });
+}
+
+// ── AUTH ──
+function openAdmin(){gel('adm-ov').style.display='block';gel('adm-login').style.display='block';gel('adm-dash').style.display='none';}
+function closeAdmin(){gel('adm-ov').style.display='none';}
+function doLogin(){var v=gel('pwd-input').value;if(v===(D.config.pwd||DEFPWD)){gel('adm-login').style.display='none';gel('adm-dash').style.display='block';renderAllAdmin();toast('Connecte!','s');}else{toast('Mot de passe incorrect','e');gel('pwd-input').value='';}}
+function doLogout(){gel('adm-ov').style.display='none';gel('adm-dash').style.display='none';gel('adm-login').style.display='block';gel('pwd-input').value='';}
+
+// ── CRUD SLOTS ──
+function saveSlot(){
+  var s={id:uid('sl'),jour:gv('e-jour'),matiere:gv('e-mat').trim(),heureDebut:gv('e-deb'),heureFin:gv('e-fin'),niveau:gv('e-niv'),enseignant:gv('e-ens').trim(),ficheId:gv('e-fid'),resumeId:gv('e-rid'),progId:gv('e-pid'),videoId:gv('e-vid'),audioId:gv('e-aid'),imageId:gv('e-iid'),statut:'approved'};
+  if(!s.matiere||!s.heureDebut||!s.heureFin){toast('Matiere et horaires requis','e');return;}
+  D.slots.push(s);save();fbPush('slots',D.slots);renderEdtList();populateSels();sv('e-mat','');sv('e-ens','');
+  toast('Creneau ajoute','s');logA('contenu','Creneau: '+s.matiere+' '+s.niveau);
+}
+function delSlot(id){D.slots=D.slots.filter(function(x){return x.id!==id;});save();fbPush('slots',D.slots);renderEdtList();populateSels();toast('Supprime','s');}
+function renderEdtList(){
+  var c=gel('edt-list');if(!c)return;
+  var bd={};for(var i=0;i<DAYS.length;i++)bd[DAYS[i]]=D.slots.filter(function(s){return s.jour===DAYS[i];}).sort(function(a,b){return a.heureDebut.localeCompare(b.heureDebut);});
+  var h='';
+  for(var i=0;i<DAYS.length;i++){var day=DAYS[i];var sl=bd[day];if(!sl.length)continue;
+    h+='<div class="card"><div class="card-t">'+DF[day]+' ('+sl.length+' cours)</div>';
+    for(var j=0;j<sl.length;j++){var s=sl[j];
+      var fi=s.ficheId?findById(D.fiches,s.ficheId):null;
+      h+='<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(s.matiere)+' <span class="tag">'+s.niveau+'</span></div><div class="ir-s">'+s.heureDebut+'-'+s.heureFin+(s.enseignant?' | '+esc(s.enseignant):'')+(fi?' | Fiche':'')+(s.videoId?' | Video':'')+(s.audioId?' | Audio':'')+(s.imageId?' | Image':'')+'</div></div><div class="ir-a"><button class="btn br2 sm" onclick="delSlot(\''+s.id+'\')">X</button></div></div>';
+    }
+    h+='</div>';}
+  c.innerHTML=h||eHtml('Aucun creneau - ajoutez-en ci-dessus');
+}
+
+// ── CRUD PROG ──
+function saveProg(){var p={id:uid('pr'),matiere:gv('p-mat').trim(),niveau:gv('p-niv'),titre:gv('p-tit').trim(),contenu:gv('p-con').trim(),periode:gv('p-per').trim(),ts:Date.now()};if(!p.matiere||!p.titre){toast('Matiere et titre requis','e');return;}D.programmes.push(p);save();fbPush('programmes',D.programmes);renderProgList();populateSels();sv('p-mat','');sv('p-tit','');sv('p-con','');sv('p-per','');toast('Programme OK','s');logA('contenu','Programme: '+p.titre);}
+function delProg(id){D.programmes=D.programmes.filter(function(x){return x.id!==id;});save();fbPush('programmes',D.programmes);renderProgList();populateSels();toast('Supprime','s');}
+function renderProgList(){rList('prog-list',D.programmes,function(p){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(p.titre)+' <span class="tag">'+p.niveau+'</span></div><div class="ir-s">'+esc(p.matiere)+(p.periode?' | '+esc(p.periode):'')+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="viewItem(\'prog\',\''+p.id+'\')">Voir</button><button class="btn br2 sm" onclick="delProg(\''+p.id+'\')">X</button></div></div>';});}
+
+// ── CRUD FICHES ──
+function saveFiche(){var f={id:uid('fi'),titre:gv('f-tit').trim(),matiere:gv('f-mat').trim(),niveau:gv('f-niv'),duree:gv('f-dur').trim(),objectifs:gv('f-obj').trim(),contenu:gv('f-con').trim(),materiel:gv('f-mtr').trim(),ts:Date.now()};if(!f.titre||!f.matiere){toast('Titre et matiere requis','e');return;}D.fiches.push(f);save();fbPush('fiches',D.fiches);renderFichList();populateSels();sv('f-tit','');sv('f-mat','');sv('f-dur','');sv('f-obj','');sv('f-con','');sv('f-mtr','');toast('Fiche OK','s');logA('contenu','Fiche: '+f.titre);}
+function delFiche(id){D.fiches=D.fiches.filter(function(x){return x.id!==id;});save();fbPush('fiches',D.fiches);renderFichList();populateSels();toast('Supprime','s');}
+function renderFichList(){rList('fich-list',D.fiches,function(f){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(f.titre)+' <span class="tag">'+f.niveau+'</span></div><div class="ir-s">'+esc(f.matiere)+(f.duree?' | '+esc(f.duree):'')+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="viewItem(\'fiche\',\''+f.id+'\')">Voir</button><button class="btn br2 sm" onclick="delFiche(\''+f.id+'\')">X</button></div></div>';});}
+
+// ── CRUD RESUMES ──
+function saveResume(){var r={id:uid('re'),titre:gv('r-tit').trim(),matiere:gv('r-mat').trim(),niveau:gv('r-niv'),texte:gv('r-tex').trim(),ts:Date.now()};if(!r.titre||!r.texte){toast('Titre et texte requis','e');return;}D.resumes.push(r);save();fbPush('resumes',D.resumes);renderResList();populateSels();sv('r-tit','');sv('r-mat','');sv('r-tex','');toast('Resume OK','s');logA('contenu','Resume: '+r.titre);}
+function delResume(id){D.resumes=D.resumes.filter(function(x){return x.id!==id;});save();fbPush('resumes',D.resumes);renderResList();populateSels();toast('Supprime','s');}
+function renderResList(){rList('res-adm-list',D.resumes,function(r){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(r.titre)+' <span class="tag">'+r.niveau+'</span></div><div class="ir-s">'+esc(r.matiere)+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="viewItem(\'resume\',\''+r.id+'\')">Voir</button><button class="btn br2 sm" onclick="delResume(\''+r.id+'\')">X</button></div></div>';});}
+
+// ── CRUD VIDEOS ──
+function saveVid(){var v={id:uid('vi'),titre:gv('v-tit').trim(),matiere:gv('v-mat').trim(),niveau:gv('v-niv'),duree:gv('v-dur').trim(),url:gv('v-url').trim(),desc:gv('v-desc').trim(),ts:Date.now()};if(!v.titre||!v.matiere){toast('Titre et matiere requis','e');return;}if(!v.url){toast('URL requise','e');return;}var m=parseUrl(v.url);if(m.type==='folder'){toast('Lien DOSSIER - utilisez /file/d/ID/view','e');return;}D.videos.push(v);save();fbPush('videos',D.videos);renderVidAdmList();populateSels();sv('v-tit','');sv('v-mat','');sv('v-dur','');sv('v-url','');sv('v-desc','');toast('Video OK','s');logA('contenu','Video: '+v.titre);}
+function delVid(id){D.videos=D.videos.filter(function(x){return x.id!==id;});save();fbPush('videos',D.videos);renderVidAdmList();populateSels();toast('Supprime','s');}
+function renderVidAdmList(){rList('vid-adm-list',D.videos,function(v){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(v.titre)+' <span class="tag">'+v.niveau+'</span></div><div class="ir-s">'+esc(v.matiere)+(v.duree?' | '+esc(v.duree):'')+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="openMedia(\'vid\',\''+v.id+'\')">Play</button><button class="btn br2 sm" onclick="delVid(\''+v.id+'\')">X</button></div></div>';});}
+
+// ── CRUD AUDIO ──
+function saveAudio(){var a={id:uid('au'),titre:gv('a-tit').trim(),matiere:gv('a-mat').trim(),niveau:gv('a-niv'),duree:gv('a-dur').trim(),url:gv('a-url').trim(),desc:gv('a-desc').trim(),ts:Date.now()};if(!a.titre||!a.matiere){toast('Titre et matiere requis','e');return;}if(!a.url){toast('URL audio requise','e');return;}var m=parseUrl(a.url);if(m.type==='folder'){toast('Lien DOSSIER - utilisez /file/d/ID/view','e');return;}D.audios.push(a);save();fbPush('audios',D.audios);renderAudAdmList();populateSels();sv('a-tit','');sv('a-mat','');sv('a-dur','');sv('a-url','');sv('a-desc','');toast('Audio OK','s');logA('contenu','Audio: '+a.titre);}
+function delAudio(id){D.audios=D.audios.filter(function(x){return x.id!==id;});save();fbPush('audios',D.audios);renderAudAdmList();populateSels();toast('Supprime','s');}
+function renderAudAdmList(){rList('aud-adm-list',D.audios||[],function(a){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(a.titre)+' <span class="tag">'+a.niveau+'</span></div><div class="ir-s">'+esc(a.matiere)+(a.duree?' | '+esc(a.duree):'')+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="openMedia(\'aud\',\''+a.id+'\')">Play</button><button class="btn br2 sm" onclick="delAudio(\''+a.id+'\')">X</button></div></div>';});}
+
+// ── CRUD IMAGES ──
+function saveImage(){var im={id:uid('im'),titre:gv('im-tit').trim(),matiere:gv('im-mat').trim(),niveau:gv('im-niv'),legende:gv('im-leg').trim(),url:gv('im-url').trim(),ts:Date.now()};if(!im.titre||!im.matiere){toast('Titre et matiere requis','e');return;}if(!im.url){toast('URL image requise','e');return;}var m=parseUrl(im.url);if(m.type==='folder'){toast('Lien DOSSIER - utilisez /file/d/ID/view','e');return;}D.images.push(im);save();fbPush('images',D.images);renderImgAdmList();populateSels();sv('im-tit','');sv('im-mat','');sv('im-leg','');sv('im-url','');toast('Image OK','s');logA('contenu','Image: '+im.titre);}
+function delImage(id){D.images=D.images.filter(function(x){return x.id!==id;});save();fbPush('images',D.images);renderImgAdmList();populateSels();toast('Supprime','s');}
+function renderImgAdmList(){rList('img-adm-list',D.images||[],function(im){return '<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(im.titre)+' <span class="tag">'+im.niveau+'</span></div><div class="ir-s">'+esc(im.matiere)+(im.legende?' | '+esc(im.legende):'')+'</div></div><div class="ir-a"><button class="btn bn sm" onclick="openMedia(\'img\',\''+im.id+'\')">Voir</button><button class="btn br2 sm" onclick="delImage(\''+im.id+'\')">X</button></div></div>';});}
+
+// ── OPEN MEDIA MODAL ──
+function openMedia(type,id){
+  var item,title,body;
+  if(type==='vid'){item=findById(D.videos,id);if(!item)return;title='Video: '+item.titre;body=renderEmbed(item.url)+(item.desc?'<p style="font-size:13px;margin-top:9px;color:var(--tx2)">'+esc(item.desc)+'</p>':'');}
+  else if(type==='aud'){item=findById(D.audios,id);if(!item)return;title='Audio: '+item.titre;var m=parseUrl(item.url);if(m.type==='drive')body='<div class="vidframe"><iframe src="'+m.embed+'" allow="autoplay"></iframe></div>';else body=renderEmbed(item.url);if(item.desc)body+='<p style="font-size:13px;margin-top:9px;color:var(--tx2)">'+esc(item.desc)+'</p>';}
+  else{item=findById(D.images,id);if(!item)return;title='Image: '+item.titre;var src=imgSrc(item.url);body='<img src="'+src+'" style="width:100%;border-radius:10px;margin-bottom:8px" onerror="this.style.display=\'none\'"><a href="'+esc(item.url)+'" target="_blank" style="color:var(--bl);font-size:13px">Ouvrir dans Drive</a>'+(item.legende?'<p style="font-size:12px;color:var(--tx2);margin-top:7px">'+esc(item.legende)+'</p>':'');}
+  openModal(title,body);
+}
+function openFiche(slotId){
+  var active=getActiveBroadcast();if(!active)return;
+  var s=findById(active.cj.slots,slotId);if(!s||!s.fiche)return;
+  var f=s.fiche;
+  var body='<div style="margin-bottom:10px"><span class="tag">'+s.niveau+'</span><span class="tag tag-o" style="margin-left:4px">'+esc(s.matiere)+'</span>'+(f.duree?'<span class="tag tag-b" style="margin-left:4px">'+f.duree+'</span>':'')+'</div>';
+  if(f.objectifs)body+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:3px">OBJECTIFS</div><p style="font-size:13px;margin-bottom:10px;white-space:pre-wrap">'+esc(f.objectifs)+'</p>';
+  body+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:3px">CONTENU</div><p style="font-size:13px;white-space:pre-wrap;line-height:1.65">'+esc(f.contenu)+'</p>';
+  if(f.materiel)body+='<div style="font-size:12px;color:var(--tx2);margin-top:9px">Materiel: '+esc(f.materiel)+'</div>';
+  openModal('Fiche: '+f.titre,body);
+}
+
+// ── CRUD MEMBRES ──
+function saveMembre(){var plan=gv('m-plan'),stat=gv('m-stat'),j=(PRIX[plan]||{jours:30}).jours;var exp=new Date(Date.now()+j*86400000).toISOString().split('T')[0];var m={id:uid('mb'),nom:gv('m-nom').trim(),tel:gv('m-tel').trim(),plan:plan,statut:stat,expiration:exp,ts:Date.now()};if(!m.nom||!m.tel){toast('Nom et telephone requis','e');return;}D.membres.push(m);save();fbPush('membres',D.membres);renderMembres();renderMemStats();sv('m-nom','');sv('m-tel','');toast('Membre ajoute','s');logA('membre','Membre: '+m.nom);}
+function approuver(id){var m=findById(D.membres,id);if(!m)return;m.statut='paid';save();fbPush('membres',D.membres);renderMembres();renderMemStats();toast('Approuve','s');logA('membre','Approuve: '+m.nom);}
+function delMembre(id){var m=findById(D.membres,id);D.membres=D.membres.filter(function(x){return x.id!==id;});save();fbPush('membres',D.membres);renderMembres();renderMemStats();toast('Supprime','s');}
+function isActif(){var tel=localStorage.getItem('ek229_tel');if(!tel)return false;var m=D.membres.filter(function(x){return x.tel===tel&&x.statut==='paid';})[0];return m&&new Date(m.expiration)>new Date();}
+function renderMembres(){var tb=gel('mem-tbody');if(!tb)return;if(!D.membres.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--tx2)">Aucun membre</td></tr>';return;}tb.innerHTML=D.membres.map(function(m){var exp=new Date(m.expiration),ex=exp<new Date();var sL={paid:'Actif',pending:'Attente',free:'Gratuit'}[m.statut]||m.statut;return'<tr><td style="font-weight:700">'+esc(m.nom)+'</td><td>'+esc(m.tel)+'</td><td><span class="tag tag-b">'+m.plan+'</span></td><td><span class="badge '+(m.statut==='paid'?'b-appr':m.statut==='pending'?'b-pend':'b-done')+'">'+sL+'</span></td><td style="font-size:12px;'+(ex?'color:var(--re)':'')+'">'+m.expiration+(ex?' !':'')+'</td><td><div style="display:flex;gap:3px">'+(m.statut==='pending'?'<button class="btn bg sm" onclick="approuver(\''+m.id+'\')">OK</button>':'')+'<button class="btn br2 sm" onclick="delMembre(\''+m.id+'\')">X</button></div></td></tr>';}).join('');}
+function renderMemStats(){setTxt('m-tot',D.membres.length);setTxt('m-act',D.membres.filter(function(m){return m.statut==='paid'&&new Date(m.expiration)>new Date();}).length);setTxt('m-pnd',D.membres.filter(function(m){return m.statut==='pending';}).length);}
+
+// ── GENERER ──
+function generer(){
+  var jour=gv('gen-jour');if(!jour){toast('Selectionnez un jour','e');return;}
+  var slots=D.slots.filter(function(s){return s.jour===jour;}).sort(function(a,b){return a.heureDebut.localeCompare(b.heureDebut);});
+  if(!slots.length){toast('Aucun creneau pour ce jour - ajoutez-en dans Emploi du temps','e');return;}
+  var statut=gv('gen-stat')||'approved';
+  var dureeH=parseInt(gv('gen-duree'))||24;
+  var today=todayStr();
+  var cd={jour:jour,date:today,genere:true,statut:statut,genereA:Date.now(),dureeH:dureeH,archivePublic:false,slots:[]};
+  for(var i=0;i<slots.length;i++){
+    var s=slots[i];
+    cd.slots.push({
+      id:s.id,jour:s.jour,matiere:s.matiere,heureDebut:s.heureDebut,heureFin:s.heureFin,niveau:s.niveau,enseignant:s.enseignant,statut:s.statut,
+      fiche:s.ficheId?findById(D.fiches,s.ficheId)||null:null,
+      resume:s.resumeId?findById(D.resumes,s.resumeId)||null:null,
+      programme:s.progId?findById(D.programmes,s.progId)||null:null,
+      video:s.videoId?findById(D.videos,s.videoId)||null:null,
+      audio:s.audioId?findById(D.audios,s.audioId)||null:null,
+      image:s.imageId?findById(D.images,s.imageId)||null:null
+    });
+  }
+  D.coursJour[today]=cd;
+  D.historique.unshift({jour:jour,date:today,ts:Date.now(),n:slots.length,statut:statut,dureeH:dureeH});
+  if(D.historique.length>60)D.historique=D.historique.slice(0,60);
+  save();fbPush('coursJour/'+today,cd);fbPush('historique',D.historique);
+  logA('diffusion',''+DF[jour]+' - '+slots.length+' cours - '+dureeH+'h');
+  lastSlotId='';
+  renderDisplay();renderHisto();renderStats();renderAdmLive();renderAdmPend();renderAdmArch();
+  gel('livepill').style.display='flex';
+  toast(slots.length+' cours diffuses - '+DF[jour]+' ('+dureeH+'h)!','s');
+}
+function loadPreview(){
+  var jour=gv('gen-jour');if(!jour)return;
+  var slots=D.slots.filter(function(s){return s.jour===jour;}).sort(function(a,b){return a.heureDebut.localeCompare(b.heureDebut);});
+  var pz=gel('prev-zone');if(!pz)return;
+  if(!slots.length){pz.innerHTML=eHtml('Aucun cours pour '+DF[jour],'Ajoutez des creneaux dans Emploi du temps');return;}
+  var h='<div class="prev-box"><div class="card-t" style="margin-bottom:10px">Apercu - '+DF[jour]+' ('+slots.length+' cours)</div>';
+  for(var i=0;i<slots.length;i++){
+    var s=slots[i];
+    var fi=s.ficheId?findById(D.fiches,s.ficheId):null;
+    var vi=s.videoId?findById(D.videos,s.videoId):null;
+    var au=s.audioId?findById(D.audios,s.audioId):null;
+    var im=s.imageId?findById(D.images,s.imageId):null;
+    h+='<div style="border:1px solid #C8E6C9;border-radius:9px;padding:10px;margin-bottom:7px;background:#fff"><div style="font-weight:900;color:var(--g)">'+esc(s.matiere)+' <span class="tag">'+s.niveau+'</span></div><div style="font-size:12px;color:var(--tx2)">'+s.heureDebut+'-'+s.heureFin+'</div>'+(fi?'<div style="font-size:12px;color:#388E3C;margin-top:3px">Fiche: '+esc(fi.titre)+'</div>':'<div style="font-size:11px;color:#EF9A9A;margin-top:3px">Pas de fiche</div>')+(vi?'<div style="font-size:12px;color:#388E3C">Video: '+esc(vi.titre)+'</div>':'')+(au?'<div style="font-size:12px;color:#388E3C">Audio: '+esc(au.titre)+'</div>':'')+(im?'<div style="font-size:12px;color:#388E3C">Image: '+esc(im.titre)+'</div>':'')+'</div>';
+  }
+  h+='</div>';pz.innerHTML=h;
+}
+
+// ── ADMIN LIVE + PEND ──
+function renderAdmLive(){
+  var c=gel('adm-live-zone');if(!c)return;
+  var active=getActiveBroadcast();
+  if(!active){c.innerHTML=eHtml("Aucun cours diffuse aujourd'hui","Utilisez l'onglet Generer");return;}
+  var td=active.cj;
+  var liveSl=td.slots.filter(function(s){return slotStatus(s.heureDebut,s.heureFin)==='encours';});
+  var nextSl=td.slots.filter(function(s){return slotStatus(s.heureDebut,s.heureFin)==='avenir';});
+  var restH=Math.max(0,Math.ceil(((td.dureeH||24)*3600000-(Date.now()-(td.genereA||0)))/3600000));
+  var h='<div style="font-size:12px;color:var(--tx2);margin-bottom:10px">'+td.slots.length+' cours | '+restH+'h restantes</div>';
+  if(liveSl.length){
+    h+='<div style="background:var(--gbg);border-radius:11px;border:2px solid var(--g3);padding:13px;margin-bottom:9px"><div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="lpd"></div><b style="color:var(--g);font-size:11px">EN COURS</b></div>';
+    for(var i=0;i<liveSl.length;i++){var s=liveSl[i];h+='<div style="font-size:15px;font-weight:900;color:var(--g)">'+esc(s.matiere)+' <span class="tag">'+s.niveau+'</span></div><div style="font-size:12px;color:var(--tx2)">'+s.heureDebut+'-'+s.heureFin+'</div>'+(s.fiche?'<div style="font-size:12px;margin-top:4px">Fiche: '+esc(s.fiche.titre)+'</div>':'')+'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn ba sm" onclick="prepNotif(\''+esc(s.matiere)+'\',\''+s.niveau+'\',\''+s.heureDebut+'\',\''+s.heureFin+'\')">Notifier</button><button class="btn br2 sm" onclick="retirerSeq(\''+s.id+'\')">Retirer</button></div>';}
+    h+='</div>';
+  }
+  if(nextSl.length){
+    h+='<div style="background:var(--blbg);border-radius:11px;padding:11px;border:1px solid #90CAF9"><div style="font-size:11px;font-weight:800;color:var(--bl);margin-bottom:7px">A VENIR</div>';
+    for(var i=0;i<Math.min(nextSl.length,4);i++){var s=nextSl[i];h+='<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(s.matiere)+' <span class="tag">'+s.niveau+'</span></div><div class="ir-s">'+s.heureDebut+'-'+s.heureFin+'</div></div><button class="btn bg sm" onclick="approuverSeq(\''+s.id+'\')">OK</button></div>';}
+    h+='</div>';
+  }
+  if(!liveSl.length&&!nextSl.length)h+=eHtml('Tous les cours du jour sont termines');
+  c.innerHTML=h;
+}
+function renderAdmPend(){
+  var c=gel('adm-pend-zone');if(!c)return;
+  var active=getActiveBroadcast();if(!active){c.innerHTML=eHtml('Aucune session active');return;}
+  var pend=(active.cj.slots||[]).filter(function(s){return s.statut==='pending';});
+  if(!pend.length){c.innerHTML='<div style="padding:10px;color:var(--tx2);font-size:13px;text-align:center">Toutes les sequences sont approuvees</div>';return;}
+  c.innerHTML=pend.map(function(s){return'<div class="ir"><div class="ir-i"><div class="ir-t">'+esc(s.matiere)+' <span class="badge b-pend">Attente</span></div><div class="ir-s">'+s.heureDebut+'-'+s.heureFin+' | '+s.niveau+'</div></div><div class="ir-a"><button class="btn bg sm" onclick="approuverSeq(\''+s.id+'\')">OK</button><button class="btn br2 sm" onclick="rejeterSeq(\''+s.id+'\')">Non</button></div></div>';}).join('');
+}
+function approuverSeq(sid){var active=getActiveBroadcast();if(!active)return;var s=findById(active.cj.slots,sid);if(s)s.statut='approved';save();fbPush('coursJour/'+active.dt,active.cj);renderAdmPend();renderAdmLive();toast('Approuve','s');}
+function rejeterSeq(sid){var active=getActiveBroadcast();if(!active)return;var s=findById(active.cj.slots,sid);if(s)s.statut='rejected';save();fbPush('coursJour/'+active.dt,active.cj);renderAdmPend();renderAdmLive();renderDisplay();toast('Rejete','s');}
+function retirerSeq(sid){rejeterSeq(sid);}
+function prepNotif(mat,niv,deb,fin){sv('notif-msg','Le cours de '+mat+' ('+niv+') est en cours - '+deb+' a '+fin);switchATab('ap-diff');}
+function notifyAll(){var msg=gv('notif-msg');if(!msg.trim()){toast('Ecrivez un message','e');return;}if(!D.notifications)D.notifications=[];D.notifications.unshift({id:uid('no'),msg:msg,ts:Date.now()});save();fbPush('notifications',D.notifications.slice(0,50));sv('notif-msg','');toast('Notification envoyee','s');logA('notification',msg.substr(0,60));}
+
+// ── ARCHIVES ──
+function renderAdmArch(){
+  var c=gel('adm-arch-zone');if(!c)return;
+  var dates=Object.keys(D.coursJour||{}).sort().reverse();
+  if(!dates.length){c.innerHTML=eHtml('Aucune session');return;}
+  var h='';
+  for(var i=0;i<dates.length;i++){
+    var dt=dates[i],cj=D.coursJour[dt];
+    var age=Date.now()-(cj.genereA||0),ageH=Math.floor(age/3600000),active2=age<(cj.dureeH||24)*3600000;
+    h+='<div class="arch-item"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px"><div><div class="arch-dt">'+dt+' - '+(DF[cj.jour]||cj.jour)+'</div><div style="font-size:12px;color:var(--tx2)">'+(cj.slots||[]).length+' cours | '+ageH+'h | '+(cj.dureeH||24)+'h max</div><div style="margin-top:5px"><span class="badge '+(active2?'b-live':'b-done')+'">'+(active2?'Actif':'Archive')+'</span>'+(cj.archivePublic?'<span class="badge b-appr" style="margin-left:5px">Public</span>':'<span class="badge b-done" style="margin-left:5px">Restreint</span>')+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn '+(cj.archivePublic?'br2':'bg')+' sm" onclick="toggleArch(\''+dt+'\')">'+(cj.archivePublic?'Restreindre':'Rendre public')+'</button><button class="btn bn sm" onclick="viewArchDetail(\''+dt+'\')">Voir</button></div></div></div>';
+  }
+  c.innerHTML=h;
+}
+function toggleArch(dt){var cj=D.coursJour&&D.coursJour[dt];if(!cj)return;cj.archivePublic=!cj.archivePublic;save();fbPush('coursJour/'+dt,cj);renderAdmArch();renderArchPub();toast(cj.archivePublic?'Archive publique':'Acces restreint','s');logA('diffusion','Archive '+(cj.archivePublic?'ouverte':'fermee')+': '+dt);}
+function renderArchPub(){
+  var c=gel('arch-pub-list');if(!c)return;
+  var dates=getArchived().filter(function(dt){return D.coursJour[dt].archivePublic;});
+  if(!dates.length){c.innerHTML=eHtml('Aucune archive disponible',"L'administrateur peut rendre publiques les sessions passees");return;}
+  var h='';
+  for(var i=0;i<dates.length;i++){var dt=dates[i];var cj=D.coursJour[dt];h+='<div class="arch-item"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px"><div><div class="arch-dt">'+dt+' - '+(DF[cj.jour]||cj.jour)+'</div><div style="font-size:12px;color:var(--tx2)">'+(cj.slots||[]).length+' cours</div></div><button class="btn bg sm" onclick="viewArchDetail(\''+dt+'\')">Consulter</button></div></div>';}
+  c.innerHTML=h;
+}
+function viewArchDetail(dt){
+  var cj=D.coursJour[dt];if(!cj||!cj.slots)return;
+  var h='<div style="font-size:12px;color:var(--tx2);margin-bottom:12px">'+(DF[cj.jour]||cj.jour)+' - '+dt+'</div>';
+  for(var i=0;i<cj.slots.length;i++){var s=cj.slots[i];h+='<div style="border:1px solid var(--br);border-radius:9px;padding:10px;margin-bottom:8px"><div style="font-weight:900;color:var(--g)">'+esc(s.matiere)+' <span class="tag">'+s.niveau+'</span></div><div style="font-size:12px;color:var(--tx2)">'+s.heureDebut+'-'+s.heureFin+'</div>'+(s.fiche?'<div style="font-size:12px;margin-top:5px"><b>Fiche:</b> '+esc(s.fiche.titre)+'<br><span style="color:var(--tx2);font-size:11px">'+esc((s.fiche.objectifs||'').substr(0,150))+'</span></div>':'')+(s.resume?'<div style="font-size:12px;margin-top:5px;background:var(--ambg);padding:7px;border-radius:6px">'+esc(s.resume.texte.substr(0,150))+'</div>':'')+'</div>';}
+  openModal('Archive: '+dt,h);
+}
+
+// ── DISPLAY PUBLIC ──
+function renderDisplay(){
+  var active=getActiveBroadcast();
+  var td=active?active.cj:null;
+  var now=new Date();
+  var jourNom=JSD[now.getDay()];
+  setTxt('d-name',DF[jourNom]||cap(jourNom));
+  var el=gel('d-date');if(el)el.textContent=now.toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var cl=gel('cours-list');if(!cl)return;
+  if(!td||!td.slots||!td.slots.length){
+    var dotEl=gel('d-dot');if(dotEl)dotEl.className='sdot';setTxt('d-status','Aucun cours diffuse');
+    var cdEl=gel('cdown');if(cdEl)cdEl.style.display='none';
+    cl.innerHTML=eHtml('Aucun cours diffuse',"Revenez apres la generation du matin");
+    renderLiveZone(null);renderAudioZone(null);renderVideoZone(null);renderImageZone(null);renderReactZone(null);
+    return;
+  }
+  gel('livepill').style.display='flex';
+  var slots=td.slots.filter(function(s){return s.statut!=='rejected';});
+  var age=Date.now()-(td.genereA||0),limit=(td.dureeH||24)*3600000;
+  var restH=Math.max(0,Math.ceil((limit-age)/3600000));
+  var hasLive=false,nextSl=null;
+  for(var i=0;i<slots.length;i++){var ss=slotStatus(slots[i].heureDebut,slots[i].heureFin);if(ss==='encours')hasLive=true;if(ss==='avenir'&&!nextSl)nextSl=slots[i];}
+  var dotEl=gel('d-dot');
+  if(hasLive){if(dotEl)dotEl.className='sdot gr';setTxt('d-status','En cours - '+restH+'h restantes');}
+  else if(nextSl){if(dotEl)dotEl.className='sdot bl';setTxt('d-status','Prochain: '+nextSl.heureDebut+' | '+restH+'h restantes');startCd(nextSl);}
+  else{if(dotEl)dotEl.className='sdot or';setTxt('d-status','Cours termines | visible '+restH+'h');}
+  var accès=isActif()||!D.membres.length;
+  var h='';
+  for(var i=0;i<slots.length;i++){
+    var s=slots[i];var ss=slotStatus(s.heureDebut,s.heureFin);
+    var lbl=ss==='encours'?'En cours':ss==='avenir'?'A venir':'Termine';
+    var bc=ss==='encours'?'b-live':ss==='avenir'?'b-next':'b-done';
+    h+='<div class="cc '+ss+'"><div class="cc-hd"><div class="cc-time">'+s.heureDebut+'-'+s.heureFin+'</div><div class="cc-mat">'+esc(s.matiere)+'</div><span class="badge '+bc+'">'+lbl+'</span></div><div class="cc-bd"><div style="margin-bottom:7px"><span class="tag">'+s.niveau+'</span>'+(s.enseignant?'<span class="tag tag-b" style="margin-left:4px">'+esc(s.enseignant)+'</span>':'')+'</div>';
+    if(accès){
+      if(s.programme)h+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:3px">Programme</div><div style="font-size:13px;margin-bottom:8px"><b>'+esc(s.programme.titre)+'</b></div>';
+      if(s.fiche){h+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:3px">Fiche: '+esc(s.fiche.titre)+'</div>';if(s.fiche.objectifs)h+='<div style="font-size:11px;font-weight:700;color:var(--tx2)">Objectifs</div><div style="font-size:13px;margin-bottom:6px;line-height:1.6;white-space:pre-wrap">'+esc(s.fiche.objectifs)+'</div>';if(s.fiche.contenu)h+='<div style="font-size:11px;font-weight:700;color:var(--tx2)">Contenu</div><div style="font-size:13px;line-height:1.6;white-space:pre-wrap;margin-bottom:6px">'+esc(s.fiche.contenu)+'</div>';if(s.fiche.materiel)h+='<div style="font-size:12px;color:var(--tx2);margin-bottom:6px">Materiel: '+esc(s.fiche.materiel)+'</div>';}
+      if(s.resume)h+='<div style="background:var(--ambg);border-radius:9px;padding:10px;border-left:3px solid var(--am2);margin-top:5px"><div style="font-size:10px;font-weight:800;color:var(--am);margin-bottom:4px;text-transform:uppercase">Resume</div><div style="font-size:13px;line-height:1.6;white-space:pre-wrap">'+esc(s.resume.texte)+'</div></div>';
+    }else{
+      h+='<div style="background:var(--ambg);border-radius:9px;padding:12px;text-align:center;border:1px dashed var(--am2)"><div style="font-size:20px;margin-bottom:5px">⭐</div><div style="font-weight:700;color:var(--am);margin-bottom:3px">Contenu reserve aux abonnes</div><div style="font-size:12px;color:var(--tx2);margin-bottom:9px">Fiches, resumes, ressources</div><button class="btn ba sm" onclick="showAboTab()">S\'abonner - 500 FCFA/mois</button></div>';
+    }
+    h+='</div></div>';
+  }
+  cl.innerHTML=h;
+  renderLiveZone(td);renderAudioZone(td);renderVideoZone(td);renderImageZone(td);renderReactZone(td);
+}
+
+// ── ZONES DE DIFFUSION ──
+function renderLiveZone(td){
+  var z=gel('live-zone');if(!z)return;
+  if(!td||!td.slots){z.innerHTML='';return;}
+  var liveSl=td.slots.filter(function(s){return slotStatus(s.heureDebut,s.heureFin)==='encours'&&s.statut!=='rejected';});
+  if(!liveSl.length){z.innerHTML='';return;}
+  var s=liveSl[0];
+  var medias=[];
+  if(s.video)medias.push({type:'vid',icon:'🎬',label:'Video',titre:s.video.titre,id:s.video.id,dur:s.video.duree});
+  if(s.audio)medias.push({type:'aud',icon:'🔊',label:'Audio',titre:s.audio.titre,id:s.audio.id,dur:s.audio.duree});
+  if(s.image)medias.push({type:'img',icon:'🖼️',label:'Image',titre:s.image.titre,id:s.image.id});
+  var h='<div class="live-wrap"><div class="live-hd"><div class="live-dot"></div><div class="live-title">'+esc(s.matiere)+' — '+s.niveau+'</div><div class="live-time">'+s.heureDebut+'-'+s.heureFin+'</div></div><div class="live-bd">';
+  h+='<div class="live-mat">'+esc(s.matiere)+'</div><div class="live-meta"><span>'+s.niveau+'</span>'+(s.enseignant?'<span>'+esc(s.enseignant)+'</span>':'')+'</div>';
+  if(medias.length){
+    var cols=Math.min(medias.length,3);
+    h+='<div class="media-grid" style="grid-template-columns:repeat('+cols+',1fr)">';
+    for(var i=0;i<medias.length;i++){var m=medias[i];h+='<div class="media-card" onclick="openMedia(\''+m.type+'\',\''+m.id+'\')"><div class="mc-icon">'+m.icon+'</div><div class="mc-label">'+m.label+'</div><div class="mc-title">'+esc(m.titre)+'</div>'+(m.dur?'<div style="font-size:10px;color:rgba(255,255,255,.6)">'+esc(m.dur)+'</div>':'')+'<div class="mc-tap">Toucher pour ouvrir</div></div>';}
+    h+='</div>';
+  }
+  if(s.fiche){h+='<div class="fiche-card" onclick="openFiche(\''+s.id+'\')"><div class="fiche-lbl">Fiche du cours - toucher pour lire</div><div class="fiche-titre">'+esc(s.fiche.titre)+'</div>'+(s.fiche.objectifs?'<div class="fiche-prev">'+esc(s.fiche.objectifs.substr(0,140))+(s.fiche.objectifs.length>140?'...':'')+'</div>':'')+'</div>';}
+  if(s.resume){h+='<div class="resume-box"><div class="resume-lbl">Resume a retenir</div><div class="resume-txt">'+esc(s.resume.texte)+'</div></div>';}
+  h+='</div></div>';
+  z.innerHTML=h;
+}
+function renderAudioZone(td){
+  var z=gel('audio-zone');if(!z)return;
+  if(!td||!td.slots){z.innerHTML='';return;}
+  var audios=[];
+  for(var i=0;i<td.slots.length;i++){var s=td.slots[i];if(s.audio&&s.statut!=='rejected')audios.push({audio:s.audio,mat:s.matiere,niv:s.niveau});}
+  if(!audios.length){z.innerHTML='';return;}
+  var h='<div class="audio-wrap"><div class="audio-hd">Auditions - '+audios.length+' fichier(s)</div>';
+  for(var i=0;i<audios.length;i++){var a=audios[i].audio,mat=audios[i].mat,niv=audios[i].niv;h+='<div class="audio-item"><div class="audio-nm">'+esc(a.titre)+'</div><div class="audio-meta">'+esc(mat)+' | '+niv+(a.duree?' | '+esc(a.duree):'')+'</div>'+renderAudioWidget(a.url||'')+(a.desc?'<div style="font-size:12px;color:rgba(255,255,255,.75);margin-top:6px">'+esc(a.desc)+'</div>':'')+'</div>';}
+  h+='</div>';z.innerHTML=h;
+}
+function renderVideoZone(td){
+  var z=gel('video-zone');if(!z)return;
+  if(!td||!td.slots){z.innerHTML='';return;}
+  var vids=[];
+  for(var i=0;i<td.slots.length;i++){var s=td.slots[i];if(s.video&&s.statut!=='rejected')vids.push({v:s.video,mat:s.matiere});}
+  if(!vids.length){z.innerHTML='';return;}
+  var h='<div class="card"><div class="card-t">Videos des sequences</div><div class="vid-grid">';
+  for(var i=0;i<vids.length;i++){var v=vids[i].v,mat=vids[i].mat;var m=parseUrl(v.url||'');var icon=m.type==='folder'?'📁':'🎬';h+='<div class="vid-card" onclick="openMedia(\'vid\',\''+v.id+'\')"><div class="vid-thumb">'+icon+'<div class="vid-play">&#9654;</div></div><div class="vid-info"><div class="vid-nm">'+esc(v.titre)+'</div><div class="vid-dur">'+esc(mat)+(v.duree?' | '+esc(v.duree):'')+'</div></div></div>';}
+  h+='</div></div>';z.innerHTML=h;
+}
+function renderImageZone(td){
+  var z=gel('image-zone');if(!z)return;
+  if(!td||!td.slots){z.innerHTML='';return;}
+  var imgs=[];
+  for(var i=0;i<td.slots.length;i++){var s=td.slots[i];if(s.image&&s.statut!=='rejected')imgs.push({im:s.image,mat:s.matiere});}
+  if(!imgs.length){z.innerHTML='';return;}
+  var h='<div class="card"><div class="card-t">Images du cours</div><div class="img-grid">';
+  for(var i=0;i<imgs.length;i++){var im=imgs[i].im;var src=imgSrc(im.url||'');h+='<div class="img-card" onclick="openMedia(\'img\',\''+im.id+'\')"><img src="'+src+'" loading="lazy" onerror="this.style.display=\'none\'"><div class="img-info">'+esc(im.titre)+'</div></div>';}
+  h+='</div></div>';z.innerHTML=h;
+}
+
+// ── REACTIONS ET COMMENTAIRES ──
+function renderReactZone(td){
+  var z=gel('react-zone');if(!z)return;
+  if(!td){z.innerHTML='';return;}
+  var rKey='day_'+(td.date||todayStr());
+  var dr=(D.reactions&&D.reactions[rKey])||{};
+  var slotId=td.date||todayStr();
+  var coms=(D.commentaires||[]).filter(function(c){return c.slotId===slotId;}).slice(0,20);
+  var h='<div class="card"><div class="card-t">Reactions et Commentaires</div><div class="rbar">';
+  for(var i=0;i<EMOJIS.length;i++){var e=EMOJIS[i];var cnt=dr[e]||0;h+='<button class="rbtn" onclick="react(\''+rKey+'\',\''+e+'\')">'+e+(cnt>0?' <span style="font-size:12px;color:var(--tx2)">'+cnt+'</span>':'')+'</button>';}
+  h+='</div>';
+  if(coms.length)for(var i=0;i<coms.length;i++){var c2=coms[i];h+='<div class="comment"><div class="cm-hd"><div class="cm-av">'+((c2.nom||'?')[0].toUpperCase())+'</div><div class="cm-nm">'+esc(c2.nom)+'</div><div class="cm-ti">'+relTime(c2.ts)+'</div></div><div class="cm-tx">'+esc(c2.texte)+'</div></div>';}
+  h+='<div style="margin-top:10px"><div class="fr"><input type="text" id="cm-nom-'+slotId+'" placeholder="Votre prenom" style="margin-bottom:5px"></div><div style="display:flex;gap:7px"><input type="text" id="cm-inp-'+slotId+'" placeholder="Votre commentaire..." style="flex:1" onkeydown="if(event.key===\'Enter\')addComment(\''+slotId+'\')"><button class="btn bg sm" onclick="addComment(\''+slotId+'\')">Envoyer</button></div></div></div>';
+  z.innerHTML=h;
+}
+function react(rKey,emoji){if(!D.reactions)D.reactions={};if(!D.reactions[rKey])D.reactions[rKey]={};D.reactions[rKey][emoji]=(D.reactions[rKey][emoji]||0)+1;save();fbPush('reactions',D.reactions);var active=getActiveBroadcast();renderReactZone(active?active.cj:null);}
+function addComment(slotId){var txt=(gel('cm-inp-'+slotId)||{}).value||'';var nom=(gel('cm-nom-'+slotId)||{}).value||'Anonyme';if(!txt.trim()){toast('Ecrivez un commentaire','e');return;}if(!D.commentaires)D.commentaires=[];D.commentaires.unshift({id:uid('cm'),slotId:slotId,nom:nom.trim()||'Anonyme',texte:txt.trim(),ts:Date.now()});save();fbPush('commentaires',D.commentaires);var active=getActiveBroadcast();renderReactZone(active?active.cj:null);renderComAdm();toast('Envoye','s');}
+function renderComAdm(){var c=gel('com-adm-list');if(!c)return;var coms=(D.commentaires||[]).slice(0,50);if(!coms.length){c.innerHTML=eHtml('Aucun commentaire');return;}c.innerHTML=coms.map(function(cm){return'<div class="comment"><div class="cm-hd"><div class="cm-av">'+((cm.nom||'?')[0].toUpperCase())+'</div><div class="cm-nm">'+esc(cm.nom)+'</div><div class="cm-ti">'+relTime(cm.ts)+'</div></div><div class="cm-tx">'+esc(cm.texte)+'</div><div style="margin-top:6px"><button class="btn br2 sm" onclick="delCom(\''+cm.id+'\')">Supprimer</button></div></div>';}).join('');}
+function delCom(id){D.commentaires=D.commentaires.filter(function(x){return x.id!==id;});save();fbPush('commentaires',D.commentaires);renderComAdm();var active=getActiveBroadcast();renderReactZone(active?active.cj:null);toast('Supprime','s');}
+
+// ── SEMAINE ──
+function buildWeekNav(){
+  var wn=gel('wknav');if(!wn)return;
+  var today=JSD[new Date().getDay()];
+  for(var i=0;i<DAYS.length;i++){
+    var day=DAYS[i];
+    var b=document.createElement('button');
+    b.className='wday'+(day===today?' active':'')+(D.slots.filter(function(s){return s.jour===day;}).length?' has':'');
+    b.textContent=DF[day];
+    (function(d){b.onclick=function(){var btns=document.querySelectorAll('.wday');for(var j=0;j<btns.length;j++)btns[j].classList.remove('active');b.classList.add('active');renderSemaine(d);};})(day);
+    wn.appendChild(b);
+  }
+  renderSemaine(today);
+}
+function renderSemaine(day){
+  var c=gel('sem-content');if(!c)return;
+  var slots=D.slots.filter(function(s){return s.jour===day;}).sort(function(a,b){return a.heureDebut.localeCompare(b.heureDebut);});
+  if(!slots.length){c.innerHTML=eHtml('Aucun cours - '+DF[day],'Aucun creneau pour ce jour');return;}
+  var h='<p style="font-size:12px;color:var(--tx2);margin-bottom:10px">'+slots.length+' cours - '+DF[day]+'</p>';
+  for(var i=0;i<slots.length;i++){var s=slots[i];var fi=s.ficheId?findById(D.fiches,s.ficheId):null;var vi=s.videoId?findById(D.videos,s.videoId):null;var au=s.audioId?findById(D.audios,s.audioId):null;h+='<div class="cc"><div class="cc-hd"><div class="cc-time">'+s.heureDebut+'-'+s.heureFin+'</div><div class="cc-mat">'+esc(s.matiere)+'</div><span class="tag">'+s.niveau+'</span></div>'+(fi||vi||au?'<div class="cc-bd">'+(fi?'<div style="font-size:13px;margin-bottom:3px">Fiche: '+esc(fi.titre)+'</div>':'')+(vi?'<div style="font-size:13px;margin-bottom:3px">Video: '+esc(vi.titre)+'</div>':'')+(au?'<div style="font-size:13px">Audio: '+esc(au.titre)+'</div>':'')+'</div>':'')+'</div>';}
+  c.innerHTML=h;
+}
+
+// ── RESSOURCES ──
+function filterRes(){renderRes(gel('srch').value||'');}
+function renderRes(q){
+  q=(q||'').toLowerCase();var c=gel('res-list');if(!c)return;
+  var all=[];
+  var arr=[{a:D.fiches,t:'fiche',i:'Fiche',tx:'contenu'},{a:D.resumes,t:'resume',i:'Resume',tx:'texte'},{a:D.programmes,t:'programme',i:'Programme',tx:'contenu'},{a:D.videos,t:'video',i:'Video',tx:'desc'},{a:(D.audios||[]),t:'audio',i:'Audio',tx:'desc'},{a:(D.images||[]),t:'image',i:'Image',tx:'legende'}];
+  for(var j=0;j<arr.length;j++){var g=arr[j];for(var i=0;i<g.a.length;i++){var x=g.a[i];if(!q||(x.titre||'').toLowerCase().indexOf(q)>-1||(x.matiere||'').toLowerCase().indexOf(q)>-1||(x[g.tx]||'').toLowerCase().indexOf(q)>-1)all.push({item:x,type:g.t,icon:g.i,tx:x[g.tx]||''});}}
+  if(!all.length){c.innerHTML=eHtml(q?'Aucun resultat':'Aucune ressource');return;}
+  var h='';for(var i=0;i<all.length;i++){var x=all[i].item,type=all[i].type,icon=all[i].icon,tx=all[i].tx;h+='<div class="cc"><div class="cc-hd"><div class="cc-mat" style="font-size:14px">'+icon+': '+esc(x.titre)+'</div><span class="tag">'+x.niveau+'</span></div><div class="cc-bd"><span class="tag tag-o">'+esc(x.matiere)+'</span><span class="tag tag-b" style="margin-left:4px">'+type+'</span>'+(tx?'<div style="font-size:12px;color:var(--tx2);margin-top:7px;max-height:60px;overflow:hidden">'+esc(tx.substr(0,200))+(tx.length>200?'...':'')+'</div>':'')+'</div></div>';}
+  c.innerHTML=h;
+}
+
+// ── ABONNEMENT ──
+function renderAbo(){
+  var c=gel('abo-content');if(!c)return;
+  var tel=localStorage.getItem('ek229_tel');var actif=isActif();
+  if(actif){var m=D.membres.filter(function(x){return x.tel===tel&&x.statut==='paid';})[0];c.innerHTML='<div class="card" style="text-align:center"><div style="font-size:40px;margin-bottom:9px">✅</div><div style="font-size:18px;font-weight:900;color:var(--g);margin-bottom:5px">Abonnement actif</div><div style="font-size:13px;color:var(--tx2)">Plan: <b>'+(m?m.plan:'---')+'</b> | Expire: <b>'+(m?m.expiration:'---')+'</b></div></div>';return;}
+  var inPend=tel&&D.membres.filter(function(x){return x.tel===tel&&x.statut==='pending';})[0];
+  if(inPend){c.innerHTML='<div class="card" style="text-align:center"><div style="font-size:40px;margin-bottom:9px">⏳</div><div style="font-size:16px;font-weight:900;color:var(--am2);margin-bottom:7px">Verification en cours</div><div style="font-size:13px;color:var(--tx2)">Votre abonnement sera active apres verification du paiement.</div></div>';return;}
+  var sp=localStorage.getItem('ek229_plan')||'mensuel';
+  c.innerHTML='<div class="abo-hero"><div style="font-size:28px;margin-bottom:5px">⭐</div><div style="font-size:20px;font-weight:900;margin-bottom:5px">Acces complet Eduking 229</div><div style="font-size:13px;opacity:.85;margin-bottom:0">Fiches, Resumes, Videos, Audio, Images, Diffusion</div><div class="plan-row"><div class="plan '+(sp==='mensuel'?'sel':'')+'" onclick="selPlan(\'mensuel\')"><div class="plan-p">500 F</div><div class="plan-n">/ mois</div></div><div class="plan '+(sp==='annuel'?'sel':'')+'" onclick="selPlan(\'annuel\')"><div class="plan-p">1 000 F</div><div class="plan-n">/ an</div></div></div><button class="btn ba bw" onclick="showPay()">S\'abonner maintenant</button><button class="btn bn bw" style="margin-top:8px;color:#fff;background:rgba(255,255,255,.15)" onclick="startEssai()">Essai gratuit 24h</button></div><div class="card"><div class="card-t">Paiement MTN MoMo / Moov Money</div><div id="pay-zone" style="display:none"><div style="background:var(--ambg);border-radius:10px;padding:13px;margin-bottom:11px"><div style="font-weight:700;color:var(--am);margin-bottom:6px">Instructions</div><div id="pay-txt" style="font-size:13px;line-height:1.75"></div></div><div class="fr"><label>Votre numero (MTN/Moov) *</label><input type="tel" id="abo-tel" placeholder="97XXXXXXXX"></div><div class="fr"><label>Nom complet *</label><input type="text" id="abo-nom" placeholder="Votre nom"></div><button class="btn bg bw" onclick="confirmerPaiement()">J\'ai effectue le paiement</button></div></div>';
+}
+function selPlan(p){localStorage.setItem('ek229_plan',p);var plans=document.querySelectorAll('.plan');for(var i=0;i<plans.length;i++)plans[i].classList.toggle('sel',(i===0&&p==='mensuel')||(i===1&&p==='annuel'));}
+function showPay(){var plan=localStorage.getItem('ek229_plan')||'mensuel';var pz=gel('pay-zone');if(pz)pz.style.display='block';var pt=gel('pay-txt');if(pt)pt.innerHTML='<b>Montant:</b> '+(plan==='mensuel'?'500 FCFA':'1 000 FCFA')+'<br><b>MTN MoMo:</b> *880# > Envoyer argent<br><b>Moov Money:</b> *155# > Payer<br><span style="color:var(--re)">Indiquez votre numero dans le motif</span>';}
+function confirmerPaiement(){var tel=gv('abo-tel').trim();var nom=gv('abo-nom').trim();if(!tel||!nom){toast('Remplissez vos coordonnees','e');return;}var plan=localStorage.getItem('ek229_plan')||'mensuel';localStorage.setItem('ek229_tel',tel);var m={id:uid('mb'),nom:nom,tel:tel,plan:plan,statut:'pending',expiration:new Date(Date.now()+30*86400000).toISOString().split('T')[0],ts:Date.now()};D.membres.push(m);save();fbPush('membres',D.membres);renderMemStats();renderMembres();renderAbo();toast('Demande envoyee','i');logA('membre','Abonnement: '+nom+' | '+tel+' | '+plan);}
+function startEssai(){var tel=prompt('Votre numero de telephone:');if(!tel||!tel.trim())return;localStorage.setItem('ek229_tel',tel.trim());var m={id:uid('mb'),nom:'Essai',tel:tel.trim(),plan:'essai',statut:'paid',expiration:new Date(Date.now()+86400000).toISOString().split('T')[0],ts:Date.now()};D.membres.push(m);save();fbPush('membres',D.membres);renderAbo();renderDisplay();toast('Essai 24h active!','s');logA('membre','Essai 24h: '+tel);}
+function showAboTab(){var ts=document.querySelectorAll('.mtab'),ps=document.querySelectorAll('.panel');for(var i=0;i<ts.length;i++)ts[i].classList.remove('active');for(var i=0;i<ps.length;i++)ps[i].classList.remove('active');document.querySelector('[data-pnl="pnl-abo"]').classList.add('active');gel('pnl-abo').classList.add('active');renderAbo();}
+
+// ── STATS ──
+function renderStats(){
+  setTxt('st-slots',D.slots.length);setTxt('st-fiches',D.fiches.length);setTxt('st-diffs',(D.historique||[]).length);
+  setTxt('st-mems',D.membres.length);setTxt('st-vids',D.videos.length);setTxt('st-auds',(D.audios||[]).length);
+  var ch=gel('chart-edt');if(ch){
+    var max=1;for(var i=0;i<DAYS.length;i++){var n=D.slots.filter(function(s){return s.jour===DAYS[i];}).length;if(n>max)max=n;}
+    var h='<div style="display:flex;gap:5px;align-items:flex-end;height:70px;padding-bottom:4px">';
+    for(var i=0;i<DAYS.length;i++){var day=DAYS[i];var n=D.slots.filter(function(s){return s.jour===day;}).length;var pct=Math.round((n/max)*100);h+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:11px;font-weight:700;color:var(--g)">'+n+'</span><div style="width:100%;height:'+Math.max(3,Math.round(pct*.5))+'px;background:var(--g2);border-radius:3px 3px 0 0"></div><span style="font-size:9px;color:var(--tx2)">'+day.substr(0,3)+'</span></div>';}
+    h+='</div>';ch.innerHTML=h;}
+}
+function renderHisto(){var c=gel('histo-list');if(!c)return;var h=(D.historique||[]).slice(0,15);if(!h.length){c.innerHTML='<div style="text-align:center;padding:13px;color:var(--tx2);font-size:13px">Aucune diffusion</div>';return;}c.innerHTML=h.map(function(x){return'<div class="ir"><div class="ir-i"><div class="ir-t">'+(DF[x.jour]||x.jour)+' - '+x.n+' cours | '+(x.dureeH||24)+'h</div><div class="ir-s">'+x.date+' | '+new Date(x.ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div></div><span class="badge '+(x.statut==='approved'?'b-appr':'b-pend')+'">'+(x.statut==='approved'?'OK':'Attente')+'</span></div>';}).join('');}
+
+// ── ACTIVITES ──
+function filtActiv(f){activFil=f;renderActiv();}
+function renderActiv(){var c=gel('activ-list');if(!c)return;var acts=(D.activites||[]).slice(0,100);if(activFil!=='all')acts=acts.filter(function(a){return a.type===activFil;});if(!acts.length){c.innerHTML=eHtml('Aucune activite');return;}var icons={diffusion:'📡',membre:'👥',contenu:'📝',config:'⚙️',notification:'🔔'};c.innerHTML=acts.map(function(a){return'<div class="activ"><div style="font-size:18px;flex-shrink:0">'+(icons[a.type]||'📌')+'</div><div><div class="activ-msg">'+esc(a.msg)+'</div><div class="activ-time">'+new Date(a.ts).toLocaleString('fr-FR')+'</div></div></div>';}).join('');}
+
+// ── CONFIG ──
+function saveConfig(){D.config.ecole=gv('c-ecole');D.config.ville=gv('c-ville');D.config.annee=gv('c-annee');var np=gv('c-pwd');if(np)D.config.pwd=np;save();fbPush('config',D.config);sv('c-pwd','');toast('Enregistre','s');logA('config','Config mise a jour');}
+function loadCfgUI(){sv('c-ecole',D.config.ecole||'');sv('c-ville',D.config.ville||'');sv('c-annee',D.config.annee||'');var fb=localStorage.getItem(FBK);if(fb){try{var el=gel('c-fb');if(el)el.value=JSON.stringify(JSON.parse(fb),null,2);}catch(e){}}}
+function exportData(){var b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='eduking_'+todayStr()+'.json';a.click();toast('Donnees exportees','s');}
+function importData(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var imp=JSON.parse(ev.target.result);D.slots=imp.slots||[];D.programmes=imp.programmes||[];D.fiches=imp.fiches||[];D.resumes=imp.resumes||[];D.videos=imp.videos||[];D.audios=imp.audios||[];D.images=imp.images||[];D.membres=imp.membres||[];D.coursJour=imp.coursJour||{};D.historique=imp.historique||[];D.reactions=imp.reactions||{};D.config=imp.config||D.config;save();renderAll();renderAllAdmin();toast('Importe','s');}catch(err){toast('Fichier invalide','e');}};r.readAsText(f);}
+
+// ── VIEW ITEM ──
+function viewItem(type,id){
+  var item,title,body;
+  if(type==='fiche'){item=findById(D.fiches,id);if(!item)return;title='Fiche: '+item.titre;body='<span class="tag">'+item.niveau+'</span><span class="tag tag-o" style="margin-left:4px">'+esc(item.matiere)+'</span>'+(item.duree?'<span class="tag tag-b" style="margin-left:4px">'+item.duree+'</span>':'');if(item.objectifs)body+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin:10px 0 3px">OBJECTIFS</div><p style="font-size:13px;white-space:pre-wrap;margin-bottom:9px">'+esc(item.objectifs)+'</p>';body+='<div style="font-size:11px;font-weight:800;color:var(--tx2);margin-bottom:3px">CONTENU</div><p style="font-size:13px;white-space:pre-wrap;line-height:1.65">'+esc(item.contenu)+'</p>';if(item.materiel)body+='<div style="font-size:12px;color:var(--tx2);margin-top:9px">Materiel: '+esc(item.materiel)+'</div>';}
+  else if(type==='resume'){item=findById(D.resumes,id);if(!item)return;title='Resume: '+item.titre;body='<span class="tag">'+item.niveau+'</span><span class="tag tag-o" style="margin-left:4px">'+esc(item.matiere)+'</span><div style="background:var(--ambg);border-radius:9px;padding:12px;margin-top:11px;border-left:3px solid var(--am2);white-space:pre-wrap;font-size:13px;line-height:1.65">'+esc(item.texte)+'</div>';}
+  else{item=findById(D.programmes,id);if(!item)return;title='Programme: '+item.titre;body='<span class="tag">'+item.niveau+'</span><span class="tag tag-o" style="margin-left:4px">'+esc(item.matiere)+'</span>'+(item.periode?'<span class="tag tag-b" style="margin-left:4px">'+item.periode+'</span>':'')+'<p style="font-size:13px;margin-top:11px;white-space:pre-wrap;line-height:1.65">'+esc(item.contenu)+'</p>';}
+  openModal(title,body);
+}
+
+// ── POPULATE SELECTS ──
+function populateSels(){
+  fSel('e-fid',D.fiches,function(f){return{v:f.id,l:'['+f.niveau+'] '+f.matiere+' - '+f.titre};});
+  fSel('e-rid',D.resumes,function(r){return{v:r.id,l:'['+r.niveau+'] '+r.matiere+' - '+r.titre};});
+  fSel('e-pid',D.programmes,function(p){return{v:p.id,l:'['+p.niveau+'] '+p.matiere+' - '+p.titre};});
+  fSel('e-vid',D.videos,function(v){return{v:v.id,l:'['+v.niveau+'] '+v.matiere+' - '+v.titre};});
+  fSel('e-aid',D.audios||[],function(a){return{v:a.id,l:'['+a.niveau+'] '+a.matiere+' - '+a.titre};});
+  fSel('e-iid',D.images||[],function(im){return{v:im.id,l:'['+im.niveau+'] '+im.matiere+' - '+im.titre};});
+}
+function fSel(id,items,fn){var sel=gel(id);if(!sel)return;var cur=sel.value;sel.innerHTML='<option value="">-- aucun --</option>';for(var i=0;i<items.length;i++){var r=fn(items[i]);var o=document.createElement('option');o.value=r.v;o.textContent=r.l;if(r.v===cur)o.selected=true;sel.appendChild(o);}}
+
+// ── COUNTDOWN ──
+function startCd(sl){if(cdInt)clearInterval(cdInt);var hh=parseInt(sl.heureDebut.split(':')[0]),mm=parseInt(sl.heureDebut.split(':')[1]);var box=gel('cdown');box.style.display='block';setTxt('cd-next',sl.matiere+' - '+sl.niveau);var tick=function(){var now=new Date();var tgt=new Date(now);tgt.setHours(hh,mm,0,0);var diff=tgt-now;if(diff<=0){clearInterval(cdInt);box.style.display='none';renderDisplay();return;}var h2=Math.floor(diff/3600000),m2=Math.floor((diff%3600000)/60000),s2=Math.floor((diff%60000)/1000);setTxt('cd-time',pad(h2)+':'+pad(m2)+':'+pad(s2));};tick();cdInt=setInterval(tick,1000);}
+
+// ── HELPERS ──
+function gel(id){return document.getElementById(id);}
+function gv(id){return(gel(id)||{}).value||'';}
+function sv(id,v){var el=gel(id);if(el)el.value=v;}
+function setTxt(id,t){var el=gel(id);if(el)el.innerHTML=t;}
+function findById(arr,id){for(var i=0;i<arr.length;i++)if(arr[i].id===id)return arr[i];return null;}
+function slotStatus(deb,fin){var dh=parseInt(deb.split(':')[0]),dm=parseInt(deb.split(':')[1]),fh=parseInt(fin.split(':')[0]),fm=parseInt(fin.split(':')[1]);var nm=new Date().getHours()*60+new Date().getMinutes(),sm=dh*60+dm,em=fh*60+fm;if(nm>=sm&&nm<em)return'encours';if(nm<sm)return'avenir';return'termine';}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function pad(n){return String(n).padStart(2,'0');}
+function cap(s){return s?s[0].toUpperCase()+s.slice(1):s;}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+function eHtml(t,s){return'<div class="empty"><div class="ei">📭</div><div class="et">'+t+'</div>'+(s?'<div class="es">'+s+'</div>':'')+'</div>';}
+function rList(cid,items,fn){var c=gel(cid);if(!c)return;if(!items.length){c.innerHTML=eHtml('Aucun element');return;}var h='<div class="card"><div class="card-t">Liste ('+items.length+')</div>';for(var i=0;i<items.length;i++)h+=fn(items[i]);h+='</div>';c.innerHTML=h;}
+function relTime(ts){var d=Date.now()-ts;if(d<60000)return"A l'instant";if(d<3600000)return Math.floor(d/60000)+'min';if(d<86400000)return Math.floor(d/3600000)+'h';return new Date(ts).toLocaleDateString('fr-FR');}
+function switchATab(apId){var ts=document.querySelectorAll('.atab'),ps=document.querySelectorAll('.apanel');for(var i=0;i<ts.length;i++)ts[i].classList.remove('active');for(var i=0;i<ps.length;i++)ps[i].classList.remove('active');var tab=document.querySelector('[data-ap="'+apId+'"]');if(tab)tab.classList.add('active');var p=gel(apId);if(p)p.classList.add('active');}
+function toast(msg,type){var t=gel('toast');t.textContent=msg;t.className='toast t'+(type||'s')+' active';setTimeout(function(){t.className='toast';},4500);}
+function openModal(title,body){gel('m-tit').textContent=title;gel('m-body').innerHTML=body;gel('mbg').classList.add('active');}
+function closeModal(){gel('mbg').classList.remove('active');}
+
+// ── RENDER ALL ──
+function renderAllAdmin(){renderEdtList();renderProgList();renderFichList();renderResList();renderVidAdmList();renderAudAdmList();renderImgAdmList();renderHisto();renderStats();renderMembres();renderMemStats();renderComAdm();renderActiv();populateSels();loadCfgUI();loadPreview();renderAdmLive();renderAdmPend();renderAdmArch();}
+function renderAll(){renderDisplay();renderRes('');renderStats();renderAbo();renderArchPub();}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',function(){
+  load();
+
+  // PUBLIC TABS
+  var tabs=document.querySelectorAll('.mtab');
+  for(var i=0;i<tabs.length;i++){
+    (function(tab){tab.addEventListener('click',function(){
+      var ts=document.querySelectorAll('.mtab'),ps=document.querySelectorAll('.panel');
+      for(var j=0;j<ts.length;j++)ts[j].classList.remove('active');
+      for(var j=0;j<ps.length;j++)ps[j].classList.remove('active');
+      tab.classList.add('active');
+      var p=gel(tab.getAttribute('data-pnl'));if(p)p.classList.add('active');
+      var pnl=tab.getAttribute('data-pnl');
+      if(pnl==='pnl-ressources')renderRes('');
+      if(pnl==='pnl-abo')renderAbo();
+      if(pnl==='pnl-archives')renderArchPub();
+    });})(tabs[i]);
+  }
+
+  // ADMIN TABS
+  var atabs=gel('atabs');
+  if(atabs){atabs.addEventListener('click',function(e){
+    var tab=e.target;while(tab&&!tab.getAttribute('data-ap'))tab=tab.parentElement;
+    if(!tab)return;
+    switchATab(tab.getAttribute('data-ap'));
+    var ap=tab.getAttribute('data-ap');
+    if(ap==='ap-gen')loadPreview();
+    if(ap==='ap-stat')renderStats();
+    if(ap==='ap-activ')renderActiv();
+    if(ap==='ap-diff'){renderAdmLive();renderAdmPend();}
+    if(ap==='ap-mem'){renderMembres();renderMemStats();}
+    if(ap==='ap-com')renderComAdm();
+    if(ap==='ap-arch')renderAdmArch();
+  });}
+
+  // MODAL CLOSE ON BACKDROP
+  gel('mbg').addEventListener('click',function(e){if(e.target.id==='mbg')closeModal();});
+
+  buildWeekNav();
+  sv('gen-jour',JSD[new Date().getDay()]);
+
+  // AUTO-CONNECT FIREBASE
+  var fbCfg=localStorage.getItem(FBK);
+  if(fbCfg){try{var el=gel('c-fb');if(el)el.value=JSON.stringify(JSON.parse(fbCfg),null,2);connectFirebase(true);}catch(e){}}
+
+  renderDisplay();
+
+  // TEMPS REEL : check slot change toutes les 30s
+  chkInt=setInterval(checkTimeSwitch,30000);
+  // Refresh toutes les 60s
+  setInterval(function(){renderDisplay();var dash=gel('adm-dash');if(dash&&dash.style.display!=='none')renderAdmLive();},60000);
+});
+
+</script>
+</body>
+</html>
