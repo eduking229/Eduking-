@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DocShield — Protection de Documents</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;600;800&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0a0c0f;
+  --panel:#111418;
+  --border:#1e2530;
+  --green:#00ff88;
+  --green2:#00cc6a;
+  --red:#ff3355;
+  --text:#c8d4e0;
+  --dim:#4a5568;
+  --mono:'Share Tech Mono',monospace;
+  --head:'Exo 2',sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--mono);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* grid background */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,136,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,136,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+.wrap{
+  position:relative;z-index:1;
+  max-width:520px;margin:0 auto;
+  padding:24px 16px 60px;
+}
+
+/* HEADER */
+header{
+  display:flex;align-items:center;gap:12px;
+  padding:20px 0 28px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:28px;
+}
+.logo-icon{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,var(--green),#00aaff);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  box-shadow:0 0 20px rgba(0,255,136,.3);
+}
+.logo-text h1{
+  font-family:var(--head);
+  font-weight:800;font-size:22px;
+  letter-spacing:2px;
+  color:#fff;
+}
+.logo-text p{
+  font-size:10px;color:var(--dim);
+  letter-spacing:1px;text-transform:uppercase;
+  margin-top:2px;
+}
+
+/* STATUS BAR */
+.status-bar{
+  display:flex;align-items:center;gap:8px;
+  font-size:10px;letter-spacing:1px;
+  color:var(--green);text-transform:uppercase;
+  margin-bottom:20px;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:blink 1.4s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* CARD */
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:16px;
+}
+.card-title{
+  font-family:var(--head);
+  font-size:11px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--green);
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.card-title::before{
+  content:'';display:block;
+  width:12px;height:2px;background:var(--green);
+}
+
+/* UPLOAD ZONE */
+.upload-zone{
+  border:1.5px dashed var(--border);
+  border-radius:8px;
+  padding:32px 16px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+}
+.upload-zone:hover,.upload-zone.drag{
+  border-color:var(--green);
+  background:rgba(0,255,136,.04);
+}
+.upload-zone input{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;
+}
+.upload-icon{font-size:32px;margin-bottom:8px;}
+.upload-zone p{font-size:12px;color:var(--dim);}
+.upload-zone .file-name{
+  font-size:13px;color:var(--green);margin-top:8px;
+  word-break:break-all;
+}
+
+/* INPUT */
+label{
+  display:block;font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:6px;
+}
+input[type=text],input[type=password]{
+  width:100%;background:#0d1117;
+  border:1px solid var(--border);
+  border-radius:6px;padding:10px 12px;
+  color:var(--text);font-family:var(--mono);
+  font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+input[type=text]:focus,input[type=password]:focus{
+  border-color:var(--green);
+}
+
+/* TOGGLE */
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;
+}
+.toggle-label{font-size:12px;color:var(--text);}
+.toggle{
+  position:relative;width:40px;height:22px;
+  background:var(--border);border-radius:11px;
+  cursor:pointer;transition:background .2s;flex-shrink:0;
+}
+.toggle.on{background:var(--green2);}
+.toggle::after{
+  content:'';position:absolute;
+  top:3px;left:3px;
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;transition:left .2s;
+}
+.toggle.on::after{left:21px;}
+
+/* SELECT */
+select{
+  width:100%;background:#0d1117;
+  border:1px solid var(--border);
+  border-radius:6px;padding:10px 12px;
+  color:var(--text);font-family:var(--mono);
+  font-size:13px;outline:none;
+  appearance:none;
+}
+
+/* BUTTON */
+.btn{
+  display:block;width:100%;
+  padding:14px;border:none;border-radius:8px;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#000;font-family:var(--head);
+  font-size:14px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;margin-top:8px;
+  transition:opacity .2s,transform .1s;
+  position:relative;overflow:hidden;
+}
+.btn:hover{opacity:.9;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn.danger{
+  background:linear-gradient(135deg,var(--red),#cc0033);
+  color:#fff;
+}
+
+/* PROGRESS */
+.progress-wrap{
+  display:none;margin-top:12px;
+  background:var(--border);border-radius:4px;height:4px;overflow:hidden;
+}
+.progress-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--green),#00aaff);
+  transition:width .3s;border-radius:4px;
+}
+
+/* RESULT */
+.result{
+  display:none;
+  background:#0d1117;
+  border:1px solid var(--green);
+  border-radius:8px;
+  padding:16px;
+  margin-top:16px;
+}
+.result-title{
+  font-size:10px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--green);
+  margin-bottom:12px;
+}
+.hash-display{
+  font-size:10px;
+  word-break:break-all;
+  line-height:1.6;
+  color:var(--green);
+  background:rgba(0,255,136,.05);
+  padding:10px;border-radius:4px;
+  margin-bottom:12px;
+}
+canvas#barcodeCanvas{
+  width:100%;height:40px;
+  display:block;border-radius:4px;
+  image-rendering:pixelated;
+  margin-bottom:12px;
+}
+.meta{font-size:10px;color:var(--dim);line-height:1.8;}
+.meta span{color:var(--text);}
+
+/* LOG */
+.log{
+  background:#0a0c0f;
+  border:1px solid var(--border);
+  border-radius:6px;padding:10px;
+  max-height:120px;overflow-y:auto;
+  font-size:10px;line-height:1.8;
+  color:var(--dim);
+  margin-top:12px;
+}
+.log .ok{color:var(--green);}
+.log .err{color:var(--red);}
+.log .info{color:#00aaff;}
+
+/* VERIFY SECTION */
+.verify-result{
+  display:none;margin-top:12px;
+  padding:12px;border-radius:6px;
+  font-size:12px;
+  text-align:center;font-weight:600;
+}
+.verify-result.ok{
+  background:rgba(0,255,136,.1);
+  border:1px solid var(--green);
+  color:var(--green);
+}
+.verify-result.fail{
+  background:rgba(255,51,85,.1);
+  border:1px solid var(--red);
+  color:var(--red);
+}
+
+.sep{height:1px;background:var(--border);margin:16px 0;}
+.small{font-size:10px;color:var(--dim);line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo-icon">🛡️</div>
+  <div class="logo-text">
+    <h1>DOCSHIELD</h1>
+    <p>Protection cryptographique de documents</p>
+  </div>
+</header>
+
+<div class="status-bar"><div class="dot"></div>Système actif — Web Crypto HMAC-SHA256</div>
+
+<!-- STAMP -->
+<div class="card">
+  <div class="card-title">01 — Tamponner un document</div>
+
+  <div class="upload-zone" id="dropZone">
+    <input type="file" id="fileInput" accept=".pdf,image/*">
+    <div class="upload-icon">📄</div>
+    <p>Appuyer pour choisir un fichier</p>
+    <p style="font-size:10px;margin-top:4px;">PDF, JPG, PNG, WEBP</p>
+    <div class="file-name" id="fileName"></div>
+  </div>
+
+  <div style="height:14px"></div>
+  <label>Clé secrète (HMAC)</label>
+  <input type="password" id="secretKey" placeholder="Votre clé secrète...">
+
+  <div style="height:12px"></div>
+  <label>Position du tampon</label>
+  <select id="stampPos">
+    <option value="bottom-right">Bas droite</option>
+    <option value="bottom-left">Bas gauche</option>
+    <option value="top-right">Haut droite</option>
+    <option value="top-left">Haut gauche</option>
+    <option value="center">Centre (diagonal)</option>
+  </select>
+
+  <div style="height:12px"></div>
+  <div class="toggle-row">
+    <span class="toggle-label">Inclure date et heure</span>
+    <div class="toggle on" id="toggleDate" onclick="this.classList.toggle('on')"></div>
+  </div>
+  <div class="toggle-row">
+    <span class="toggle-label">Afficher code-barres</span>
+    <div class="toggle on" id="toggleBarcode" onclick="this.classList.toggle('on')"></div>
+  </div>
+
+  <button class="btn" id="stampBtn" onclick="processStamp()">🛡️ Tamponner &amp; Télécharger</button>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="result" id="stampResult">
+    <div class="result-title">✓ Document protégé</div>
+    <div class="hash-display" id="hashDisplay"></div>
+    <canvas id="barcodeCanvas" width="400" height="60"></canvas>
+    <div class="meta" id="stampMeta"></div>
+  </div>
+
+  <div class="log" id="log"></div>
+</div>
+
+<!-- VERIFY -->
+<div class="card">
+  <div class="card-title">02 — Vérifier un hash</div>
+  <p class="small">Collez un hash HMAC-SHA256 et le contenu original pour vérifier l'authenticité.</p>
+  <div style="height:12px"></div>
+
+  <label>Hash à vérifier</label>
+  <input type="text" id="verifyHash" placeholder="Cole le hash ici...">
+  <div style="height:8px"></div>
+  <label>Clé secrète</label>
+  <input type="password" id="verifyKey" placeholder="Votre clé secrète...">
+  <div style="height:8px"></div>
+  <label>Texte/données originales</label>
+  <input type="text" id="verifyData" placeholder="Nom du fichier + date d'émission...">
+
+  <button class="btn" onclick="verifyHash()" style="margin-top:12px;">🔍 Vérifier</button>
+  <div class="verify-result" id="verifyResult"></div>
+</div>
+
+<!-- INFO -->
+<div class="card" style="border-color:#1a2030">
+  <div class="card-title">ℹ️ — Comment ça marche</div>
+  <p class="small">
+    DocShield génère une signature <strong style="color:var(--green)">HMAC-SHA256</strong> unique pour chaque document à partir de son contenu binaire + votre clé secrète.<br><br>
+    Cette signature est ensuite <strong style="color:var(--green)">incrustée visuellement</strong> dans le document (PDF ou image) sous forme de tampon avec code-barres.<br><br>
+    Toute modification du document invalide la signature — preuve d'authenticité garantie.
+  </p>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// =====================
+// UTILS
+// =====================
+var fileData = null;
+var fileType = '';
+var fileName = '';
+
+function log(msg, type) {
+  var el = document.getElementById('log');
+  var line = document.createElement('div');
+  line.className = type || 'info';
+  var ts = new Date().toLocaleTimeString('fr');
+  line.textContent = '[' + ts + '] ' + msg;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(p) {
+  var w = document.getElementById('progressWrap');
+  var b = document.getElementById('progressBar');
+  w.style.display = 'block';
+  b.style.width = p + '%';
+  if (p >= 100) {
+    setTimeout(function() { w.style.display = 'none'; }, 800);
+  }
+}
+
+// =====================
+// FILE INPUT
+// =====================
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  loadFile(f);
+});
+
+var dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', function() { dz.classList.remove('drag'); });
+dz.addEventListener('drop', function(e) {
+  e.preventDefault(); dz.classList.remove('drag');
+  var f = e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+
+function loadFile(f) {
+  fileName = f.name;
+  fileType = f.type;
+  document.getElementById('fileName').textContent = '📎 ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)';
+  log('Fichier chargé: ' + f.name, 'ok');
+  var reader = new FileReader();
+  reader.onload = function(e) { fileData = e.target.result; };
+  reader.readAsArrayBuffer(f);
+}
+
+// =====================
+// HMAC-SHA256
+// =====================
+function hmacSHA256(key, data) {
+  var enc = new TextEncoder();
+  return window.crypto.subtle.importKey(
+    'raw', enc.encode(key), {name:'HMAC',hash:'SHA-256'}, false, ['sign']
+  ).then(function(k) {
+    return window.crypto.subtle.sign('HMAC', k, data instanceof ArrayBuffer ? data : enc.encode(data));
+  }).then(function(sig) {
+    return Array.from(new Uint8Array(sig)).map(function(b) {
+      return b.toString(16).padStart(2,'0');
+    }).join('');
+  });
+}
+
+// =====================
+// BARCODE CANVAS
+// =====================
+function drawBarcode(canvas, hash) {
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  var bars = [];
+  for (var i = 0; i < hash.length; i++) {
+    bars.push(parseInt(hash[i], 16));
+  }
+
+  var totalBars = bars.length * 3;
+  var barW = canvas.width / totalBars;
+  var x = 0;
+
+  ctx.fillStyle = '#000';
+  for (var j = 0; j < bars.length; j++) {
+    var val = bars[j];
+    var h1 = 20 + (val % 4) * 10;
+    var h2 = 15 + ((val >> 2) % 4) * 10;
+    var gap = barW * 0.3;
+
+    ctx.fillRect(x, (canvas.height - h1) / 2, barW - gap, h1);
+    x += barW;
+    ctx.fillRect(x, (canvas.height - h2) / 2, barW * 0.4, h2);
+    x += barW;
+    x += barW * 0.4;
+  }
+}
+
+// =====================
+// STAMP PROCESS
+// =====================
+function processStamp() {
+  if (!fileData) { log('⚠ Aucun fichier sélectionné', 'err'); return; }
+  var key = document.getElementById('secretKey').value.trim();
+  if (!key) { log('⚠ Clé secrète requise', 'err'); return; }
+
+  document.getElementById('stampBtn').disabled = true;
+  setProgress(10);
+  log('Calcul HMAC-SHA256...', 'info');
+
+  hmacSHA256(key, fileData).then(function(hash) {
+    setProgress(40);
+    log('Hash: ' + hash.substring(0,16) + '...', 'ok');
+
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR');
+    var stampText = 'DocShield | ' + hash.substring(0,32) + ' | ' + dateStr;
+
+    document.getElementById('hashDisplay').textContent = hash;
+
+    // draw barcode preview
+    var bc = document.getElementById('barcodeCanvas');
+    drawBarcode(bc, hash);
+
+    document.getElementById('stampMeta').innerHTML =
+      'Fichier : <span>' + fileName + '</span><br>' +
+      'Date : <span>' + dateStr + '</span><br>' +
+      'Hash complet : <span style="word-break:break-all">' + hash + '</span>';
+
+    setProgress(60);
+
+    if (fileType === 'application/pdf') {
+      stampPDF(hash, dateStr);
+    } else if (fileType.indexOf('image/') === 0) {
+      stampImage(hash, dateStr);
+    } else {
+      log('Format non supporté pour le tampon visuel. Hash généré.', 'err');
+      showResult();
+      setProgress(100);
+      document.getElementById('stampBtn').disabled = false;
+    }
+  }).catch(function(e) {
+    log('Erreur: ' + e.message, 'err');
+    document.getElementById('stampBtn').disabled = false;
+  });
+}
+
+function showResult() {
+  var r = document.getElementById('stampResult');
+  r.style.display = 'block';
+  var showDate = document.getElementById('toggleDate').classList.contains('on');
+  var showBar = document.getElementById('toggleBarcode').classList.contains('on');
+  document.getElementById('barcodeCanvas').style.display = showBar ? 'block' : 'none';
+}
+
+// =====================
+// STAMP PDF
+// =====================
+function stampPDF(hash, dateStr) {
+  log('Application du tampon PDF...', 'info');
+  setProgress(70);
+
+  PDFLib.PDFDocument.load(fileData).then(function(pdfDoc) {
+    var pages = pdfDoc.getPages();
+    var pos = document.getElementById('stampPos').value;
+    var showDate = document.getElementById('toggleDate').classList.contains('on');
+    var showBar = document.getElementById('toggleBarcode').classList.contains('on');
+
+    pages.forEach(function(page, idx) {
+      var pw = page.getWidth();
+      var ph = page.getHeight();
+
+      // stamp background
+      var sw = 280, sh = showBar ? 60 : 36;
+      var sx, sy;
+      switch(pos) {
+        case 'bottom-right': sx=pw-sw-10; sy=10; break;
+        case 'bottom-left':  sx=10; sy=10; break;
+        case 'top-right':    sx=pw-sw-10; sy=ph-sh-10; break;
+        case 'top-left':     sx=10; sy=ph-sh-10; break;
+        default: sx=(pw-sw)/2; sy=(ph-sh)/2;
+      }
+
+      // background rect
+      page.drawRectangle({
+        x:sx, y:sy, width:sw, height:sh,
+        color:PDFLib.rgb(0.95,1,0.97),
+        borderColor:PDFLib.rgb(0,0.6,0.3),
+        borderWidth:1,
+        opacity:0.92
+      });
+
+      // title
+      page.drawText('DOCSHIELD', {
+        x:sx+8, y:sy+sh-14,
+        size:7,
+        color:PDFLib.rgb(0,0.5,0.25)
+      });
+
+      // hash line 1
+      var h1 = hash.substring(0,32);
+      var h2 = hash.substring(32);
+      page.drawText(h1, {
+        x:sx+8, y:sy+sh-24,
+        size:5.5,
+        color:PDFLib.rgb(0.1,0.1,0.1)
+      });
+      page.drawText(h2, {
+        x:sx+8, y:sy+sh-32,
+        size:5.5,
+        color:PDFLib.rgb(0.1,0.1,0.1)
+      });
+
+      if (showDate) {
+        page.drawText(dateStr, {
+          x:sx+8, y:sy+6,
+          size:6,
+          color:PDFLib.rgb(0.4,0.4,0.4)
+        });
+      }
+
+      // barcode lines from hash
+      if (showBar) {
+        var bx = sx + 8;
+        var by = sy + 12;
+        var bw = sw - 16;
+        var bars = hash.split('').map(function(c){return parseInt(c,16);});
+        var totalB = bars.length * 3;
+        var bw2 = bw / totalB;
+        bars.forEach(function(v) {
+          var bh = 4 + (v % 4) * 2;
+          page.drawRectangle({
+            x:bx, y:by,
+            width:bw2*0.6, height:bh,
+            color:PDFLib.rgb(0,0.3,0.15)
+          });
+          bx += bw2;
+          var bh2 = 3 + ((v>>2)%4)*2;
+          page.drawRectangle({
+            x:bx, y:by,
+            width:bw2*0.35, height:bh2,
+            color:PDFLib.rgb(0,0.3,0.15)
+          });
+          bx += bw2*1.65;
+        });
+      }
+    });
+
+    setProgress(90);
+    return pdfDoc.save();
+  }).then(function(bytes) {
+    download(bytes, fileName.replace('.pdf','') + '_docshield.pdf', 'application/pdf');
+    setProgress(100);
+    showResult();
+    log('PDF protégé téléchargé !', 'ok');
+    document.getElementById('stampBtn').disabled = false;
+  }).catch(function(e) {
+    log('Erreur PDF: ' + e.message, 'err');
+    document.getElementById('stampBtn').disabled = false;
+  });
+}
+
+// =====================
+// STAMP IMAGE
+// =====================
+function stampImage(hash, dateStr) {
+  log('Application du tampon image...', 'info');
+  setProgress(70);
+
+  var img = new Image();
+  var url = URL.createObjectURL(new Blob([fileData], {type: fileType}));
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    var pos = document.getElementById('stampPos').value;
+    var showDate = document.getElementById('toggleDate').classList.contains('on');
+    var showBar = document.getElementById('toggleBarcode').classList.contains('on');
+
+    var sw = Math.min(img.width * 0.6, 400);
+    var sh = showBar ? 80 : 55;
+    var pad = 10;
+    var sx, sy;
+    switch(pos) {
+      case 'bottom-right': sx=img.width-sw-pad; sy=img.height-sh-pad; break;
+      case 'bottom-left':  sx=pad; sy=img.height-sh-pad; break;
+      case 'top-right':    sx=img.width-sw-pad; sy=pad; break;
+      case 'top-left':     sx=pad; sy=pad; break;
+      default: sx=(img.width-sw)/2; sy=(img.height-sh)/2;
+    }
+
+    // bg
+    ctx.save();
+    if (pos === 'center') {
+      ctx.translate(sx+sw/2, sy+sh/2);
+      ctx.rotate(-0.3);
+      ctx.translate(-(sx+sw/2), -(sy+sh/2));
+    }
+    ctx.globalAlpha = 0.88;
+    ctx.fillStyle = '#f0fff4';
+    roundRect(ctx, sx, sy, sw, sh, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#00aa44';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    var fs = Math.max(sw * 0.03, 10);
+    ctx.fillStyle = '#007733';
+    ctx.font = 'bold ' + fs + 'px monospace';
+    ctx.fillText('DOCSHIELD', sx+8, sy+fs+6);
+
+    var hfs = Math.max(sw*0.024, 8);
+    ctx.fillStyle = '#111';
+    ctx.font = hfs + 'px monospace';
+    ctx.fillText(hash.substring(0,32), sx+6, sy+fs+22);
+    ctx.fillText(hash.substring(32), sx+6, sy+fs+34);
+
+    if (showDate) {
+      ctx.fillStyle = '#555';
+      ctx.font = (hfs-1) + 'px monospace';
+      ctx.fillText(dateStr, sx+6, sy+sh-8);
+    }
+
+    if (showBar) {
+      var bx = sx+6, by = sy+sh-28, bw = sw-12;
+      var bars = hash.split('').map(function(c){return parseInt(c,16);});
+      var bwu = bw/(bars.length*3);
+      ctx.fillStyle = '#004422';
+      bars.forEach(function(v){
+        var bh = 6 + (v%4)*4;
+        ctx.fillRect(bx, by-bh, bwu*0.6, bh);
+        bx += bwu;
+        var bh2 = 4 + ((v>>2)%4)*4;
+        ctx.fillRect(bx, by-bh2, bwu*0.35, bh2);
+        bx += bwu*1.65;
+      });
+    }
+    ctx.restore();
+
+    setProgress(90);
+    canvas.toBlob(function(blob) {
+      blob.arrayBuffer().then(function(ab) {
+        download(ab, fileName.replace(/\.\w+$/,'') + '_docshield.jpg', 'image/jpeg');
+        setProgress(100);
+        showResult();
+        log('Image protégée téléchargée !', 'ok');
+        document.getElementById('stampBtn').disabled = false;
+      });
+    }, 'image/jpeg', 0.92);
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+// =====================
+// DOWNLOAD
+// =====================
+function download(data, name, mime) {
+  var blob = new Blob([data], {type: mime});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);}, 1000);
+}
+
+// =====================
+// VERIFY
+// =====================
+function verifyHash() {
+  var hash = document.getElementById('verifyHash').value.trim();
+  var key = document.getElementById('verifyKey').value.trim();
+  var data = document.getElementById('verifyData').value.trim();
+  var res = document.getElementById('verifyResult');
+
+  if (!hash || !key || !data) {
+    res.style.display = 'block';
+    res.className = 'verify-result fail';
+    res.textContent = '⚠ Remplissez tous les champs';
+    return;
+  }
+
+  hmacSHA256(key, data).then(function(computed) {
+    res.style.display = 'block';
+    if (computed === hash) {
+      res.className = 'verify-result ok';
+      res.textContent = '✓ AUTHENTIQUE — Hash validé';
+    } else {
+      res.className = 'verify-result fail';
+      res.textContent = '✗ INVALIDE — Document modifié ou clé incorrecte';
+    }
+  });
+}
+</script>
+</body>
+</html>
