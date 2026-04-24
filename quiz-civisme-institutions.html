@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qui suis-je ? — Civisme CM2 | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --orange: #F97316;
+    --green: #16A34A;
+    --gold: #FACC15;
+    --red: #DC2626;
+    --dark: #1E1B4B;
+    --light: #F0FDF4;
+    --card: #FFFFFF;
+    --shadow: 0 4px 24px rgba(30,27,75,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #1E1B4B 0%, #14532D 100%);
+    min-height: 100vh;
+    color: #1E1B4B;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(255,255,255,0.07);
+    border-bottom: 2px solid rgba(249,115,22,0.4);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    color: #FACC15;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+  .logo span { color: #F97316; }
+  .subject-tag {
+    background: #F97316;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    padding: 8px 16px;
+    gap: 8px;
+  }
+  .score-item {
+    text-align: center;
+    color: #fff;
+  }
+  .score-item .val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FACC15;
+    line-height: 1;
+  }
+  .score-item .lbl {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+  .progress-wrap {
+    flex: 1;
+    max-width: 160px;
+  }
+  .progress-track {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F97316, #FACC15);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-txt {
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  /* MAIN */
+  .main {
+    padding: 14px 12px 80px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 14px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #1E1B4B, #14532D);
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .question-num {
+    background: #F97316;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .question-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #FACC15;
+  }
+  .question-sub {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* INDICES */
+  .indices {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .indice-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .indice-icon {
+    background: #F97316;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .indice-text {
+    font-size: 0.88rem;
+    color: #1E1B4B;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .indice-locked {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ccc;
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+  .lock-icon { font-size: 1rem; }
+
+  /* HINT BTN */
+  .hint-wrap {
+    padding: 6px 16px 10px;
+    text-align: center;
+  }
+  .btn-hint {
+    background: none;
+    border: 1.5px dashed #F97316;
+    color: #F97316;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-hint:hover { background: #fff7f0; }
+  .btn-hint:disabled { opacity: 0.3; cursor: default; }
+
+  /* OPTIONS */
+  .options {
+    padding: 10px 14px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .opt-btn {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1E1B4B;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1.3;
+  }
+  .opt-btn:hover:not(:disabled) {
+    background: #EFF6FF;
+    border-color: #1E1B4B;
+    transform: translateY(-1px);
+  }
+  .opt-btn.correct {
+    background: #DCFCE7;
+    border-color: #16A34A;
+    color: #14532D;
+  }
+  .opt-btn.wrong {
+    background: #FEE2E2;
+    border-color: #DC2626;
+    color: #7F1D1D;
+  }
+  .opt-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin: 0 14px 14px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: none;
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .feedback.correct {
+    background: #DCFCE7;
+    color: #14532D;
+    border-left: 4px solid #16A34A;
+    display: block;
+  }
+  .feedback.wrong {
+    background: #FEE2E2;
+    color: #7F1D1D;
+    border-left: 4px solid #DC2626;
+    display: block;
+  }
+  .feedback-emoji { font-size: 1.2rem; margin-right: 6px; }
+  .feedback-expl {
+    font-weight: 400;
+    font-size: 0.78rem;
+    margin-top: 4px;
+    opacity: 0.85;
+  }
+
+  /* NEXT BTN */
+  .btn-next {
+    display: block;
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    background: linear-gradient(135deg, #F97316, #FACC15);
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #1E1B4B;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s, opacity 0.2s;
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); opacity: 0.92; }
+
+  /* ECRAN ACCUEIL */
+  .screen {
+    display: none;
+    animation: slideIn 0.4s ease;
+  }
+  .screen.active { display: block; }
+
+  .welcome-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .welcome-icon { font-size: 3.5rem; margin-bottom: 8px; }
+  .welcome-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: #1E1B4B;
+    margin-bottom: 6px;
+  }
+  .welcome-sub {
+    font-size: 0.88rem;
+    color: #64748B;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .welcome-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .info-box {
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .info-box .ib-val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: #F97316;
+  }
+  .info-box .ib-lbl {
+    font-size: 0.65rem;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .btn-start {
+    width: 100%;
+    background: linear-gradient(135deg, #1E1B4B, #14532D);
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #FACC15;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+  .btn-start:hover { transform: scale(1.02); }
+
+  /* ECRAN RÉSULTAT */
+  .result-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .result-icon { font-size: 4rem; margin-bottom: 8px; }
+  .result-score-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: #F97316;
+    line-height: 1;
+  }
+  .result-total { font-size: 1rem; color: #64748B; margin-bottom: 10px; }
+  .result-msg {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1E1B4B;
+    margin-bottom: 6px;
+  }
+  .result-sub { font-size: 0.82rem; color: #64748B; margin-bottom: 20px; }
+  .stars { font-size: 1.8rem; margin-bottom: 14px; letter-spacing: 4px; }
+  .result-bar-wrap {
+    background: #F1F5F9;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  .result-bar-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-bottom: 6px;
+  }
+  .result-bar-track {
+    background: #E2E8F0;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .result-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s ease;
+  }
+  .btn-retry {
+    width: 100%;
+    background: linear-gradient(135deg, #F97316, #FACC15);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #1E1B4B;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+    margin-bottom: 8px;
+  }
+  .btn-retry:hover { transform: scale(1.02); }
+
+  /* FOOTER */
+  .footer-brand {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.65rem;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">EDUKING <span>229</span></div>
+  <div class="subject-tag">Civisme CM2</div>
+</div>
+
+<!-- ECRAN ACCUEIL -->
+<div id="screen-welcome" class="screen active">
+  <div class="main">
+    <div class="welcome-card">
+      <div class="welcome-icon">🏛️</div>
+      <div class="welcome-title">Qui suis-je ?</div>
+      <div class="welcome-sub">Découvre les institutions démocratiques du Bénin à travers des indices. Lis bien chaque indice avant de répondre !</div>
+      <div class="welcome-info">
+        <div class="info-box">
+          <div class="ib-val">10</div>
+          <div class="ib-lbl">Questions</div>
+        </div>
+        <div class="info-box">
+          <div class="ib-val">3</div>
+          <div class="ib-lbl">Indices max</div>
+        </div>
+        <div class="info-box">
+          <div class="ib-val">20</div>
+          <div class="ib-lbl">Points max</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startGame()">▶ COMMENCER LE JEU</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Plateforme éducative du Bénin</div>
+</div>
+
+<!-- ECRAN JEU -->
+<div id="screen-game" class="screen">
+  <div class="score-bar">
+    <div class="score-item">
+      <div class="val" id="disp-score">0</div>
+      <div class="lbl">Score</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-txt" id="prog-txt">0 / 10</div>
+    </div>
+    <div class="score-item">
+      <div class="val" id="disp-correct">0</div>
+      <div class="lbl">Bonnes rép.</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="question-card" id="qcard">
+      <div class="card-header">
+        <div class="question-num" id="q-num">1</div>
+        <div>
+          <div class="question-title">🏛️ Qui suis-je ?</div>
+          <div class="question-sub">Lis les indices et trouve l'institution</div>
+        </div>
+      </div>
+
+      <div class="indices" id="indices-zone"></div>
+      <div class="hint-wrap">
+        <button class="btn-hint" id="btn-hint" onclick="showNextIndice()">💡 Indice suivant</button>
+      </div>
+
+      <div class="options" id="options-zone"></div>
+
+      <div class="feedback" id="feedback-zone"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ECRAN RÉSULTAT -->
+<div id="screen-result" class="screen">
+  <div class="main">
+    <div class="result-card">
+      <div class="result-icon" id="res-icon">🏆</div>
+      <div class="result-score-big" id="res-score">0</div>
+      <div class="result-total">points sur 20</div>
+      <div class="stars" id="res-stars">⭐⭐⭐</div>
+      <div class="result-msg" id="res-msg">Excellent !</div>
+      <div class="result-sub" id="res-sub"></div>
+
+      <div class="result-bar-wrap">
+        <div class="result-bar-row">
+          <span>Bonnes réponses</span>
+          <span id="res-corr">0/10</span>
+        </div>
+        <div class="result-bar-track">
+          <div class="result-bar-fill" id="res-bar" style="width:0%; background:linear-gradient(90deg,#16A34A,#FACC15)"></div>
+        </div>
+      </div>
+
+      <button class="btn-retry" onclick="startGame()">🔄 Rejouer</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Civisme CM2 — SA1</div>
+</div>
+
+<script>
+// ===================== DONNÉES =====================
+var questions = [
+  {
+    institution: "L'Assemblée Nationale",
+    indices: [
+      "Je suis composée de 109 membres élus par le peuple béninois.",
+      "Mon rôle principal est de voter les lois et de contrôler le gouvernement.",
+      "Je siège à Porto-Novo, la capitale politique du Bénin."
+    ],
+    options: ["L'Assemblée Nationale", "Le Gouvernement", "La Cour Constitutionnelle", "La Préfecture"],
+    explication: "L'Assemblée Nationale est composée de 109 députés élus pour 4 ans. Elle vote les lois et siège à Porto-Novo."
+  },
+  {
+    institution: "La Présidence de la République",
+    indices: [
+      "Je suis le Chef de l'État et chef du gouvernement du Bénin.",
+      "Je suis élu par le peuple pour un mandat de 5 ans, renouvelable une fois.",
+      "Je nomme les ministres et j'assure la défense nationale."
+    ],
+    options: ["Le Maire", "La Présidence de la République", "L'Assemblée Nationale", "La Cour Suprême"],
+    explication: "Le Président de la République est élu au suffrage universel direct pour 5 ans. Il dirige le gouvernement et est le chef des armées."
+  },
+  {
+    institution: "La Cour Constitutionnelle",
+    indices: [
+      "Je veille au respect de la Constitution du Bénin.",
+      "Je valide les résultats des élections présidentielles et législatives.",
+      "Je suis composée de 7 membres nommés pour 5 ans."
+    ],
+    options: ["La Cour Suprême", "L'HAAC", "La Cour Constitutionnelle", "Le Tribunal"],
+    explication: "La Cour Constitutionnelle contrôle la conformité des lois à la Constitution. Elle proclame les résultats officiels des élections."
+  },
+  {
+    institution: "La Mairie",
+    indices: [
+      "Je gère les affaires d'une commune au niveau local.",
+      "Mon responsable principal est élu par les conseillers communaux.",
+      "Je m'occupe de l'état civil, des routes locales et du développement de la commune."
+    ],
+    options: ["La Préfecture", "Le Ministère", "La Mairie", "La Cour Suprême"],
+    explication: "La Mairie est l'institution locale qui gère la commune. Le Maire est élu par les conseillers communaux pour diriger les affaires locales."
+  },
+  {
+    institution: "La Préfecture",
+    indices: [
+      "Je représente l'État central dans un département du Bénin.",
+      "Mon responsable est nommé par le gouvernement, pas élu par le peuple.",
+      "Je coordonne les services de l'État dans les 12 départements du Bénin."
+    ],
+    options: ["La Mairie", "L'Ambassade", "La Préfecture", "Le Ministère"],
+    explication: "La Préfecture représente l'État dans chaque département. Le Préfet est nommé en Conseil des Ministres et coordonne les services administratifs."
+  },
+  {
+    institution: "La Cour Suprême",
+    indices: [
+      "Je suis la plus haute juridiction du Bénin en matière administrative et judiciaire.",
+      "Je rends des décisions définitives sur les affaires judiciaires importantes.",
+      "Je contrôle également la bonne gestion des finances publiques du pays."
+    ],
+    options: ["La Cour Constitutionnelle", "Le Tribunal de Cotonou", "La Cour Suprême", "L'Assemblée Nationale"],
+    explication: "La Cour Suprême est la plus haute juridiction du Bénin. Elle contrôle les décisions des tribunaux inférieurs et veille à la bonne gestion publique."
+  },
+  {
+    institution: "Le Gouvernement",
+    indices: [
+      "Je suis composé des ministres nommés par le Chef de l'État.",
+      "Je prépare et applique les lois votées par l'Assemblée Nationale.",
+      "Je me réunis en Conseil des Ministres sous la direction du Président."
+    ],
+    options: ["L'Assemblée Nationale", "Le Gouvernement", "La Préfecture", "La Mairie"],
+    explication: "Le Gouvernement est composé des ministres. Il applique les lois, gère les affaires publiques et se réunit chaque semaine en Conseil des Ministres."
+  },
+  {
+    institution: "L'HAAC",
+    indices: [
+      "Je surveille et régule les médias : télévisions, radios et journaux au Bénin.",
+      "Je garantis la liberté de la presse et le respect des règles de communication.",
+      "Mon nom complet parle de communication audiovisuelle."
+    ],
+    options: ["Le Ministère de la Communication", "L'HAAC", "La Cour Constitutionnelle", "Le Sénat"],
+    explication: "L'HAAC (Haute Autorité de l'Audiovisuel et de la Communication) régule les médias au Bénin et veille au respect de la déontologie journalistique."
+  },
+  {
+    institution: "La Commune",
+    indices: [
+      "Je suis la plus petite unité administrative au Bénin avec une personnalité juridique.",
+      "Le Bénin compte 77 de mes semblables sur tout le territoire national.",
+      "Je suis gérée de manière autonome par des élus locaux : le Maire et les conseillers communaux."
+    ],
+    options: ["L'Arrondissement", "Le Département", "La Commune", "Le Village"],
+    explication: "Le Bénin est divisé en 77 communes. Chaque commune est dirigée par un Conseil communal élu et un Maire. C'est la base de la décentralisation."
+  },
+  {
+    institution: "Le Parlement",
+    indices: [
+      "Je représente le pouvoir législatif du Bénin.",
+      "En régime présidentiel béninois, je suis unicaméral : une seule chambre.",
+      "Mon autre nom est l'Assemblée Nationale et je réunis les représentants du peuple."
+    ],
+    options: ["Le Sénat", "Le Gouvernement", "Le Parlement", "La Cour Constitutionnelle"],
+    explication: "Au Bénin, le Parlement est unicaméral : il n'y a qu'une seule chambre appelée l'Assemblée Nationale. Elle détient le pouvoir législatif."
+  }
+];
+
+// ===================== ÉTAT =====================
+var state = {
+  qIndex: 0,
+  score: 0,
+  correct: 0,
+  indiceShown: 1,
+  answered: false,
+  shuffled: []
+};
+
+// ===================== UTILS =====================
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function show(id) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) {
+    screens[i].classList.remove('active');
+  }
+  document.getElementById(id).classList.add('active');
+}
+
+// ===================== JEU =====================
+function startGame() {
+  state.qIndex = 0;
+  state.score = 0;
+  state.correct = 0;
+  state.shuffled = shuffle(questions);
+  show('screen-game');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  state.indiceShown = 1;
+  state.answered = false;
+
+  var q = state.shuffled[state.qIndex];
+  var total = state.shuffled.length;
+
+  // Numéro
+  document.getElementById('q-num').textContent = state.qIndex + 1;
+
+  // Progress
+  var pct = Math.round((state.qIndex / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = state.qIndex + ' / ' + total;
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  // Indices
+  renderIndices(q);
+
+  // Options (mélangées)
+  var opts = shuffle(q.options);
+  var zone = document.getElementById('options-zone');
+  zone.innerHTML = '';
+  for (var i = 0; i < opts.length; i++) {
+    (function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.onclick = function() { answer(opt); };
+      zone.appendChild(btn);
+    })(opts[i]);
+  }
+
+  // Feedback & next
+  var fb = document.getElementById('feedback-zone');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  var nb = document.getElementById('btn-next');
+  nb.style.display = 'none';
+
+  // Hint button
+  var hb = document.getElementById('btn-hint');
+  hb.disabled = (q.indices.length <= 1);
+  hb.style.display = q.indices.length > 1 ? 'inline-block' : 'none';
+}
+
+function renderIndices(q) {
+  var zone = document.getElementById('indices-zone');
+  zone.innerHTML = '';
+
+  for (var i = 0; i < q.indices.length; i++) {
+    var row = document.createElement('div');
+    if (i < state.indiceShown) {
+      row.className = 'indice-row';
+      row.innerHTML = '<div class="indice-icon">I' + (i+1) + '</div>' +
+                      '<div class="indice-text">' + q.indices[i] + '</div>';
+    } else {
+      row.className = 'indice-locked';
+      row.innerHTML = '<span class="lock-icon">🔒</span> Indice ' + (i+1) + ' — non révélé';
+    }
+    zone.appendChild(row);
+  }
+}
+
+function showNextIndice() {
+  var q = state.shuffled[state.qIndex];
+  if (state.indiceShown < q.indices.length) {
+    state.indiceShown++;
+    renderIndices(q);
+  }
+  var hb = document.getElementById('btn-hint');
+  hb.disabled = (state.indiceShown >= q.indices.length);
+}
+
+function answer(chosen) {
+  if (state.answered) return;
+  state.answered = true;
+
+  var q = state.shuffled[state.qIndex];
+  var correct = (chosen === q.institution);
+  var pts = 0;
+
+  if (correct) {
+    if (state.indiceShown === 1) pts = 3;
+    else if (state.indiceShown === 2) pts = 2;
+    else pts = 1;
+    state.score += pts;
+    state.correct++;
+  }
+
+  // Colorer les boutons
+  var btns = document.getElementById('options-zone').querySelectorAll('.opt-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    if (btns[i].textContent === q.institution) {
+      btns[i].className = 'opt-btn correct';
+    } else if (btns[i].textContent === chosen && !correct) {
+      btns[i].className = 'opt-btn wrong';
+    }
+  }
+
+  // Feedback
+  var fb = document.getElementById('feedback-zone');
+  if (correct) {
+    fb.className = 'feedback correct';
+    fb.innerHTML = '<span class="feedback-emoji">✅</span> Bravo ! +' + pts + ' point' + (pts > 1 ? 's' : '') +
+                   '<div class="feedback-expl">' + q.explication + '</div>';
+  } else {
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '<span class="feedback-emoji">❌</span> Ce n\'est pas la bonne réponse.' +
+                   '<div class="feedback-expl">La bonne réponse est : <strong>' + q.institution + '</strong>. ' + q.explication + '</div>';
+  }
+
+  // Scores
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  // Next button
+  var nb = document.getElementById('btn-next');
+  var isLast = (state.qIndex >= state.shuffled.length - 1);
+  nb.style.display = 'block';
+  nb.textContent = isLast ? '🏁 Voir mes résultats' : 'Question suivante →';
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= state.shuffled.length) {
+    showResult();
+  } else {
+    // Re-render card with animation
+    var card = document.getElementById('qcard');
+    card.style.animation = 'none';
+    card.offsetHeight; // reflow
+    card.style.animation = 'slideIn 0.4s ease';
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  var total = state.shuffled.length;
+  var pct = Math.round((state.correct / total) * 100);
+
+  // Score normalisé sur 20
+  var note = Math.round((state.score / (total * 3)) * 20);
+
+  document.getElementById('res-score').textContent = note;
+  document.getElementById('res-corr').textContent = state.correct + '/' + total;
+
+  setTimeout(function() {
+    document.getElementById('res-bar').style.width = pct + '%';
+  }, 300);
+
+  var icon, stars, msg, sub;
+  if (pct >= 80) {
+    icon = '🏆'; stars = '⭐⭐⭐';
+    msg = 'Excellent travail !';
+    sub = 'Tu maîtrises bien les institutions démocratiques du Bénin !';
+  } else if (pct >= 60) {
+    icon = '😊'; stars = '⭐⭐';
+    msg = 'Bon résultat !';
+    sub = 'Continue de réviser pour mieux connaître les institutions.';
+  } else if (pct >= 40) {
+    icon = '📚'; stars = '⭐';
+    msg = 'Peut mieux faire.';
+    sub = 'Relis ta leçon sur les institutions du Bénin et réessaie !';
+  } else {
+    icon = '💪'; stars = '—';
+    msg = 'Courage !';
+    sub = 'Revois bien ta leçon avant de rejouer. Tu vas y arriver !';
+  }
+
+  document.getElementById('res-icon').textContent = icon;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-sub').textContent = sub;
+
+  show('screen-result');
+}
+</script>
+</body>
+</html>
