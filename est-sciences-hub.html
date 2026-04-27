@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EST Sciences — Jeux Éducatifs | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:#060D18;min-height:100vh;overflow-x:hidden;color:#fff;}
+  .bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(5,150,105,0.15) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(3,105,161,0.12) 0%,transparent 60%),#060D18;}
+  .bg-dots{position:fixed;inset:0;z-index:0;background-image:radial-gradient(rgba(255,255,255,0.06) 1px,transparent 1px);background-size:28px 28px;}
+  .wrapper{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 12px 60px;}
+
+  .header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;border-bottom:1px solid rgba(52,211,153,0.2);margin-bottom:20px;}
+  .logo{font-family:'Fredoka One',cursive;font-size:1.3rem;color:#34D399;letter-spacing:1px;}
+  .logo span{color:#F97316;}
+  .header-badge{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:#34D399;font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;}
+
+  .hero{text-align:center;padding:10px 0 22px;}
+  .hero-icon{font-size:3rem;display:inline-block;animation:float 4s ease-in-out infinite;margin-bottom:10px;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .hero-title{font-family:'Fredoka One',cursive;font-size:1.9rem;line-height:1.15;background:linear-gradient(135deg,#34D399,#38BDF8,#FACC15);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+  .hero-sub{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.5;}
+
+  .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:24px;}
+  .stat-box{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:12px 8px;text-align:center;}
+  .stat-box .sv{font-family:'Fredoka One',cursive;font-size:1.6rem;color:#34D399;line-height:1;}
+  .stat-box .sl{font-size:.6rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+  .section-title{font-family:'Fredoka One',cursive;font-size:.9rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1);}
+
+  .games-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+
+  .game-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:18px;overflow:hidden;transition:all .3s ease;text-decoration:none;display:block;position:relative;}
+  .game-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.25);box-shadow:0 10px 40px rgba(0,0,0,.4);}
+  .game-card::before{content:'';position:absolute;inset:0;border-radius:18px;opacity:0;transition:opacity .3s;}
+  .game-card:hover::before{opacity:1;}
+
+  .game-card.c1{border-color:rgba(5,150,105,.4);}
+  .game-card.c1::before{background:linear-gradient(135deg,rgba(5,150,105,.08),transparent);}
+  .game-card.c2{border-color:rgba(3,105,161,.4);}
+  .game-card.c2::before{background:linear-gradient(135deg,rgba(3,105,161,.08),transparent);}
+
+  .card-prog{height:3px;background:rgba(255,255,255,0.06);}
+  .c1 .card-prog-fill{background:linear-gradient(90deg,#059669,#34D399,#FACC15);}
+  .c2 .card-prog-fill{background:linear-gradient(90deg,#0369A1,#38BDF8,#FACC15);}
+  .card-prog-fill{height:100%;border-radius:0 3px 3px 0;}
+
+  .card-inner{display:flex;align-items:center;gap:14px;padding:16px;}
+  .card-icon-wrap{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;}
+  .c1 .card-icon-wrap{background:linear-gradient(135deg,#059669,#064e3b);}
+  .c2 .card-icon-wrap{background:linear-gradient(135deg,#0369A1,#0C1A2E);}
+  .card-info{flex:1;min-width:0;}
+  .card-dossier{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.6;margin-bottom:3px;}
+  .card-title{font-family:'Fredoka One',cursive;font-size:1.05rem;color:#fff;margin-bottom:5px;line-height:1.2;}
+  .card-tags{display:flex;gap:5px;flex-wrap:wrap;}
+  .tag{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;}
+  .tag.format{background:rgba(250,204,21,0.15);color:#FACC15;}
+  .tag.nb{background:rgba(255,255,255,0.08);color:rgba(255,255,255,.6);}
+  .card-arrow{color:rgba(255,255,255,.3);font-size:1.2rem;flex-shrink:0;transition:transform .3s,color .3s;}
+  .game-card:hover .card-arrow{color:#34D399;transform:translateX(4px);}
+
+  /* SA tags mini */
+  .sa-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+  .sa-mini{font-size:.58rem;font-weight:800;padding:2px 6px;border-radius:8px;}
+  .sa-mini.sa2{background:#DCFCE7;color:#14532D;}
+  .sa-mini.sa4{background:#DBEAFE;color:#1E3A8A;}
+  .sa-mini.sa5{background:#FEF3C7;color:#78350F;}
+  .sa-mini.sa7{background:#E0F2FE;color:#0C4A6E;}
+  .sa-mini.sa8{background:#FEF3C7;color:#78350F;}
+  .sa-mini.sa9{background:#FEE2E2;color:#7F1D1D;}
+  .sa-mini.sa10{background:#EDE9FE;color:#4C1D95;}
+
+  .info-box-url{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+  .info-box-url .ib-label{font-size:.65rem;font-weight:800;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+  .url-pill{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;font-size:.72rem;color:#34D399;font-family:monospace;word-break:break-all;line-height:1.5;margin-bottom:6px;}
+
+  /* LIEN RETOUR MATHS */
+  .retour-link{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 16px;text-decoration:none;margin-bottom:14px;transition:all .2s;}
+  .retour-link:hover{border-color:rgba(255,255,255,.2);}
+  .retour-icon{font-size:1.3rem;}
+  .retour-txt{font-size:.82rem;color:rgba(255,255,255,.65);}
+  .retour-titre{font-family:'Fredoka One',cursive;font-size:.95rem;color:rgba(255,255,255,.85);}
+
+  .footer{text-align:center;color:rgba(255,255,255,.25);font-size:.65rem;padding:10px 0;text-transform:uppercase;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-dots"></div>
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">EDUKING <span>229</span></div>
+    <div class="header-badge">EST — Sciences</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">🔬</div>
+    <div class="hero-title">Jeux EST<br>Sciences</div>
+    <div class="hero-sub">2 jeux couvrant 7 situations d'apprentissage du programme EST · CE2 / CM1</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="sv">2</div><div class="sl">Jeux</div></div>
+    <div class="stat-box"><div class="sv">31</div><div class="sl">Questions</div></div>
+    <div class="stat-box"><div class="sv">7</div><div class="sl">SA couvertes</div></div>
+  </div>
+
+  <div class="section-title">Les 2 jeux</div>
+
+  <div class="games-grid">
+    <a class="game-card c1" href="https://eduking229.github.io/Eduking-/est-quiz-corps-animaux.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">🫀</div>
+        <div class="card-info">
+          <div class="card-dossier">Jeu 1 — Quiz classique</div>
+          <div class="card-title">Corps humain & Animaux</div>
+          <div class="sa-tags">
+            <span class="sa-mini sa2">SA2 Digestion</span>
+            <span class="sa-mini sa4">SA4 Respiration</span>
+            <span class="sa-mini sa5">SA5 Locomotion</span>
+          </div>
+          <div class="card-tags" style="margin-top:5px;">
+            <span class="tag format">🎯 Quiz · 4 choix</span>
+            <span class="tag nb">15 questions</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+
+    <a class="game-card c2" href="https://eduking229.github.io/Eduking-/est-devinette-nature-sciences.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">🔍</div>
+        <div class="card-info">
+          <div class="card-dossier">Jeu 2 — Devinette à indices</div>
+          <div class="card-title">Nature & Sciences</div>
+          <div class="sa-tags">
+            <span class="sa-mini sa7">SA7 Eau</span>
+            <span class="sa-mini sa8">SA8 Thermomètre</span>
+            <span class="sa-mini sa9">SA9 Aimants</span>
+            <span class="sa-mini sa10">SA10 Sciences & Tech</span>
+          </div>
+          <div class="card-tags" style="margin-top:5px;">
+            <span class="tag format">🃏 Devinette · 3 indices</span>
+            <span class="tag nb">16 questions</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-title">Accès direct</div>
+
+  <div class="info-box-url">
+    <div class="ib-label">🌐 URL de ce hub</div>
+    <div class="url-pill">https://eduking229.github.io/Eduking-/est-sciences-hub.html</div>
+    <div class="ib-label" style="margin-top:8px;">📁 Fichiers à déposer sur GitHub</div>
+    <div class="url-pill">est-sciences-hub.html<br>est-quiz-corps-animaux.html<br>est-devinette-nature-sciences.html</div>
+  </div>
+
+  <div class="section-title">Aussi dans le panier</div>
+
+  <a class="retour-link" href="https://eduking229.github.io/Eduking-/maths-cm1-hub.html" target="_blank">
+    <div class="retour-icon">📐</div>
+    <div>
+      <div class="retour-titre">Maths CM1 — Hub des 4 jeux</div>
+      <div class="retour-txt">Calcul · Division · Géométrie · Numération</div>
+    </div>
+    <div class="card-arrow">›</div>
+  </a>
+
+  <div class="footer">Eduking 229 — EST Sciences · CE2 / CM1 · Bénin</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Factory — Admin | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg:#08090F;
+    --surface:rgba(255,255,255,0.04);
+    --border:rgba(255,255,255,0.09);
+    --accent:#F97316;
+    --gold:#FACC15;
+    --green:#10B981;
+    --violet:#8B5CF6;
+    --text:rgba(255,255,255,0.9);
+    --muted:rgba(255,255,255,0.45);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family:'Nunito',sans-serif;
+    background:var(--bg);
+    min-height:100vh; color:var(--text);
+    overflow-x:hidden;
+  }
+
+  /* BG */
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 70% 50% at 10% 10%, rgba(139,92,246,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 90%, rgba(249,115,22,0.1) 0%, transparent 60%);
+    pointer-events:none;
+  }
+
+  .wrapper { position:relative; z-index:1; max-width:520px; margin:0 auto; padding:0 12px 60px; }
+
+  /* HEADER */
+  .header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 0 12px;
+    border-bottom:1px solid var(--border); margin-bottom:0;
+  }
+  .logo { font-family:'Fredoka One',cursive; font-size:1.2rem; color:var(--gold); letter-spacing:1px; }
+  .logo span { color:var(--accent); }
+  .admin-badge {
+    background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4);
+    color:#A78BFA; font-size:.65rem; font-weight:800;
+    padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:1px;
+  }
+
+  /* ÉCRANS */
+  .screen { display:none; }
+  .screen.active { display:block; }
+
+  /* ===== LOGIN ===== */
+  .login-wrap { padding:40px 0; text-align:center; }
+  .login-icon { font-size:3rem; margin-bottom:16px; display:block; }
+  .login-title { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--gold); margin-bottom:6px; }
+  .login-sub { font-size:.85rem; color:var(--muted); margin-bottom:28px; }
+
+  .login-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:18px; padding:24px 20px;
+  }
+  .login-label { font-size:.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); display:block; margin-bottom:8px; text-align:left; }
+  .login-input {
+    width:100%; background:rgba(0,0,0,.4); border:1px solid var(--border);
+    border-radius:12px; padding:13px 16px;
+    font-family:'Nunito',sans-serif; font-size:1rem; color:var(--text);
+    outline:none; transition:border .2s; margin-bottom:14px;
+    -webkit-text-security:disc;
+    text-security:disc;
+    letter-spacing:4px;
+  }
+  .login-input:focus { border-color:rgba(139,92,246,.6); }
+  .login-error { color:#F87171; font-size:.8rem; margin-bottom:12px; display:none; }
+  .btn-login {
+    width:100%; background:linear-gradient(135deg,#8B5CF6,#4C1D95);
+    border:none; border-radius:12px; padding:14px;
+    font-family:'Fredoka One',cursive; font-size:1rem; color:var(--gold);
+    cursor:pointer; letter-spacing:1px; transition:transform .2s;
+  }
+  .btn-login:hover { transform:scale(1.02); }
+
+  /* ===== FACTORY ===== */
+  .factory-header { padding:18px 0 14px; }
+  .factory-title { font-family:'Fredoka One',cursive; font-size:1.4rem; color:var(--gold); margin-bottom:4px; }
+  .factory-sub { font-size:.8rem; color:var(--muted); }
+
+  /* FORM */
+  .form-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:18px; padding:18px; margin-bottom:14px;
+  }
+  .form-section-title {
+    font-size:.65rem; font-weight:800; text-transform:uppercase;
+    letter-spacing:1.5px; color:var(--muted);
+    margin-bottom:12px; display:flex; align-items:center; gap:6px;
+  }
+  .form-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .form-row { margin-bottom:12px; }
+  .form-label { font-size:.72rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; display:block; margin-bottom:6px; }
+
+  .form-select, .form-input {
+    width:100%; background:rgba(0,0,0,.4); border:1px solid var(--border);
+    border-radius:10px; padding:11px 14px;
+    font-family:'Nunito',sans-serif; font-size:.9rem; color:var(--text);
+    outline:none; transition:border .2s; appearance:none;
+  }
+  .form-select:focus, .form-input:focus { border-color:rgba(139,92,246,.5); }
+
+  .form-textarea {
+    width:100%; background:rgba(0,0,0,.4); border:1px solid var(--border);
+    border-radius:10px; padding:11px 14px;
+    font-family:'Nunito',sans-serif; font-size:.85rem; color:var(--text);
+    outline:none; resize:vertical; min-height:120px; line-height:1.5;
+    transition:border .2s;
+  }
+  .form-textarea:focus { border-color:rgba(139,92,246,.5); }
+  .form-textarea::placeholder { color:rgba(255,255,255,.25); }
+
+  /* FORMAT GRID */
+  .format-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .format-btn {
+    background:rgba(0,0,0,.3); border:2px solid var(--border);
+    border-radius:12px; padding:12px 8px; cursor:pointer;
+    text-align:center; transition:all .2s;
+  }
+  .format-btn:hover { border-color:rgba(139,92,246,.5); }
+  .format-btn.selected { border-color:#8B5CF6; background:rgba(139,92,246,.12); }
+  .format-btn .fi { font-size:1.4rem; margin-bottom:4px; }
+  .format-btn .ft { font-size:.72rem; font-weight:800; color:var(--text); }
+  .format-btn .fd { font-size:.62rem; color:var(--muted); margin-top:2px; }
+
+  /* NB QUESTIONS SLIDER */
+  .nb-row { display:flex; align-items:center; gap:10px; }
+  .nb-slider { flex:1; accent-color:#8B5CF6; }
+  .nb-val {
+    font-family:'Fredoka One',cursive; font-size:1.2rem; color:#8B5CF6;
+    min-width:28px; text-align:center;
+  }
+
+  /* EXEMPLE HINT */
+  .hint-box {
+    background:rgba(250,204,21,0.06); border:1px solid rgba(250,204,21,0.2);
+    border-radius:10px; padding:10px 12px; margin-top:8px;
+    font-size:.76rem; color:rgba(250,204,21,.8); line-height:1.5;
+  }
+  .hint-box strong { color:var(--gold); }
+
+  /* BTN GÉNÉRER */
+  .btn-generate {
+    width:100%; background:linear-gradient(135deg,#F97316,#FACC15);
+    border:none; border-radius:14px; padding:16px;
+    font-family:'Fredoka One',cursive; font-size:1.1rem; color:#0A0812;
+    cursor:pointer; letter-spacing:1px; transition:all .2s;
+    box-shadow:0 4px 20px rgba(249,115,22,.25); margin-bottom:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-generate:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(249,115,22,.35); }
+  .btn-generate:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+  /* LOADING */
+  .loading-zone {
+    text-align:center; padding:32px 20px;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:18px; margin-bottom:14px; display:none;
+  }
+  .loading-spinner {
+    width:48px; height:48px; border-radius:50%;
+    border:4px solid rgba(139,92,246,.2);
+    border-top-color:#8B5CF6;
+    animation:spin 1s linear infinite;
+    margin:0 auto 16px;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-title { font-family:'Fredoka One',cursive; font-size:1.1rem; color:var(--gold); margin-bottom:6px; }
+  .loading-steps { font-size:.8rem; color:var(--muted); }
+  .loading-step { display:none; }
+  .loading-step.active { display:block; animation:fadeIn .4s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ERREUR */
+  .error-zone {
+    background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.3);
+    border-radius:14px; padding:14px 16px; margin-bottom:14px;
+    font-size:.85rem; color:#FCA5A5; display:none;
+  }
+
+  /* RÉSULTAT - JEU GÉNÉRÉ */
+  .result-zone { display:none; }
+
+  .result-header {
+    background:var(--surface); border:1px solid rgba(16,185,129,.3);
+    border-radius:18px; padding:16px; margin-bottom:14px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .result-icon {
+    width:48px; height:48px; border-radius:14px;
+    background:linear-gradient(135deg,#10B981,#059669);
+    display:flex; align-items:center; justify-content:center; font-size:1.5rem;
+    flex-shrink:0;
+  }
+  .result-info { flex:1; }
+  .result-titre { font-family:'Fredoka One',cursive; font-size:1rem; color:var(--gold); }
+  .result-meta { font-size:.72rem; color:var(--muted); margin-top:3px; }
+
+  /* APERÇU DU JEU */
+  .game-preview {
+    background:#fff; border-radius:18px;
+    box-shadow:0 8px 40px rgba(0,0,0,.4);
+    overflow:hidden; margin-bottom:14px;
+  }
+
+  /* ACTIONS */
+  .action-btns { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .btn-action {
+    border:none; border-radius:12px; padding:13px 10px;
+    font-family:'Fredoka One',cursive; font-size:.9rem;
+    cursor:pointer; text-align:center; transition:transform .2s;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .btn-action:hover { transform:translateY(-2px); }
+  .btn-download { background:linear-gradient(135deg,#10B981,#059669); color:#fff; }
+  .btn-regenerate { background:linear-gradient(135deg,#8B5CF6,#4C1D95); color:var(--gold); }
+  .btn-new { width:100%; background:rgba(255,255,255,.06); border:1px solid var(--border); color:var(--muted); border-radius:12px; padding:12px; font-family:'Fredoka One',cursive; font-size:.9rem; cursor:pointer; transition:all .2s; }
+  .btn-new:hover { color:var(--text); border-color:rgba(255,255,255,.2); }
+
+  /* MINI JEUX INTÉGRÉS */
+  .quiz-container { font-family:'Nunito',sans-serif; }
+  .quiz-header-bar {
+    background:linear-gradient(135deg,#0F172A,#1E1B4B);
+    padding:10px 14px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .quiz-title-bar { font-family:'Fredoka One',cursive; font-size:.95rem; color:#FACC15; }
+  .quiz-prog { font-size:.7rem; color:rgba(255,255,255,.6); }
+  .quiz-q-card { padding:14px; }
+  .quiz-q-num { font-size:.65rem; font-weight:800; color:#8B5CF6; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .quiz-q-text { font-size:.95rem; font-weight:800; color:#0F172A; line-height:1.4; margin-bottom:8px; }
+  .quiz-context { background:#FFF7ED; border-left:3px solid #F97316; padding:7px 10px; border-radius:0 8px 8px 0; font-size:.78rem; color:#7C2D12; margin-bottom:12px; line-height:1.4; font-weight:600; }
+  .quiz-options { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:10px; }
+  .quiz-opt {
+    background:#F8FAFC; border:2px solid #E2E8F0; border-radius:10px;
+    padding:10px 8px; font-size:.82rem; font-weight:700; color:#0F172A;
+    cursor:pointer; text-align:center; transition:all .15s; min-height:46px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .quiz-opt:hover { background:#EEF2FF; border-color:#8B5CF6; }
+  .quiz-opt.correct { background:#DCFCE7; border-color:#16A34A; color:#14532D; }
+  .quiz-opt.wrong   { background:#FEE2E2; border-color:#DC2626; color:#7F1D1D; }
+  .quiz-opt:disabled { cursor:default; }
+  .quiz-feedback { margin:0 14px 10px; border-radius:10px; padding:9px 12px; font-size:.8rem; font-weight:700; display:none; }
+  .quiz-feedback.correct { background:#DCFCE7; color:#14532D; border-left:3px solid #16A34A; display:block; }
+  .quiz-feedback.wrong   { background:#FEE2E2; color:#7F1D1D; border-left:3px solid #DC2626; display:block; }
+  .quiz-feedback-expl { font-weight:400; font-size:.74rem; margin-top:3px; opacity:.85; }
+  .quiz-nav {
+    padding:0 14px 14px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .quiz-score-mini { font-family:'Fredoka One',cursive; font-size:.85rem; color:#8B5CF6; }
+  .quiz-btn-next {
+    background:linear-gradient(135deg,#8B5CF6,#4C1D95); border:none;
+    border-radius:8px; padding:9px 16px;
+    font-family:'Fredoka One',cursive; font-size:.85rem; color:#FACC15;
+    cursor:pointer; display:none;
+  }
+
+  /* INDICES jeu */
+  .indice-row-preview { display:flex; gap:7px; align-items:flex-start; margin-bottom:7px; }
+  .indice-bullet { background:#8B5CF6; color:#fff; font-size:.6rem; font-weight:800; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .indice-txt-preview { font-size:.82rem; color:#0F172A; font-weight:600; line-height:1.4; }
+  .indice-locked-preview { font-size:.75rem; color:#ccc; font-style:italic; margin-bottom:5px; }
+  .btn-indice-next { background:none; border:1.5px dashed #8B5CF6; color:#8B5CF6; font-size:.72rem; font-weight:700; padding:4px 12px; border-radius:20px; cursor:pointer; margin:4px 14px 8px; }
+  .btn-indice-next:disabled { opacity:.3; cursor:default; }
+  .mystere-mini {
+    text-align:center; margin:0 14px 10px;
+    background:linear-gradient(135deg,#8B5CF6,#4C1D95);
+    border-radius:10px; padding:8px;
+    font-family:'Fredoka One',cursive; font-size:1.3rem; color:#FACC15;
+    letter-spacing:2px;
+  }
+
+  /* VF jeu */
+  .vf-options { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; padding:0 14px; }
+  .vf-btn { border:2px solid #E2E8F0; border-radius:12px; padding:14px; font-family:'Fredoka One',cursive; font-size:1.2rem; cursor:pointer; text-align:center; background:#F8FAFC; color:#0F172A; transition:all .15s; }
+  .vf-btn.vrai { border-color:#16A34A; color:#16A34A; }
+  .vf-btn.faux  { border-color:#DC2626; color:#DC2626; }
+
+  /* FOOTER */
+  .footer { text-align:center; color:var(--muted); font-size:.65rem; padding:10px 0; text-transform:uppercase; letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">EDUKING <span>229</span></div>
+    <div class="admin-badge">⚙️ Admin</div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="screen-login" class="screen active">
+    <div class="login-wrap">
+      <span class="login-icon">🏭</span>
+      <div class="login-title">Game Factory</div>
+      <div class="login-sub">Espace administrateur — Génération de jeux éducatifs par intelligence artificielle</div>
+      <div class="login-card">
+        <label class="login-label">Mot de passe admin</label>
+        <input type="password" id="pwd-input" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') tryLogin()">
+        <div class="login-error" id="login-error">❌ Mot de passe incorrect</div>
+        <button class="btn-login" onclick="tryLogin()">🔐 ACCÉDER À LA FACTORY</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACTORY -->
+  <div id="screen-factory" class="screen">
+    <div class="factory-header">
+      <div class="factory-title">🏭 Game Factory</div>
+      <div class="factory-sub">Soumets ton programme → l'IA génère un jeu éducatif complet</div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card" id="form-zone">
+      <div class="form-section-title">📋 Identité du jeu</div>
+
+      <div class="form-row">
+        <label class="form-label">Matière</label>
+        <select class="form-select" id="f-matiere">
+          <option value="Mathématiques">Mathématiques</option>
+          <option value="Civisme">Civisme</option>
+          <option value="Morale">Morale</option>
+          <option value="EST / Sciences">EST / Sciences</option>
+          <option value="Français">Français</option>
+          <option value="Histoire-Géographie">Histoire-Géographie</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-row">
+          <label class="form-label">Classe</label>
+          <select class="form-select" id="f-classe">
+            <option>CI</option><option>CP</option><option>CE1</option>
+            <option>CE2</option><option>CM1</option><option selected>CM2</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">SA / Dossier</label>
+          <input class="form-input" id="f-sa" placeholder="ex: SA1, Dossier 3..." value="SA1">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Thème / Titre de la leçon</label>
+        <input class="form-input" id="f-theme" placeholder="ex: Les institutions démocratiques du Bénin">
+      </div>
+
+      <div class="form-section-title" style="margin-top:6px;">🎮 Format du jeu</div>
+
+      <div class="format-grid" id="format-grid">
+        <div class="format-btn selected" data-format="quiz" onclick="selectFormat(this)">
+          <div class="fi">🎯</div>
+          <div class="ft">Quiz classique</div>
+          <div class="fd">4 choix de réponse</div>
+        </div>
+        <div class="format-btn" data-format="devinette" onclick="selectFormat(this)">
+          <div class="fi">🃏</div>
+          <div class="ft">Devinette</div>
+          <div class="fd">3 indices progressifs</div>
+        </div>
+        <div class="format-btn" data-format="vrai_faux" onclick="selectFormat(this)">
+          <div class="fi">✅</div>
+          <div class="ft">Vrai ou Faux</div>
+          <div class="fd">Affirmations à juger</div>
+        </div>
+        <div class="format-btn" data-format="flashcard" onclick="selectFormat(this)">
+          <div class="fi">⚡</div>
+          <div class="ft">Flash Quiz</div>
+          <div class="fd">Questions rapides</div>
+        </div>
+      </div>
+
+      <div class="form-section-title" style="margin-top:14px;">📖 Contenu du programme</div>
+
+      <div class="form-row">
+        <label class="form-label">Résumé / Compétences / Objectifs de la leçon</label>
+        <textarea class="form-textarea" id="f-contenu" placeholder="Colle ici le contenu de ta leçon : résumé, objectifs, compétences visées, notions clés, vocabulaire...&#10;&#10;Exemple :&#10;- Les institutions du Bénin sont : l'Assemblée Nationale (109 députés), la Présidence de la République (élu pour 5 ans), la Cour Constitutionnelle (7 membres)...&#10;- Compétences : identifier les institutions, comprendre leurs rôles..."></textarea>
+        <div class="hint-box">💡 Plus tu fournis de contenu détaillé, plus les questions générées seront précises et conformes à ton programme !</div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Nombre de questions — <span id="nb-label">10</span></label>
+        <div class="nb-row">
+          <input type="range" class="nb-slider" id="f-nb" min="5" max="15" value="10" oninput="document.getElementById('nb-label').textContent=this.value">
+          <div class="nb-val" id="nb-val2">10</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Contexte culturel (optionnel)</label>
+        <select class="form-select" id="f-contexte">
+          <option value="béninois">🇧🇯 Béninois (prénoms, villes, culture locale)</option>
+          <option value="général">🌍 Général (contexte universel)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btn-generate" onclick="generateGame()">
+      <span>🚀</span> GÉNÉRER LE JEU
+    </button>
+
+    <!-- LOADING -->
+    <div class="loading-zone" id="loading-zone">
+      <div class="loading-spinner"></div>
+      <div class="loading-title">L'IA génère ton jeu...</div>
+      <div class="loading-steps">
+        <div class="loading-step" id="step-1">📖 Analyse du programme...</div>
+        <div class="loading-step" id="step-2">🧠 Création des questions...</div>
+        <div class="loading-step" id="step-3">🎨 Construction du jeu...</div>
+        <div class="loading-step" id="step-4">✅ Finalisation...</div>
+      </div>
+    </div>
+
+    <!-- ERREUR -->
+    <div class="error-zone" id="error-zone"></div>
+
+    <!-- RÉSULTAT -->
+    <div class="result-zone" id="result-zone">
+      <div class="result-header">
+        <div class="result-icon">✅</div>
+        <div class="result-info">
+          <div class="result-titre" id="res-titre">Jeu généré</div>
+          <div class="result-meta" id="res-meta">10 questions · Quiz classique</div>
+        </div>
+      </div>
+
+      <div class="game-preview" id="game-preview"></div>
+
+      <div class="action-btns">
+        <button class="btn-action btn-download" onclick="downloadGame()">⬇️ Télécharger HTML</button>
+        <button class="btn-action btn-regenerate" onclick="generateGame()">🔄 Régénérer</button>
+      </div>
+      <button class="btn-new" onclick="newGame()">+ Nouveau jeu</button>
+    </div>
+
+    <div class="footer">Eduking 229 — Game Factory · Powered by Claude AI</div>
+  </div>
+</div>
+
+<script>
+// ===================== CONFIG =====================
+var ADMIN_PWD = "eduking229";
+var selectedFormat = "quiz";
+var generatedData = null;
+var generatedMeta = null;
+
+// ===================== LOGIN =====================
+function tryLogin() {
+  var pwd = document.getElementById('pwd-input').value;
+  if (pwd === ADMIN_PWD) {
+    show('screen-factory');
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function selectFormat(el) {
+  var btns = document.querySelectorAll('.format-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
+  el.classList.add('selected');
+  selectedFormat = el.getAttribute('data-format');
+}
+
+function show(id) {
+  var sc = document.querySelectorAll('.screen');
+  for (var i = 0; i < sc.length; i++) sc[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// ===================== SYNC SLIDER =====================
+document.getElementById('f-nb').addEventListener('input', function() {
+  document.getElementById('nb-label').textContent = this.value;
+  document.getElementById('nb-val2').textContent = this.value;
+});
+
+// ===================== PROMPT BUILDER =====================
+function buildPrompt(meta) {
+  var formatDesc = {
+    quiz: 'Quiz classique : chaque question a 4 options (A/B/C/D), une seule bonne réponse, et une explication pédagogique. Ajoute un champ "contexte" avec une courte mise en situation réaliste.',
+    devinette: 'Devinette : chaque question a un "mystere" (le mot/nombre/institution à trouver), 3 indices progressifs du plus général au plus précis, 4 options, une bonne réponse et une explication.',
+    vrai_faux: 'Vrai ou Faux : chaque question est une affirmation à juger. La réponse est "Vrai" ou "Faux". Inclure une explication pédagogique.',
+    flashcard: 'Flash Quiz : questions directes et courtes. 4 options, une bonne réponse, explication courte.'
+  };
+
+  return 'Tu es un expert en pédagogie de l\'école primaire béninoise et en création de jeux éducatifs.\n\n' +
+    'Génère exactement ' + meta.nb + ' questions pour un jeu éducatif avec ces paramètres :\n' +
+    '- Matière : ' + meta.matiere + '\n' +
+    '- Classe : ' + meta.classe + '\n' +
+    '- SA/Dossier : ' + meta.sa + '\n' +
+    '- Thème : ' + meta.theme + '\n' +
+    '- Format : ' + formatDesc[meta.format] + '\n' +
+    '- Contexte : ' + meta.contexte + '\n\n' +
+    'CONTENU DU PROGRAMME :\n' + meta.contenu + '\n\n' +
+    'RÈGLES IMPORTANTES :\n' +
+    '1. Les questions doivent couvrir les points clés du programme fourni\n' +
+    '2. Utilise des prénoms béninois (Kofi, Adjoua, Mensah, Dossa, Aïcha, Bello, Fatou...) et des villes du Bénin (Cotonou, Porto-Novo, Parakou, Abomey, Natitingou, Bohicon...)\n' +
+    '3. Varie les types de questions : définition, identification, application, comparaison\n' +
+    '4. Niveau adapté à la classe ' + meta.classe + '\n' +
+    '5. Explications pédagogiques claires et précises\n\n' +
+    'Réponds UNIQUEMENT avec un objet JSON valide, sans aucun texte avant ou après, sans balises markdown :\n' +
+    '{\n' +
+    '  "titre": "Titre du jeu",\n' +
+    '  "description": "Courte description",\n' +
+    '  "questions": [\n' +
+    (meta.format === 'quiz' ?
+      '    {"question":"...","contexte":"...","options":["A","B","C","D"],"reponse":"A","explication":"..."}\n' :
+     meta.format === 'devinette' ?
+      '    {"mystere":"...","indices":["indice1","indice2","indice3"],"options":["A","B","C","D"],"reponse":"A","explication":"..."}\n' :
+     meta.format === 'vrai_faux' ?
+      '    {"affirmation":"...","reponse":"Vrai","explication":"..."}\n' :
+      '    {"question":"...","options":["A","B","C","D"],"reponse":"A","explication":"..."}\n'
+    ) +
+    '  ]\n' +
+    '}';
+}
+
+// ===================== GENERATE =====================
+async function generateGame() {
+  var matiere = document.getElementById('f-matiere').value;
+  var classe = document.getElementById('f-classe').value;
+  var sa = document.getElementById('f-sa').value.trim();
+  var theme = document.getElementById('f-theme').value.trim();
+  var contenu = document.getElementById('f-contenu').value.trim();
+  var nb = parseInt(document.getElementById('f-nb').value);
+  var contexte = document.getElementById('f-contexte').value;
+
+  if (!theme) { alert('Saisis le thème de la leçon !'); return; }
+  if (!contenu) { alert('Colle le contenu du programme !'); return; }
+
+  var meta = { matiere:matiere, classe:classe, sa:sa, theme:theme, contenu:contenu, nb:nb, contexte:contexte, format:selectedFormat };
+  generatedMeta = meta;
+
+  // UI loading
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('loading-zone').style.display = 'block';
+  document.getElementById('error-zone').style.display = 'none';
+  document.getElementById('result-zone').style.display = 'none';
+
+  // Étapes animées
+  var steps = ['step-1','step-2','step-3','step-4'];
+  var stepIdx = 0;
+  document.getElementById(steps[0]).classList.add('active');
+  var stepInterval = setInterval(function() {
+    document.getElementById(steps[stepIdx]).classList.remove('active');
+    stepIdx = (stepIdx + 1) % steps.length;
+    document.getElementById(steps[stepIdx]).classList.add('active');
+  }, 1800);
+
+  try {
+    var prompt = buildPrompt(meta);
+
+    var response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4000,
+        system: "Tu es un expert en pédagogie primaire béninoise. Tu génères des questions de jeux éducatifs en JSON strict. Ne fournis jamais rien d'autre que du JSON valide, sans markdown ni texte autour.",
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    clearInterval(stepInterval);
+
+    var data = await response.json();
+    var rawText = data.content && data.content[0] ? data.content[0].text : '';
+
+    // Nettoyer éventuel markdown
+    var clean = rawText.replace(/```json|```/g, '').trim();
+
+    var gameData;
+    try {
+      gameData = JSON.parse(clean);
+    } catch(e) {
+      // Essai d'extraction JSON
+      var match = clean.match(/\{[\s\S]*\}/);
+      if (match) gameData = JSON.parse(match[0]);
+      else throw new Error('Format JSON invalide reçu');
+    }
+
+    generatedData = gameData;
+    renderGame(gameData, meta);
+
+  } catch(err) {
+    clearInterval(stepInterval);
+    document.getElementById('error-zone').textContent = '❌ Erreur : ' + (err.message || 'Connexion impossible. Vérifie ta connexion internet.');
+    document.getElementById('error-zone').style.display = 'block';
+  } finally {
+    document.getElementById('loading-zone').style.display = 'none';
+    document.getElementById('btn-generate').disabled = false;
+  }
+}
+
+// ===================== RENDER GAME =====================
+function renderGame(data, meta) {
+  var preview = document.getElementById('game-preview');
+  document.getElementById('res-titre').textContent = data.titre || meta.theme;
+  document.getElementById('res-meta').textContent = (data.questions ? data.questions.length : 0) + ' questions · ' + formatLabel(meta.format);
+
+  if (meta.format === 'quiz' || meta.format === 'flashcard') renderQuiz(preview, data, meta);
+  else if (meta.format === 'devinette') renderDevinette(preview, data, meta);
+  else if (meta.format === 'vrai_faux') renderVF(preview, data, meta);
+
+  document.getElementById('result-zone').style.display = 'block';
+}
+
+function formatLabel(f) {
+  return {quiz:'Quiz classique', devinette:'Devinette à indices', vrai_faux:'Vrai ou Faux', flashcard:'Flash Quiz'}[f] || f;
+}
+
+// ----- QUIZ RENDER -----
+function renderQuiz(container, data, meta) {
+  var qs = data.questions || [];
+  var state = { idx:0, score:0, answered:false };
+
+  function renderQ() {
+    state.answered = false;
+    var q = qs[state.idx];
+    var opts = shuffleArr(q.options ? q.options.slice() : []);
+
+    var html = '<div class="quiz-container">';
+    html += '<div class="quiz-header-bar">';
+    html += '<span class="quiz-title-bar">🎯 ' + (data.titre || meta.theme) + '</span>';
+    html += '<span class="quiz-prog">' + (state.idx+1) + '/' + qs.length + '</span>';
+    html += '</div>';
+    html += '<div class="quiz-q-card">';
+    html += '<div class="quiz-q-num">Question ' + (state.idx+1) + '</div>';
+    html += '<div class="quiz-q-text">' + q.question + '</div>';
+    if (q.contexte) html += '<div class="quiz-context">📍 ' + q.contexte + '</div>';
+    html += '<div class="quiz-options" id="qopts">';
+    opts.forEach(function(opt) {
+      html += '<button class="quiz-opt" onclick="qAnswer(this,\'' + esc(opt) + '\',\'' + esc(q.reponse) + '\',\'' + esc(q.explication) + '\')" data-val="' + esc(opt) + '">' + opt + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="quiz-feedback" id="qfb"></div>';
+    html += '<div class="quiz-nav">';
+    html += '<div class="quiz-score-mini">Score : ' + state.score + '/' + qs.length + '</div>';
+    html += '<button class="quiz-btn-next" id="qnext" onclick="qNext()">Suivant →</button>';
+    html += '</div></div></div>';
+
+    container.innerHTML = html;
+    window._qState = state;
+    window._qData = { qs:qs, data:data, meta:meta, container:container };
+  }
+
+  window.qAnswer = function(btn, chosen, correct, expl) {
+    if (window._qState.answered) return;
+    window._qState.answered = true;
+    var isOk = chosen === correct;
+    if (isOk) window._qState.score++;
+    var btns = document.querySelectorAll('.quiz-opt');
+    btns.forEach(function(b) {
+      b.disabled = true;
+      if (b.getAttribute('data-val') === correct) b.className = 'quiz-opt correct';
+      else if (b.getAttribute('data-val') === chosen && !isOk) b.className = 'quiz-opt wrong';
+    });
+    var fb = document.getElementById('qfb');
+    fb.className = 'quiz-feedback ' + (isOk?'correct':'wrong');
+    fb.innerHTML = (isOk?'✅ Bravo !':'❌ Réponse : <strong>'+correct+'</strong>') + '<div class="quiz-feedback-expl">'+expl+'</div>';
+    document.getElementById('qnext').style.display = 'inline-block';
+  };
+
+  window.qNext = function() {
+    window._qState.idx++;
+    if (window._qState.idx >= window._qData.qs.length) {
+      var pct = Math.round(window._qState.score / window._qData.qs.length * 100);
+      container.innerHTML = '<div style="padding:24px;text-align:center;font-family:Nunito,sans-serif;">' +
+        '<div style="font-size:2.5rem;margin-bottom:8px;">'+(pct>=80?'🏆':pct>=60?'😊':'💪')+'</div>' +
+        '<div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:#8B5CF6;">'+window._qState.score+'/'+window._qData.qs.length+'</div>' +
+        '<div style="font-size:.85rem;color:#64748B;margin:6px 0 16px;">'+(pct>=80?'Excellent !':pct>=60?'Bon résultat !':'Courage, continue !')+'</div>' +
+        '<button onclick="window.qRestart()" style="background:linear-gradient(135deg,#8B5CF6,#4C1D95);border:none;border-radius:10px;padding:11px 20px;font-family:Fredoka One,cursive;color:#FACC15;cursor:pointer;">🔄 Rejouer</button>' +
+        '</div>';
+      window.qRestart = function() { window._qState.idx=0; window._qState.score=0; renderQ(); };
+      return;
+    }
+    renderQ();
+  };
+
+  renderQ();
+}
+
+// ----- DEVINETTE RENDER -----
+function renderDevinette(container, data, meta) {
+  var qs = data.questions || [];
+  var state = { idx:0, score:0, indice:1, answered:false };
+
+  function renderD() {
+    state.answered = false; state.indice = 1;
+    var q = qs[state.idx];
+    var opts = shuffleArr(q.options ? q.options.slice() : []);
+
+    function buildHTML() {
+      var h = '<div class="quiz-container">';
+      h += '<div class="quiz-header-bar"><span class="quiz-title-bar">🃏 ' + (data.titre||meta.theme) + '</span><span class="quiz-prog">'+(state.idx+1)+'/'+qs.length+'</span></div>';
+      h += '<div class="quiz-q-card">';
+      h += '<div class="mystere-mini" id="dmystere">❓ Qui / Quoi suis-je ?</div>';
+      h += '<div style="padding:8px 14px 0;">';
+      for (var i = 0; i < q.indices.length; i++) {
+        if (i < state.indice) {
+          h += '<div class="indice-row-preview"><div class="indice-bullet">I'+(i+1)+'</div><div class="indice-txt-preview">'+q.indices[i]+'</div></div>';
+        } else {
+          h += '<div class="indice-locked-preview">🔒 Indice '+(i+1)+' — non révélé</div>';
+        }
+      }
+      h += '</div>';
+      h += '<button class="btn-indice-next" id="dbtn-hint" onclick="dNextIndice()" '+(state.indice>=q.indices.length?'disabled':'')+'>💡 Indice suivant</button>';
+      h += '<div class="quiz-options" id="dopts">';
+      opts.forEach(function(opt) {
+        h += '<button class="quiz-opt" onclick="dAnswer(this,\''+esc(opt)+'\',\''+esc(q.reponse)+'\',\''+esc(q.explication)+'\')" data-val="'+esc(opt)+'">'+opt+'</button>';
+      });
+      h += '</div>';
+      h += '<div class="quiz-feedback" id="dfb"></div>';
+      h += '<div class="quiz-nav"><div class="quiz-score-mini">Score : '+state.score+'/'+qs.length+'</div><button class="quiz-btn-next" id="dnext" onclick="dNext()">Suivant →</button></div>';
+      h += '</div></div>';
+      return h;
+    }
+
+    container.innerHTML = buildHTML();
+    window._dState = state;
+    window._dData = { qs:qs, q:q, opts:opts, data:data, meta:meta, container:container, buildHTML:buildHTML };
+  }
+
+  window.dNextIndice = function() {
+    if (window._dState.indice < window._dData.q.indices.length) {
+      window._dState.indice++;
+      container.innerHTML = window._dData.buildHTML();
+      if (window._dState.answered) {
+        document.getElementById('dmystere').textContent = window._dData.q.mystere;
+        document.getElementById('dnext').style.display = 'inline-block';
+      }
+    }
+  };
+
+  window.dAnswer = function(btn, chosen, correct, expl) {
+    if (window._dState.answered) return;
+    window._dState.answered = true;
+    var isOk = chosen === correct;
+    if (isOk) window._dState.score++;
+    document.getElementById('dmystere').textContent = window._dData.q.mystere;
+    var btns = document.querySelectorAll('.quiz-opt');
+    btns.forEach(function(b) {
+      b.disabled = true;
+      if (b.getAttribute('data-val') === correct) b.className = 'quiz-opt correct';
+      else if (b.getAttribute('data-val') === chosen && !isOk) b.className = 'quiz-opt wrong';
+    });
+    var fb = document.getElementById('dfb');
+    fb.className = 'quiz-feedback '+(isOk?'correct':'wrong');
+    fb.innerHTML = (isOk?'✅ Trouvé !':'❌ C\'était : <strong>'+correct+'</strong>') + '<div class="quiz-feedback-expl">'+expl+'</div>';
+    document.getElementById('dbtn-hint').disabled = true;
+    document.getElementById('dnext').style.display = 'inline-block';
+  };
+
+  window.dNext = function() {
+    window._dState.idx++;
+    if (window._dState.idx >= window._dData.qs.length) {
+      var pct = Math.round(window._dState.score/window._dData.qs.length*100);
+      container.innerHTML = '<div style="padding:24px;text-align:center;font-family:Nunito,sans-serif;"><div style="font-size:2.5rem;margin-bottom:8px;">'+(pct>=80?'🏆':pct>=60?'😊':'💪')+'</div><div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:#8B5CF6;">'+window._dState.score+'/'+window._dData.qs.length+'</div><div style="font-size:.85rem;color:#64748B;margin:6px 0 16px;">'+(pct>=80?'Excellent !':pct>=60?'Bon résultat !':'Courage !')+'</div><button onclick="window.dRestart()" style="background:linear-gradient(135deg,#8B5CF6,#4C1D95);border:none;border-radius:10px;padding:11px 20px;font-family:Fredoka One,cursive;color:#FACC15;cursor:pointer;">🔄 Rejouer</button></div>';
+      window.dRestart = function() { window._dState.idx=0; window._dState.score=0; renderD(); };
+      return;
+    }
+    window._dData.q = window._dData.qs[window._dState.idx];
+    window._dData.opts = shuffleArr(window._dData.q.options.slice());
+    renderD();
+  };
+
+  renderD();
+}
+
+// ----- VRAI/FAUX RENDER -----
+function renderVF(container, data, meta) {
+  var qs = data.questions || [];
+  var state = { idx:0, score:0, answered:false };
+
+  function renderVq() {
+    state.answered = false;
+    var q = qs[state.idx];
+    var h = '<div class="quiz-container">';
+    h += '<div class="quiz-header-bar"><span class="quiz-title-bar">✅ '+(data.titre||meta.theme)+'</span><span class="quiz-prog">'+(state.idx+1)+'/'+qs.length+'</span></div>';
+    h += '<div class="quiz-q-card">';
+    h += '<div class="quiz-q-num">Affirmation '+(state.idx+1)+'</div>';
+    h += '<div class="quiz-q-text" style="font-size:1rem;color:#0F172A;background:#F8FAFC;border-radius:10px;padding:12px;margin-bottom:12px;line-height:1.5;">"'+q.affirmation+'"</div>';
+    h += '<div class="vf-options">';
+    h += '<button class="vf-btn vrai" onclick="vfAnswer(this,\'Vrai\',\''+esc(q.reponse)+'\',\''+esc(q.explication)+'\')">✅ Vrai</button>';
+    h += '<button class="vf-btn faux" onclick="vfAnswer(this,\'Faux\',\''+esc(q.reponse)+'\',\''+esc(q.explication)+'\')">❌ Faux</button>';
+    h += '</div>';
+    h += '<div class="quiz-feedback" id="vffb"></div>';
+    h += '<div class="quiz-nav"><div class="quiz-score-mini">Score : '+state.score+'/'+qs.length+'</div><button class="quiz-btn-next" id="vfnext" onclick="vfNext()">Suivant →</button></div>';
+    h += '</div></div>';
+    container.innerHTML = h;
+    window._vfState = state;
+    window._vfData = { qs:qs, data:data, meta:meta, container:container };
+  }
+
+  window.vfAnswer = function(btn, chosen, correct, expl) {
+    if (window._vfState.answered) return;
+    window._vfState.answered = true;
+    var isOk = chosen === correct;
+    if (isOk) window._vfState.score++;
+    var btns = document.querySelectorAll('.vf-btn');
+    btns.forEach(function(b) { b.disabled = true; b.style.opacity='.5'; });
+    btn.style.opacity = '1';
+    btn.style.background = isOk ? '#DCFCE7' : '#FEE2E2';
+    var fb = document.getElementById('vffb');
+    fb.className = 'quiz-feedback '+(isOk?'correct':'wrong');
+    fb.innerHTML = (isOk?'✅ Correct !':'❌ C\'est '+correct+' !') + '<div class="quiz-feedback-expl">'+expl+'</div>';
+    document.getElementById('vfnext').style.display = 'inline-block';
+  };
+
+  window.vfNext = function() {
+    window._vfState.idx++;
+    if (window._vfState.idx >= window._vfData.qs.length) {
+      var pct = Math.round(window._vfState.score/window._vfData.qs.length*100);
+      container.innerHTML = '<div style="padding:24px;text-align:center;font-family:Nunito,sans-serif;"><div style="font-size:2.5rem;margin-bottom:8px;">'+(pct>=80?'🏆':pct>=60?'😊':'💪')+'</div><div style="font-family:Fredoka One,cursive;font-size:1.5rem;color:#8B5CF6;">'+window._vfState.score+'/'+window._vfData.qs.length+'</div><div style="font-size:.85rem;color:#64748B;margin:6px 0 16px;">'+(pct>=80?'Excellent !':pct>=60?'Bon résultat !':'Courage !')+'</div><button onclick="window.vfRestart()" style="background:linear-gradient(135deg,#8B5CF6,#4C1D95);border:none;border-radius:10px;padding:11px 20px;font-family:Fredoka One,cursive;color:#FACC15;cursor:pointer;">🔄 Rejouer</button></div>';
+      window.vfRestart = function() { window._vfState.idx=0; window._vfState.score=0; renderVq(); };
+      return;
+    }
+    renderVq();
+  };
+
+  renderVq();
+}
+
+// ===================== DOWNLOAD =====================
+function downloadGame() {
+  if (!generatedData || !generatedMeta) return;
+
+  // Générer un HTML standalone complet
+  var qs = generatedData.questions || [];
+  var titre = generatedData.titre || generatedMeta.theme;
+  var matiere = generatedMeta.matiere;
+  var classe = generatedMeta.classe;
+
+  var qsJSON = JSON.stringify(qs);
+  var format = generatedMeta.format;
+
+  var html = '<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8">\n' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+    '<title>' + titre + ' | Eduking 229</title>\n' +
+    '<style>\n@import url(\'https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap\');\n' +
+    '* {box-sizing:border-box;margin:0;padding:0;}\n' +
+    'body{font-family:Nunito,sans-serif;background:linear-gradient(150deg,#0C0A1E,#1B0A3D);min-height:100vh;}\n' +
+    '.header{background:rgba(0,0,0,.5);border-bottom:2px solid rgba(167,139,250,.3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}\n' +
+    '.logo{font-family:Fredoka One,cursive;color:#FACC15;font-size:1.2rem;}\n' +
+    '.logo span{color:#F97316;}\n' +
+    '.badge{background:linear-gradient(135deg,#7C3AED,#4C1D95);color:#fff;font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:20px;text-transform:uppercase;}\n' +
+    '.main{padding:14px 12px 60px;max-width:480px;margin:0 auto;}\n' +
+    '.card{background:#fff;border-radius:20px;box-shadow:0 6px 30px rgba(0,0,0,.35);overflow:hidden;margin-bottom:12px;}\n' +
+    '.card-hdr{background:linear-gradient(135deg,#0C0A1E,#1B0A3D);padding:12px 16px;display:flex;align-items:center;gap:10px;}\n' +
+    '.q-n{background:#7C3AED;color:#fff;font-family:Fredoka One,cursive;font-size:.85rem;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;}\n' +
+    '.q-t{font-family:Fredoka One,cursive;font-size:1rem;color:#FACC15;}\n' +
+    '.q-body{padding:14px;}\n' +
+    '.ctx{background:#FFF7ED;border-left:4px solid #F97316;padding:8px 12px;border-radius:0 10px 10px 0;font-size:.82rem;color:#7C2D12;font-weight:600;margin-bottom:10px;}\n' +
+    '.q-txt{font-size:.95rem;font-weight:800;color:#0C0A1E;margin-bottom:12px;line-height:1.4;}\n' +
+    '.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}\n' +
+    '.opt{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:12px;padding:11px 8px;font-family:Nunito,sans-serif;font-size:.82rem;font-weight:700;color:#0C0A1E;cursor:pointer;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center;transition:all .15s;}\n' +
+    '.opt:hover:not(:disabled){background:#EDE9FE;border-color:#7C3AED;}\n' +
+    '.opt.ok{background:#DCFCE7;border-color:#16A34A;color:#14532D;}\n' +
+    '.opt.no{background:#FEE2E2;border-color:#DC2626;color:#7F1D1D;}\n' +
+    '.opt:disabled{cursor:default;}\n' +
+    '.fb{margin:0 0 10px;border-radius:10px;padding:9px 12px;font-size:.82rem;font-weight:700;display:none;}\n' +
+    '.fb.ok{background:#DCFCE7;color:#14532D;border-left:4px solid #16A34A;display:block;}\n' +
+    '.fb.no{background:#FEE2E2;color:#7F1D1D;border-left:4px solid #DC2626;display:block;}\n' +
+    '.fb-e{font-weight:400;font-size:.76rem;margin-top:3px;}\n' +
+    '.nav{display:flex;justify-content:space-between;align-items:center;}\n' +
+    '.sc{font-family:Fredoka One,cursive;font-size:.85rem;color:#7C3AED;}\n' +
+    '.btn-nx{background:linear-gradient(135deg,#7C3AED,#4C1D95);border:none;border-radius:8px;padding:9px 16px;font-family:Fredoka One,cursive;font-size:.85rem;color:#FACC15;cursor:pointer;display:none;}\n' +
+    '.footer{text-align:center;color:rgba(255,255,255,.3);font-size:.65rem;padding:10px;text-transform:uppercase;}\n' +
+    '</style>\n</head>\n<body>\n' +
+    '<div class="header"><div class="logo">EDUKING <span>229</span></div><div class="badge">' + matiere + ' ' + classe + '</div></div>\n' +
+    '<div class="main"><div id="app"></div></div>\n' +
+    '<div class="footer">Eduking 229 — ' + titre + '</div>\n' +
+    '<script>\n' +
+    'var qs=' + qsJSON + ';\n' +
+    'var state={idx:0,score:0,ans:false};\n' +
+    'var fmt="' + format + '";\n' +
+    'var titre="' + titre.replace(/"/g,'\\"') + '";\n' +
+    'function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}\n' +
+    'function render(){state.ans=false;var q=qs[state.idx];var app=document.getElementById("app");\n' +
+    'var opts=q.options?shuffle(q.options.slice()):["Vrai","Faux"];\n' +
+    'var h=\'<div class="card"><div class="card-hdr"><div class="q-n">\'+(state.idx+1)+\'</div><div class="q-t">\'+(q.question||q.affirmation||("Indice : "+q.indices[0]))+\'</div></div><div class="q-body">\';\n' +
+    'if(q.contexte)h+=\'<div class="ctx">\'+q.contexte+\'</div>\';\n' +
+    'if(q.affirmation)h+=\'<div class="q-txt">"\'+q.affirmation+\'"</div>\';\n' +
+    'else if(q.question)h+=\'<div class="q-txt">\'+q.question+\'</div>\';\n' +
+    'h+=\'<div class="opts">\';\n' +
+    'opts.forEach(function(o){h+=\'<button class="opt" onclick="ans(this,\\\'\'+(o.replace(/\'/g,"\\\\\'"))+\'\\\',\\\'\'+(q.reponse.replace(/\'/g,"\\\\\'"))+\'\\\',\\\'\'+(q.explication.replace(/\'/g,"\\\\\'").replace(/\\n/g," "))+\'\\\')" data-v="\'+(o.replace(/"/g,"&quot;"))+\'">\'+o+\'</button>\';});\n' +
+    'h+=\'</div><div class="fb" id="fb"></div><div class="nav"><div class="sc">Score : \'+state.score+\'/\'+qs.length+\'</div><button class="btn-nx" id="nx" onclick="nx()">Suivant →</button></div></div></div>\';\n' +
+    'app.innerHTML=h;}\n' +
+    'function ans(btn,chosen,correct,expl){if(state.ans)return;state.ans=true;var ok=chosen===correct;if(ok)state.score++;var bs=document.querySelectorAll(".opt");bs.forEach(function(b){b.disabled=true;if(b.getAttribute("data-v")===correct)b.className="opt ok";else if(b.getAttribute("data-v")===chosen&&!ok)b.className="opt no";});var fb=document.getElementById("fb");fb.className="fb "+(ok?"ok":"no");fb.innerHTML=(ok?"✅ Bravo !":"❌ Réponse : <strong>"+correct+"</strong>")+"<div class=\'fb-e\'>"+expl+"</div>";document.getElementById("nx").style.display="inline-block";}\n' +
+    'function nx(){state.idx++;if(state.idx>=qs.length){var p=Math.round(state.score/qs.length*100);document.getElementById("app").innerHTML=\'<div style="padding:30px;text-align:center;background:#fff;border-radius:20px;"><div style="font-size:3rem;margin-bottom:8px;">\'+(p>=80?"🏆":p>=60?"😊":"💪")+\'</div><div style="font-family:Fredoka One,cursive;font-size:2rem;color:#7C3AED;">\'+state.score+\'/\'+qs.length+\'</div><div style="font-size:.9rem;color:#64748B;margin:8px 0 20px;">\'+(p>=80?"Excellent !":p>=60?"Bon résultat !":"Courage !")+\'</div><button onclick="state.idx=0;state.score=0;render()" style="background:linear-gradient(135deg,#7C3AED,#4C1D95);border:none;border-radius:12px;padding:13px 24px;font-family:Fredoka One,cursive;font-size:1rem;color:#FACC15;cursor:pointer;">🔄 Rejouer</button></div>\';return;}render();}\n' +
+    'render();\n' +
+    '<\/script>\n</body>\n</html>';
+
+  var blob = new Blob([html], { type:'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = (titre.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '.html');
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function newGame() {
+  document.getElementById('result-zone').style.display = 'none';
+  document.getElementById('f-contenu').value = '';
+  document.getElementById('f-theme').value = '';
+  generatedData = null;
+}
+
+// ===================== UTILS =====================
+function shuffleArr(a) {
+  for (var i = a.length-1; i > 0; i--) {
+    var j = Math.floor(Math.random()*(i+1));
+    var t = a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,' ');
+}
+</script>
+</body>
+</html>

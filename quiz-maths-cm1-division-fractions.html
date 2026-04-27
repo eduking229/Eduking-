@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course aux Calculs — Division & Fractions CM1 | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(150deg, #0D1117 0%, #1A1035 50%, #0D1117 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(0,0,0,0.5);
+    border-bottom: 2px solid rgba(234,179,8,0.3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo { font-family: 'Fredoka One', cursive; color: #EAB308; font-size: 1.2rem; letter-spacing: 1px; }
+  .logo span { color: #F97316; }
+  .subject-tag {
+    background: linear-gradient(135deg, #059669, #0D9488);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .main { padding: 14px 12px 60px; max-width: 480px; margin: 0 auto; }
+
+  /* ÉCRANS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== ACCUEIL ===== */
+  .welcome-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .welcome-icon { font-size: 3.5rem; margin-bottom: 8px; }
+  .welcome-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: #0D1117; margin-bottom: 6px; }
+  .welcome-sub { font-size: 0.88rem; color: #475569; margin-bottom: 14px; line-height: 1.5; }
+
+  .niveau-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .niveau-btn {
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #F8FAFC;
+  }
+  .niveau-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .niveau-btn.selected { border-width: 3px; }
+  .niveau-btn.n1 { border-color: #16A34A; }
+  .niveau-btn.n1.selected { background: #DCFCE7; }
+  .niveau-btn.n2 { border-color: #2563EB; }
+  .niveau-btn.n2.selected { background: #DBEAFE; }
+  .niveau-btn.n3 { border-color: #F97316; }
+  .niveau-btn.n3.selected { background: #FFF7ED; }
+  .niveau-btn.n4 { border-color: #DC2626; }
+  .niveau-btn.n4.selected { background: #FEE2E2; }
+  .niv-icon { font-size: 1.5rem; margin-bottom: 4px; }
+  .niv-titre { font-family: 'Fredoka One', cursive; font-size: 0.9rem; }
+  .niv-desc { font-size: 0.68rem; color: #64748B; margin-top: 2px; }
+
+  .btn-start {
+    width: 100%;
+    background: linear-gradient(135deg, #059669, #0D9488);
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+  .btn-start:hover { transform: scale(1.02); }
+
+  /* ===== TIMER RING ===== */
+  .timer-zone {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .timer-ring-wrap {
+    position: relative;
+    width: 80px; height: 80px;
+  }
+  .timer-svg { transform: rotate(-90deg); }
+  .timer-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 7; }
+  .timer-arc {
+    fill: none;
+    stroke: #EAB308;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 201;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+  .timer-txt {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #EAB308;
+  }
+
+  /* BARRE SCORE RAPIDE */
+  .quick-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.35);
+    border-radius: 14px;
+    padding: 8px 14px;
+    margin-bottom: 12px;
+  }
+  .qb-item { text-align: center; color: #fff; }
+  .qb-item .qv { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: #EAB308; line-height: 1; }
+  .qb-item .ql { font-size: 0.6rem; text-transform: uppercase; opacity: 0.65; }
+  .streak-badge {
+    background: linear-gradient(135deg, #F97316, #EAB308);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    color: #fff;
+  }
+
+  /* CARTE QUESTION */
+  .question-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.35);
+    overflow: hidden;
+    animation: slideIn 0.35s ease;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #0D1117, #1A1035);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .q-num {
+    background: #059669;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .q-badge.div  { background: #DCFCE7; color: #14532D; }
+  .q-badge.frac { background: #DBEAFE; color: #1E3A8A; }
+  .q-badge.mix  { background: #FFF7ED; color: #7C2D12; }
+
+  /* OPÉRATION CENTRALE */
+  .operation-zone {
+    padding: 20px 16px 14px;
+    text-align: center;
+    background: linear-gradient(180deg, #F8FAFC, #fff);
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .operation-main {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #0D1117;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .fraction-display {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+  .frac-num { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #0D1117; line-height: 1; }
+  .frac-bar { width: 100%; height: 3px; background: #0D1117; margin: 2px 0; border-radius: 2px; }
+  .frac-den { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #0D1117; line-height: 1; }
+  .operation-context {
+    font-size: 0.82rem;
+    color: #64748B;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  /* OPTIONS */
+  .options {
+    padding: 12px 14px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .opt-btn {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 13px 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #0D1117;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    min-height: 56px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .opt-btn:hover:not(:disabled) { background: #ECFDF5; border-color: #059669; transform: translateY(-2px); }
+  .opt-btn.correct { background: #DCFCE7; border-color: #16A34A; color: #14532D; animation: bounce 0.3s ease; }
+  .opt-btn.wrong   { background: #FEE2E2; border-color: #DC2626; color: #7F1D1D; animation: shake 0.3s ease; }
+  .opt-btn.timeout { background: #FEF3C7; border-color: #D97706; color: #78350F; }
+  .opt-btn:disabled { cursor: default; }
+
+  @keyframes bounce {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.05); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-5px); }
+    75%      { transform: translateX(5px); }
+  }
+
+  /* FEEDBACK */
+  .feedback {
+    margin: 0 14px 12px;
+    border-radius: 12px;
+    padding: 9px 13px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: none;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn {
+    from { opacity:0; transform:scale(0.95); }
+    to   { opacity:1; transform:scale(1); }
+  }
+  .feedback.correct { background: #DCFCE7; color: #14532D; border-left: 4px solid #16A34A; display: block; }
+  .feedback.wrong   { background: #FEE2E2; color: #7F1D1D; border-left: 4px solid #DC2626; display: block; }
+  .feedback.timeout { background: #FEF3C7; color: #78350F; border-left: 4px solid #D97706; display: block; }
+  .feedback-expl { font-weight: 400; font-size: 0.76rem; margin-top: 3px; line-height: 1.4; }
+
+  /* NEXT AUTO */
+  .next-bar-wrap {
+    margin: 0 14px 12px;
+    background: #F1F5F9;
+    border-radius: 8px;
+    height: 6px;
+    overflow: hidden;
+    display: none;
+  }
+  .next-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #059669, #EAB308);
+    border-radius: 8px;
+    width: 100%;
+    transition: width 2s linear;
+  }
+  .btn-next {
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    background: linear-gradient(135deg, #059669, #0D9488);
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); }
+
+  /* ===== RÉSULTAT ===== */
+  .result-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    animation: slideIn 0.4s ease;
+  }
+  .result-icon { font-size: 4rem; margin-bottom: 8px; }
+  .result-score-big { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #059669; line-height: 1; }
+  .result-total { font-size: 1rem; color: #64748B; margin-bottom: 8px; }
+  .stars { font-size: 1.8rem; margin-bottom: 10px; letter-spacing: 4px; }
+  .result-msg { font-size: 1rem; font-weight: 700; color: #0D1117; margin-bottom: 4px; }
+  .result-sub { font-size: 0.82rem; color: #64748B; margin-bottom: 16px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat-box { background: #F8FAFC; border-radius: 12px; padding: 10px 6px; }
+  .stat-box .sv { font-family: 'Fredoka One', cursive; font-size: 1.4rem; }
+  .stat-box .sl { font-size: 0.65rem; color: #64748B; text-transform: uppercase; }
+  .stat-box.s-score .sv { color: #059669; }
+  .stat-box.s-streak .sv { color: #F97316; }
+  .stat-box.s-time .sv { color: #2563EB; }
+
+  .perf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .perf-box {
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: left;
+  }
+  .perf-label { font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 4px; }
+  .perf-bar-track { background: #E2E8F0; border-radius: 10px; height: 8px; overflow: hidden; }
+  .perf-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+  .perf-bar-fill.div-bar  { background: linear-gradient(90deg, #16A34A, #059669); }
+  .perf-bar-fill.frac-bar { background: linear-gradient(90deg, #2563EB, #0D9488); }
+  .perf-val { font-size: 0.78rem; font-weight: 700; color: #0D1117; margin-top: 3px; }
+
+  .btn-retry {
+    width: 100%;
+    background: linear-gradient(135deg, #059669, #0D9488);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .btn-retry:hover { transform: scale(1.02); }
+
+  .footer-brand { text-align: center; color: rgba(255,255,255,0.3); font-size: 0.65rem; padding: 10px; text-transform: uppercase; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">EDUKING <span>229</span></div>
+  <div class="subject-tag">➗ Maths CM1</div>
+</div>
+
+<!-- ACCUEIL -->
+<div id="screen-welcome" class="screen active">
+  <div class="main">
+    <div class="welcome-card">
+      <div class="welcome-icon">⚡</div>
+      <div class="welcome-title">Course aux Calculs</div>
+      <div class="welcome-sub">Réponds le plus vite possible ! Chaque seconde compte. Plus tu es rapide, plus tu gagnes de points bonus !</div>
+
+      <div style="font-size:0.8rem;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Choisir le niveau</div>
+      <div class="niveau-grid">
+        <div class="niveau-btn n1 selected" id="niv1" onclick="selectNiveau(1)">
+          <div class="niv-icon">🟢</div>
+          <div class="niv-titre" style="color:#16A34A;">Facile</div>
+          <div class="niv-desc">30 sec / question</div>
+        </div>
+        <div class="niveau-btn n2" id="niv2" onclick="selectNiveau(2)">
+          <div class="niv-icon">🔵</div>
+          <div class="niv-titre" style="color:#2563EB;">Moyen</div>
+          <div class="niv-desc">20 sec / question</div>
+        </div>
+        <div class="niveau-btn n3" id="niv3" onclick="selectNiveau(3)">
+          <div class="niv-icon">🟠</div>
+          <div class="niv-titre" style="color:#F97316;">Difficile</div>
+          <div class="niv-desc">15 sec / question</div>
+        </div>
+        <div class="niveau-btn n4" id="niv4" onclick="selectNiveau(4)">
+          <div class="niv-icon">🔴</div>
+          <div class="niv-titre" style="color:#DC2626;">Expert</div>
+          <div class="niv-desc">10 sec / question</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startGame()">⚡ DÉMARRER LA COURSE</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Maths CM1 — Division & Fractions</div>
+</div>
+
+<!-- JEU -->
+<div id="screen-game" class="screen">
+  <div class="main">
+    <div class="timer-zone">
+      <div class="timer-ring-wrap">
+        <svg class="timer-svg" width="80" height="80" viewBox="0 0 80 80">
+          <circle class="timer-bg" cx="40" cy="40" r="32"/>
+          <circle class="timer-arc" id="timer-arc" cx="40" cy="40" r="32"/>
+        </svg>
+        <div class="timer-txt" id="timer-txt">30</div>
+      </div>
+    </div>
+
+    <div class="quick-bar">
+      <div class="qb-item"><div class="qv" id="qb-score">0</div><div class="ql">Score</div></div>
+      <div class="streak-badge" id="streak-badge">🔥 0</div>
+      <div class="qb-item"><div class="qv" id="qb-prog">1/12</div><div class="ql">Question</div></div>
+    </div>
+
+    <div class="question-card" id="qcard">
+      <div class="card-header">
+        <div class="q-num" id="q-num">1</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:#EAB308;" id="q-title">Division</span>
+            <span class="q-badge div" id="q-badge">÷</span>
+          </div>
+          <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);">Réponds avant la fin du temps !</div>
+        </div>
+      </div>
+
+      <div class="operation-zone">
+        <div class="operation-main" id="operation-main"></div>
+        <div class="operation-context" id="operation-context"></div>
+      </div>
+
+      <div class="options" id="options-zone"></div>
+      <div class="feedback" id="feedback-zone"></div>
+      <div class="next-bar-wrap" id="next-bar-wrap"><div class="next-bar" id="next-bar"></div></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RÉSULTAT -->
+<div id="screen-result" class="screen">
+  <div class="main">
+    <div class="result-card">
+      <div class="result-icon" id="res-icon">🏆</div>
+      <div class="result-score-big" id="res-score">0</div>
+      <div class="result-total">points sur 20</div>
+      <div class="stars" id="res-stars">⭐⭐⭐</div>
+      <div class="result-msg" id="res-msg">Excellent !</div>
+      <div class="result-sub" id="res-sub"></div>
+
+      <div class="stats-grid">
+        <div class="stat-box s-score"><div class="sv" id="st-score">0</div><div class="sl">Pts bruts</div></div>
+        <div class="stat-box s-streak"><div class="sv" id="st-streak">0</div><div class="sl">Meilleure série</div></div>
+        <div class="stat-box s-time"><div class="sv" id="st-time">0s</div><div class="sl">Tps moyen</div></div>
+      </div>
+
+      <div class="perf-grid">
+        <div class="perf-box">
+          <div class="perf-label">➗ Divisions</div>
+          <div class="perf-bar-track"><div class="perf-bar-fill div-bar" id="bar-div" style="width:0%"></div></div>
+          <div class="perf-val" id="val-div">0/0</div>
+        </div>
+        <div class="perf-box">
+          <div class="perf-label">⅔ Fractions</div>
+          <div class="perf-bar-track"><div class="perf-bar-fill frac-bar" id="bar-frac" style="width:0%"></div></div>
+          <div class="perf-val" id="val-frac">0/0</div>
+        </div>
+      </div>
+
+      <button class="btn-retry" onclick="goWelcome()">🔄 Rejouer</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Maths CM1 — Division & Fractions</div>
+</div>
+
+<script>
+var NIVEAUX = { 1: 30, 2: 20, 3: 15, 4: 10 };
+var selectedNiveau = 1;
+
+var questions = [
+  // ===== DIVISIONS =====
+  { type:"div", titre:"Division", badge:"div", symbole:"÷",
+    op:"56 ÷ 7 = ?", context:"Kofi partage 56 billes équitablement entre 7 amis.",
+    options:["7","8","9","6"], reponse:"8",
+    explication:"56 ÷ 7 = 8. Table de 7 : 7×8=56. Chaque ami reçoit 8 billes." },
+
+  { type:"div", titre:"Division", badge:"div", symbole:"÷",
+    op:"84 ÷ 4 = ?", context:"84 mangues réparties dans 4 paniers égaux.",
+    options:["20","21","22","18"], reponse:"21",
+    explication:"84 ÷ 4 = 21. On pose : 8÷4=2, puis 4÷4=1. Résultat : 21." },
+
+  { type:"div", titre:"Division", badge:"div", symbole:"÷",
+    op:"135 ÷ 5 = ?", context:"Mensah parcourt 135 km en 5 jours, à la même distance chaque jour.",
+    options:["25","27","30","23"], reponse:"27",
+    explication:"135 ÷ 5 = 27. On pose : 13÷5=2 reste 3, puis 35÷5=7. Résultat : 27." },
+
+  { type:"div", titre:"Division", badge:"div", symbole:"÷",
+    op:"288 ÷ 9 = ?", context:"288 élèves répartis en 9 classes égales à l'école de Natitingou.",
+    options:["30","32","34","36"], reponse:"32",
+    explication:"288 ÷ 9 = 32. On vérifie : 9×32 = 9×30 + 9×2 = 270+18 = 288. ✓" },
+
+  { type:"div", titre:"Division avec reste", badge:"div", symbole:"÷",
+    op:"47 ÷ 6 = ? reste ?", context:"47 crayons partagés en groupes de 6.",
+    options:["7 reste 4","7 reste 5","8 reste 1","6 reste 11"], reponse:"7 reste 5",
+    explication:"47 ÷ 6 = 7 reste 5. Car 6×7=42 et 47-42=5. Vérif : 6×7+5=47. ✓" },
+
+  { type:"div", titre:"Division avec reste", badge:"div", symbole:"÷",
+    op:"100 ÷ 7 = ? reste ?", context:"100 F divisés le plus équitablement possible entre 7 élèves.",
+    options:["13 reste 1","14 reste 2","13 reste 2","15 reste 5"], reponse:"14 reste 2",
+    explication:"100 ÷ 7 = 14 reste 2. Car 7×14=98 et 100-98=2. ✓" },
+
+  // ===== FRACTIONS =====
+  { type:"frac", titre:"Fraction", badge:"frac", symbole:"½",
+    op:"½ de 24 = ?", context:"Adjoua mange la moitié de ses 24 beignets.",
+    options:["10","12","14","8"], reponse:"12",
+    explication:"½ de 24 = 24÷2 = 12. La moitié c'est diviser par 2." },
+
+  { type:"frac", titre:"Fraction", badge:"frac", symbole:"⅓",
+    op:"⅓ de 36 = ?", context:"Dossa donne le tiers de ses 36 noix de coco à sa sœur.",
+    options:["9","12","13","18"], reponse:"12",
+    explication:"⅓ de 36 = 36÷3 = 12. Le tiers c'est diviser par 3." },
+
+  { type:"frac", titre:"Fraction", badge:"frac", symbole:"¾",
+    op:"¾ de 40 = ?", context:"Un taxi fait les ¾ de son trajet. Son trajet total est de 40 km.",
+    options:["25","30","35","20"], reponse:"30",
+    explication:"¾ de 40 = (40÷4)×3 = 10×3 = 30. On divise par 4 puis on multiplie par 3." },
+
+  { type:"frac", titre:"Fractions égales", badge:"frac", symbole:"=",
+    op:"2/4 = ?/2", context:"Complète la fraction équivalente.",
+    options:["1","2","3","4"], reponse:"1",
+    explication:"2/4 = 1/2. En simplifiant : 2÷2=1 et 4÷2=2. Les deux fractions sont équivalentes." },
+
+  { type:"frac", titre:"Fraction", badge:"frac", symbole:"⅖",
+    op:"⅖ de 50 = ?", context:"L'école reçoit 50 livres. Les ⅖ sont des livres de Maths.",
+    options:["10","15","20","25"], reponse:"20",
+    explication:"⅖ de 50 = (50÷5)×2 = 10×2 = 20. On divise par 5 puis multiplie par 2." },
+
+  { type:"frac", titre:"Comparaison", badge:"frac", symbole:"<>",
+    op:"¼ de 60 = ?", context:"Un marchand vend le quart de son stock de 60 pagnes.",
+    options:["12","15","18","20"], reponse:"15",
+    explication:"¼ de 60 = 60÷4 = 15. Le quart c'est diviser par 4." }
+];
+
+// ÉTAT
+var state = {
+  qIndex:0, score:0, correct:0,
+  shuffled:[], answered:false,
+  timer:null, timeLeft:30, maxTime:30,
+  streak:0, bestStreak:0,
+  totalTime:0,
+  stats:{ div:{ok:0,total:0}, frac:{ok:0,total:0} }
+};
+
+function selectNiveau(n) {
+  selectedNiveau = n;
+  for (var i=1;i<=4;i++) {
+    var el = document.getElementById('niv'+i);
+    el.className = 'niveau-btn n'+i + (i===n?' selected':'');
+  }
+}
+
+function shuffle(arr) {
+  var a=arr.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+function show(id) {
+  var sc=document.querySelectorAll('.screen');
+  for(var i=0;i<sc.length;i++) sc[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+function goWelcome() { show('screen-welcome'); }
+
+function startGame() {
+  state.qIndex=0; state.score=0; state.correct=0;
+  state.streak=0; state.bestStreak=0; state.totalTime=0;
+  state.stats={ div:{ok:0,total:0}, frac:{ok:0,total:0} };
+  state.shuffled = shuffle(questions);
+  state.maxTime = NIVEAUX[selectedNiveau];
+  show('screen-game');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  state.answered = false;
+  var q = state.shuffled[state.qIndex];
+  var total = state.shuffled.length;
+
+  // Header
+  document.getElementById('q-num').textContent = state.qIndex+1;
+  document.getElementById('q-title').textContent = q.titre;
+  var badge = document.getElementById('q-badge');
+  badge.textContent = q.symbole;
+  badge.className = 'q-badge ' + q.badge;
+
+  // Opération
+  document.getElementById('operation-main').textContent = q.op;
+  document.getElementById('operation-context').textContent = q.context;
+
+  // Score bar
+  document.getElementById('qb-score').textContent = state.score;
+  document.getElementById('qb-prog').textContent = (state.qIndex+1)+'/'+total;
+  document.getElementById('streak-badge').textContent = '🔥 '+state.streak;
+
+  // Options
+  var opts = shuffle(q.options);
+  var zone = document.getElementById('options-zone');
+  zone.innerHTML='';
+  for(var i=0;i<opts.length;i++){
+    (function(opt){
+      var btn=document.createElement('button');
+      btn.className='opt-btn';
+      btn.textContent=opt;
+      btn.onclick=function(){ answer(opt); };
+      zone.appendChild(btn);
+    })(opts[i]);
+  }
+
+  // Feedback + next
+  var fb=document.getElementById('feedback-zone');
+  fb.className='feedback'; fb.innerHTML='';
+  document.getElementById('btn-next').style.display='none';
+  document.getElementById('next-bar-wrap').style.display='none';
+
+  // Animation card
+  var card=document.getElementById('qcard');
+  card.style.animation='none'; card.offsetHeight;
+  card.style.animation='slideIn 0.35s ease';
+
+  // Timer
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(state.timer);
+  state.timeLeft = state.maxTime;
+  updateTimerUI(state.timeLeft, state.maxTime);
+
+  state.timer = setInterval(function(){
+    state.timeLeft--;
+    updateTimerUI(state.timeLeft, state.maxTime);
+    if(state.timeLeft <= 0) {
+      clearInterval(state.timer);
+      timeout();
+    }
+  }, 1000);
+}
+
+function updateTimerUI(left, max) {
+  var arc = document.getElementById('timer-arc');
+  var txt = document.getElementById('timer-txt');
+  var pct = left / max;
+  var circ = 201;
+  arc.style.strokeDashoffset = circ - (circ * pct);
+  txt.textContent = left;
+  // Couleur urgence
+  if (pct > 0.5) { arc.style.stroke = '#EAB308'; txt.style.color = '#EAB308'; }
+  else if (pct > 0.25) { arc.style.stroke = '#F97316'; txt.style.color = '#F97316'; }
+  else { arc.style.stroke = '#DC2626'; txt.style.color = '#DC2626'; }
+}
+
+function timeout() {
+  if(state.answered) return;
+  state.answered = true;
+  state.streak = 0;
+  document.getElementById('streak-badge').textContent = '🔥 0';
+
+  var q = state.shuffled[state.qIndex];
+  state.stats[q.type].total++;
+  state.totalTime += state.maxTime;
+
+  // Révéler bonne réponse
+  var btns=document.getElementById('options-zone').querySelectorAll('.opt-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=true;
+    if(btns[i].textContent===q.reponse) btns[i].className='opt-btn correct';
+  }
+
+  var fb=document.getElementById('feedback-zone');
+  fb.className='feedback timeout';
+  fb.innerHTML='⏰ Temps écoulé !' +
+    '<div class="feedback-expl">Réponse : <strong>'+q.reponse+'</strong>. '+q.explication+'</div>';
+
+  showNextControls();
+}
+
+function answer(chosen) {
+  if(state.answered) return;
+  state.answered=true;
+  clearInterval(state.timer);
+
+  var q = state.shuffled[state.qIndex];
+  var timeUsed = state.maxTime - state.timeLeft;
+  state.totalTime += timeUsed;
+  state.stats[q.type].total++;
+
+  var correct = (chosen === q.reponse);
+  var pts = 0;
+
+  if(correct) {
+    // Points de base + bonus vitesse
+    pts = 2;
+    if(timeUsed <= Math.floor(state.maxTime*0.33)) pts += 3; // rapide
+    else if(timeUsed <= Math.floor(state.maxTime*0.66)) pts += 1; // moyen
+    state.score += pts;
+    state.correct++;
+    state.streak++;
+    if(state.streak > state.bestStreak) state.bestStreak = state.streak;
+    // Bonus série
+    if(state.streak >= 3) { state.score += 1; pts += 1; }
+    state.stats[q.type].ok++;
+  } else {
+    state.streak = 0;
+  }
+
+  document.getElementById('qb-score').textContent = state.score;
+  document.getElementById('streak-badge').textContent = '🔥 '+state.streak;
+
+  var btns=document.getElementById('options-zone').querySelectorAll('.opt-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].disabled=true;
+    if(btns[i].textContent===q.reponse) btns[i].className='opt-btn correct';
+    else if(btns[i].textContent===chosen && !correct) btns[i].className='opt-btn wrong';
+  }
+
+  var fb=document.getElementById('feedback-zone');
+  if(correct){
+    var rapide = timeUsed <= Math.floor(state.maxTime*0.33);
+    fb.className='feedback correct';
+    fb.innerHTML='<span>✅</span> +'+pts+' pt'+(pts>1?'s':'')+
+      (rapide?' ⚡ Rapide !':'')+(state.streak>=3?' 🔥 Série x'+state.streak+' !':'')+
+      '<div class="feedback-expl">'+q.explication+'</div>';
+  } else {
+    fb.className='feedback wrong';
+    fb.innerHTML='<span>❌</span> Réponse : <strong>'+q.reponse+'</strong>'+
+      '<div class="feedback-expl">'+q.explication+'</div>';
+  }
+
+  showNextControls();
+}
+
+function showNextControls() {
+  var nb=document.getElementById('btn-next');
+  var nbw=document.getElementById('next-bar-wrap');
+  var isLast=(state.qIndex>=state.shuffled.length-1);
+  nb.style.display='block';
+  nb.textContent=isLast?'🏁 Résultats':'Suivant →';
+  nbw.style.display='block';
+  // Barre de progression vers auto-avance
+  var bar=document.getElementById('next-bar');
+  bar.style.width='100%';
+  setTimeout(function(){ bar.style.width='0%'; },50);
+  // Auto-avance après 2.5s
+  state.autoNext = setTimeout(function(){
+    if(state.answered) nextQuestion();
+  }, 2500);
+}
+
+function nextQuestion() {
+  clearTimeout(state.autoNext);
+  state.qIndex++;
+  if(state.qIndex>=state.shuffled.length) showResult();
+  else loadQuestion();
+}
+
+function showResult() {
+  var total=state.shuffled.length;
+  var pct=Math.round((state.correct/total)*100);
+  var note=Math.min(20,Math.round((state.score/(total*5))*20));
+  var avgTime=state.totalTime>0?Math.round(state.totalTime/total):0;
+
+  document.getElementById('res-score').textContent=note;
+  document.getElementById('st-score').textContent=state.score;
+  document.getElementById('st-streak').textContent=state.bestStreak;
+  document.getElementById('st-time').textContent=avgTime+'s';
+
+  // Stats par type
+  var dOk=state.stats.div.ok, dTot=state.stats.div.total;
+  var fOk=state.stats.frac.ok, fTot=state.stats.frac.total;
+  document.getElementById('val-div').textContent=dOk+'/'+dTot;
+  document.getElementById('val-frac').textContent=fOk+'/'+fTot;
+  setTimeout(function(){
+    document.getElementById('bar-div').style.width=(dTot>0?Math.round(dOk/dTot*100):0)+'%';
+    document.getElementById('bar-frac').style.width=(fTot>0?Math.round(fOk/fTot*100):0)+'%';
+  },300);
+
+  var icon,stars,msg,sub;
+  if(pct>=80){icon='🏆';stars='⭐⭐⭐';msg='Champion du calcul !';sub='Tu es rapide ET précis. Excellent travail !';}
+  else if(pct>=60){icon='😊';stars='⭐⭐';msg='Bon résultat !';sub='Continue à t'entraîner sur les fractions et la division posée.';}
+  else if(pct>=40){icon='📚';stars='⭐';msg='Peut mieux faire.';sub='Revois la technique de division posée et la notion de fraction.';}
+  else{icon='💪';stars='—';msg='Courage !';sub='Relis ta leçon et entraîne-toi d'abord sur les tables avant de rejouer.';}
+
+  document.getElementById('res-icon').textContent=icon;
+  document.getElementById('res-stars').textContent=stars;
+  document.getElementById('res-msg').textContent=msg;
+  document.getElementById('res-sub').textContent=sub;
+  show('screen-result');
+}
+</script>
+</body>
+</html>

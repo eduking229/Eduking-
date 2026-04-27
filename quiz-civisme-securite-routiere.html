@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code de la Route Junior — Civisme SA3 | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --rouge: #DC2626;
+    --orange: #F97316;
+    --vert: #16A34A;
+    --jaune: #FACC15;
+    --bleu: #1D4ED8;
+    --dark: #0F172A;
+    --card: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #0F172A 0%, #1D4ED8 50%, #0F172A 100%);
+    min-height: 100vh;
+    color: #0F172A;
+    overflow-x: hidden;
+  }
+
+  /* Petits ronds décoratifs en fond */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(250,204,21,0.07);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(220,38,38,0.07);
+    pointer-events: none;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(0,0,0,0.35);
+    border-bottom: 2px solid rgba(250,204,21,0.3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Fredoka One', cursive;
+    color: #FACC15;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+  .logo span { color: #F97316; }
+  .subject-tag {
+    background: #DC2626;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(0,0,0,0.25);
+    padding: 8px 16px;
+    gap: 8px;
+  }
+  .score-item { text-align: center; color: #fff; }
+  .score-item .val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FACC15;
+    line-height: 1;
+  }
+  .score-item .lbl {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.75;
+  }
+  .progress-wrap { flex: 1; max-width: 160px; }
+  .progress-track {
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #DC2626, #FACC15, #16A34A);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-txt {
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.65);
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  /* MAIN */
+  .main {
+    padding: 14px 12px 80px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* PANNEAU VISUEL */
+  .panneau-zone {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .panneau-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    font-size: 2.4rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border: 4px solid rgba(255,255,255,0.2);
+  }
+  .panneau-svg.rouge  { background: #DC2626; }
+  .panneau-svg.orange { background: #F97316; }
+  .panneau-svg.vert   { background: #16A34A; }
+  .panneau-svg.bleu   { background: #1D4ED8; }
+  .panneau-svg.jaune  { background: #FACC15; }
+  .panneau-svg.blanc  { background: #fff; border: 4px solid #DC2626; }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+    overflow: hidden;
+    margin-bottom: 14px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #0F172A, #1D4ED8);
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .question-num {
+    background: #DC2626;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .question-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #FACC15;
+  }
+  .question-sub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* INDICES */
+  .indices {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .indice-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .indice-icon {
+    background: #DC2626;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .indice-text {
+    font-size: 0.88rem;
+    color: #0F172A;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .indice-locked {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ccc;
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  /* HINT */
+  .hint-wrap { padding: 6px 16px 10px; text-align: center; }
+  .btn-hint {
+    background: none;
+    border: 1.5px dashed #DC2626;
+    color: #DC2626;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-hint:hover { background: #fff5f5; }
+  .btn-hint:disabled { opacity: 0.3; cursor: default; }
+
+  /* OPTIONS */
+  .options {
+    padding: 10px 14px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .opt-btn {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0F172A;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1.3;
+  }
+  .opt-btn:hover:not(:disabled) {
+    background: #EFF6FF;
+    border-color: #1D4ED8;
+    transform: translateY(-1px);
+  }
+  .opt-btn.correct { background: #DCFCE7; border-color: #16A34A; color: #14532D; }
+  .opt-btn.wrong   { background: #FEE2E2; border-color: #DC2626; color: #7F1D1D; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin: 0 14px 14px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: none;
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .feedback.correct { background: #DCFCE7; color: #14532D; border-left: 4px solid #16A34A; display: block; }
+  .feedback.wrong   { background: #FEE2E2; color: #7F1D1D; border-left: 4px solid #DC2626; display: block; }
+  .feedback-emoji { font-size: 1.2rem; margin-right: 6px; }
+  .feedback-expl { font-weight: 400; font-size: 0.78rem; margin-top: 4px; opacity: 0.85; }
+
+  /* NEXT */
+  .btn-next {
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    background: linear-gradient(135deg, #DC2626, #F97316);
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); }
+
+  /* ÉCRANS */
+  .screen { display: none; animation: slideIn 0.4s ease; }
+  .screen.active { display: block; }
+
+  /* ACCUEIL */
+  .welcome-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+  }
+  .welcome-icon { font-size: 3.5rem; margin-bottom: 8px; }
+  .welcome-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.55rem;
+    color: #0F172A;
+    margin-bottom: 6px;
+  }
+  .welcome-sub {
+    font-size: 0.88rem;
+    color: #475569;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .panneaux-preview {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .prev-panneau {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    border: 3px solid rgba(255,255,255,0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .welcome-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .info-box {
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .info-box .ib-val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: #DC2626;
+  }
+  .info-box .ib-lbl {
+    font-size: 0.65rem;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .btn-start {
+    width: 100%;
+    background: linear-gradient(135deg, #DC2626, #1D4ED8);
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #FACC15;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+  .btn-start:hover { transform: scale(1.02); }
+
+  /* RÉSULTAT */
+  .result-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+  }
+  .result-icon { font-size: 4rem; margin-bottom: 8px; }
+  .result-score-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: #DC2626;
+    line-height: 1;
+  }
+  .result-total { font-size: 1rem; color: #64748B; margin-bottom: 10px; }
+  .result-msg { font-size: 1rem; font-weight: 700; color: #0F172A; margin-bottom: 6px; }
+  .result-sub { font-size: 0.82rem; color: #64748B; margin-bottom: 20px; }
+  .stars { font-size: 1.8rem; margin-bottom: 14px; letter-spacing: 4px; }
+  .result-bar-wrap {
+    background: #F1F5F9;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+  .result-bar-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-bottom: 6px;
+  }
+  .result-bar-track { background: #E2E8F0; border-radius: 10px; height: 10px; overflow: hidden; }
+  .result-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; }
+
+  .conseil-box {
+    background: #FFF7ED;
+    border: 1.5px solid #F97316;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    color: #7C2D12;
+    text-align: left;
+  }
+  .conseil-title {
+    font-weight: 800;
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+  }
+
+  .btn-retry {
+    width: 100%;
+    background: linear-gradient(135deg, #DC2626, #F97316);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+    margin-bottom: 8px;
+  }
+  .btn-retry:hover { transform: scale(1.02); }
+
+  .footer-brand {
+    text-align: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 0.65rem;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">EDUKING <span>229</span></div>
+  <div class="subject-tag">🚦 Civisme SA3</div>
+</div>
+
+<!-- ACCUEIL -->
+<div id="screen-welcome" class="screen active">
+  <div class="main">
+    <div class="welcome-card">
+      <div class="welcome-icon">🚦</div>
+      <div class="welcome-title">Code de la Route Junior</div>
+      <div class="welcome-sub">Apprends les règles de sécurité routière en jouant ! Chaque bonne réponse te rend plus prudent sur la route.</div>
+      <div class="panneaux-preview">
+        <div class="prev-panneau" style="background:#DC2626;">🛑</div>
+        <div class="prev-panneau" style="background:#FACC15; border-color:#999;">⚠️</div>
+        <div class="prev-panneau" style="background:#16A34A;">✅</div>
+        <div class="prev-panneau" style="background:#1D4ED8;">🚶</div>
+        <div class="prev-panneau" style="background:#F97316;">🚸</div>
+      </div>
+      <div class="welcome-info">
+        <div class="info-box">
+          <div class="ib-val">12</div>
+          <div class="ib-lbl">Questions</div>
+        </div>
+        <div class="info-box">
+          <div class="ib-val">3</div>
+          <div class="ib-lbl">Indices max</div>
+        </div>
+        <div class="info-box">
+          <div class="ib-val">20</div>
+          <div class="ib-lbl">Points max</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startGame()">🚗 DÉMARRER LE JEU</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Sécurité Routière — Civisme SA3</div>
+</div>
+
+<!-- JEU -->
+<div id="screen-game" class="screen">
+  <div class="score-bar">
+    <div class="score-item">
+      <div class="val" id="disp-score">0</div>
+      <div class="lbl">Score</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-txt" id="prog-txt">0 / 12</div>
+    </div>
+    <div class="score-item">
+      <div class="val" id="disp-correct">0</div>
+      <div class="lbl">Bonnes rép.</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="panneau-zone" id="panneau-zone"></div>
+
+    <div class="question-card" id="qcard">
+      <div class="card-header">
+        <div class="question-num" id="q-num">1</div>
+        <div>
+          <div class="question-title">🚦 Que signifie ce signe ?</div>
+          <div class="question-sub" id="q-sub">Lis les indices et trouve la bonne réponse</div>
+        </div>
+      </div>
+
+      <div class="indices" id="indices-zone"></div>
+      <div class="hint-wrap">
+        <button class="btn-hint" id="btn-hint" onclick="showNextIndice()">💡 Indice suivant</button>
+      </div>
+
+      <div class="options" id="options-zone"></div>
+      <div class="feedback" id="feedback-zone"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RÉSULTAT -->
+<div id="screen-result" class="screen">
+  <div class="main">
+    <div class="result-card">
+      <div class="result-icon" id="res-icon">🚗</div>
+      <div class="result-score-big" id="res-score">0</div>
+      <div class="result-total">points sur 20</div>
+      <div class="stars" id="res-stars">⭐⭐⭐</div>
+      <div class="result-msg" id="res-msg">Excellent conducteur !</div>
+      <div class="result-sub" id="res-sub"></div>
+
+      <div class="result-bar-wrap">
+        <div class="result-bar-row">
+          <span>Bonnes réponses</span>
+          <span id="res-corr">0/12</span>
+        </div>
+        <div class="result-bar-track">
+          <div class="result-bar-fill" id="res-bar" style="width:0%; background:linear-gradient(90deg,#DC2626,#FACC15,#16A34A)"></div>
+        </div>
+      </div>
+
+      <div class="conseil-box">
+        <div class="conseil-title">🛡️ Rappel sécurité</div>
+        <div id="conseil-txt">Sur la route, la prudence sauve des vies. Respecte toujours les panneaux et les règles du Code de la Route !</div>
+      </div>
+
+      <button class="btn-retry" onclick="startGame()">🔄 Rejouer</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Civisme CM2 — SA3</div>
+</div>
+
+<script>
+var questions = [
+  {
+    panneau: "🛑", couleur: "rouge",
+    categorie: "Panneau",
+    indices: [
+      "Je suis un panneau de couleur rouge en forme d'octogone.",
+      "Quand tu me vois, tu dois t'arrêter complètement avant la ligne.",
+      "Je suis obligatoire à certains carrefours dangereux. Tu ne peux pas passer sans t'arrêter."
+    ],
+    options: ["Cédez le passage", "Stop obligatoire", "Ralentissez", "Sens interdit"],
+    reponse: "Stop obligatoire",
+    explication: "Le panneau STOP (rouge, octogonal) impose un arrêt total. Le conducteur doit s'immobiliser avant la ligne et vérifier que la voie est libre."
+  },
+  {
+    panneau: "⚠️", couleur: "jaune",
+    categorie: "Panneau",
+    indices: [
+      "Je suis un panneau triangulaire à fond jaune avec un bord rouge.",
+      "Je signale un danger ou une situation particulière à venir sur la route.",
+      "Je peux représenter un virage dangereux, une école, des animaux ou un dos d'âne."
+    ],
+    options: ["Interdiction de passer", "Zone scolaire", "Panneau de danger", "Travaux terminés"],
+    reponse: "Panneau de danger",
+    explication: "Les panneaux triangulaires jaunes sont des panneaux de danger. Ils avertissent les usagers d'un risque à venir et invitent à ralentir et à être vigilant."
+  },
+  {
+    panneau: "🚸", couleur: "jaune",
+    categorie: "Situation",
+    indices: [
+      "Ce panneau représente deux silhouettes d'enfants sur fond jaune.",
+      "On le trouve généralement à proximité des écoles primaires.",
+      "Il indique aux conducteurs de ralentir car des enfants peuvent traverser."
+    ],
+    options: ["Parc de jeux", "Zone scolaire — enfants", "Marché proche", "Terrain de sport"],
+    reponse: "Zone scolaire — enfants",
+    explication: "Le panneau zone scolaire avertit les conducteurs de la présence d'enfants. Il faut absolument ralentir et redoubler de vigilance dans ces zones."
+  },
+  {
+    panneau: "🚶", couleur: "bleu",
+    categorie: "Règle",
+    indices: [
+      "Je suis une bande peinte sur la chaussée, alternant blanc et noir.",
+      "Les piétons doivent m'utiliser pour traverser la route en sécurité.",
+      "Les conducteurs sont obligés de s'arrêter et de laisser passer les piétons sur moi."
+    ],
+    options: ["La ligne blanche", "Le passage piéton", "Le trottoir", "L'arrêt de bus"],
+    reponse: "Le passage piéton",
+    explication: "Le passage piéton (zèbre) est l'endroit sécurisé pour traverser. Le piéton a la priorité et le conducteur doit obligatoirement s'arrêter pour le laisser passer."
+  },
+  {
+    panneau: "🪖", couleur: "orange",
+    categorie: "Acteur",
+    indices: [
+      "Je suis un agent de l'État, habillé en uniforme, posté aux carrefours.",
+      "Je règle la circulation à la main et au sifflet quand les feux sont absents ou en panne.",
+      "Mes gestes ont force de loi : tu dois m'obéir même si le feu est vert."
+    ],
+    options: ["Le vigile", "Le gendarme ou policier de la circulation", "Le gardien de l'école", "Le chef de quartier"],
+    reponse: "Le gendarme ou policier de la circulation",
+    explication: "Le gendarme ou policier de la circulation régule le trafic. Ses gestes sont prioritaires sur les feux tricolores. Il faut toujours lui obéir."
+  },
+  {
+    panneau: "🚦", couleur: "vert",
+    categorie: "Règle",
+    indices: [
+      "Je suis un dispositif lumineux à trois couleurs : rouge, orange et vert.",
+      "Le rouge signifie arrêt, l'orange signifie attention et le vert signifie passage autorisé.",
+      "Je règle la circulation aux carrefours pour éviter les accidents."
+    ],
+    options: ["Le panneau stop", "Le feu tricolore", "Le panneau de danger", "Le radar"],
+    reponse: "Le feu tricolore",
+    explication: "Le feu tricolore régule la circulation. Rouge = arrêt obligatoire, Orange = ralentir et se préparer à s'arrêter, Vert = on peut avancer prudemment."
+  },
+  {
+    panneau: "⛔", couleur: "rouge",
+    categorie: "Panneau",
+    indices: [
+      "Je suis un disque rouge avec une barre blanche horizontale au centre.",
+      "Je signifie qu'aucun véhicule ne peut entrer dans cette rue.",
+      "Ignorer ce panneau est une infraction grave qui peut provoquer un accident."
+    ],
+    options: ["Ralentir", "Sens interdit", "Stop", "Parking interdit"],
+    reponse: "Sens interdit",
+    explication: "Le panneau sens interdit interdit l'accès à tous les véhicules. Entrer dans une rue en sens interdit est très dangereux car on va à contresens des autres voitures."
+  },
+  {
+    panneau: "🛤️", couleur: "bleu",
+    categorie: "Règle",
+    indices: [
+      "Je suis un espace réservé aux piétons, séparé de la chaussée.",
+      "Les vélos et motos ne doivent pas circuler sur moi.",
+      "Les enfants doivent toujours m'utiliser pour se déplacer près des routes."
+    ],
+    options: ["La voie rapide", "La piste cyclable", "Le trottoir", "L'accotement"],
+    reponse: "Le trottoir",
+    explication: "Le trottoir est exclusivement réservé aux piétons. Marcher sur le trottoir est la règle de sécurité de base pour tout piéton, notamment les enfants."
+  },
+  {
+    panneau: "🔦", couleur: "orange",
+    categorie: "Situation",
+    indices: [
+      "Je suis une zone marquée sur la route où la vitesse des véhicules est réduite.",
+      "Je suis souvent installé près des écoles, des hôpitaux et des marchés.",
+      "Les conducteurs doivent rouler à 30 km/h maximum dans mon périmètre."
+    ],
+    options: ["Zone de dépassement", "Zone 30 — vitesse réduite", "Zone industrielle", "Zone franche"],
+    reponse: "Zone 30 — vitesse réduite",
+    explication: "Une Zone 30 limite la vitesse à 30 km/h. Ces zones protègent les usagers vulnérables comme les enfants. Un accident à 30 km/h est bien moins mortel qu'à 50 km/h."
+  },
+  {
+    panneau: "🚲", couleur: "vert",
+    categorie: "Règle",
+    indices: [
+      "Je suis un utilisateur de la route sans moteur, souvent un enfant ou un adulte.",
+      "Je dois rouler à droite, respecter les feux et les panneaux comme les voitures.",
+      "Je dois signaler mes changements de direction en tendant le bras."
+    ],
+    options: ["Le motocycliste", "Le cycliste", "Le chauffeur de taxi", "Le piéton"],
+    reponse: "Le cycliste",
+    explication: "Le cycliste doit respecter le Code de la Route comme tout usager. Il doit rouler à droite, utiliser les pistes cyclables quand elles existent, et signaler ses manœuvres."
+  },
+  {
+    panneau: "🌙", couleur: "bleu",
+    categorie: "Situation",
+    indices: [
+      "Cette situation de conduite est plus dangereuse car la visibilité est réduite.",
+      "Les conducteurs doivent allumer leurs phares et rouler moins vite.",
+      "Les piétons doivent porter des vêtements clairs ou réfléchissants pour être vus."
+    ],
+    options: ["Conduire sous la pluie", "Conduire la nuit", "Conduire sur autoroute", "Conduire en ville"],
+    reponse: "Conduire la nuit",
+    explication: "La conduite de nuit est risquée car la visibilité est faible. Le conducteur doit allumer ses phares et les piétons doivent se rendre visibles avec des vêtements clairs."
+  },
+  {
+    panneau: "🏥", couleur: "vert",
+    categorie: "Règle",
+    indices: [
+      "Je suis le comportement à adopter immédiatement après un accident de la route.",
+      "Il faut protéger la zone, alerter les secours et apporter les premiers soins.",
+      "En ville au Bénin, on appelle le 166 (SAMU) ou le 117 (Police) en cas d'urgence."
+    ],
+    options: ["Fuir les lieux", "Les gestes de premiers secours", "Prendre des photos seulement", "Attendre sans agir"],
+    reponse: "Les gestes de premiers secours",
+    explication: "En cas d'accident : PROTÉGER (sécuriser la zone), ALERTER (appeler le 166 ou 117), SECOURIR (apporter les premiers soins). Ne jamais fuir les lieux d'un accident."
+  }
+];
+
+// ÉTAT
+var state = {
+  qIndex: 0,
+  score: 0,
+  correct: 0,
+  indiceShown: 1,
+  answered: false,
+  shuffled: []
+};
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function show(id) {
+  var sc = document.querySelectorAll('.screen');
+  for (var i = 0; i < sc.length; i++) sc[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  state.qIndex = 0;
+  state.score = 0;
+  state.correct = 0;
+  state.shuffled = shuffle(questions);
+  show('screen-game');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  state.indiceShown = 1;
+  state.answered = false;
+
+  var q = state.shuffled[state.qIndex];
+  var total = state.shuffled.length;
+
+  document.getElementById('q-num').textContent = state.qIndex + 1;
+  document.getElementById('q-sub').textContent = q.categorie + ' — Lis les indices et réponds';
+
+  // Panneau visuel
+  var pz = document.getElementById('panneau-zone');
+  pz.innerHTML = '<div class="panneau-svg ' + q.couleur + '">' + q.panneau + '</div>';
+
+  // Progress
+  var pct = Math.round((state.qIndex / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = state.qIndex + ' / ' + total;
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  renderIndices(q);
+
+  // Options
+  var opts = shuffle(q.options);
+  var zone = document.getElementById('options-zone');
+  zone.innerHTML = '';
+  for (var i = 0; i < opts.length; i++) {
+    (function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.onclick = function() { answer(opt); };
+      zone.appendChild(btn);
+    })(opts[i]);
+  }
+
+  var fb = document.getElementById('feedback-zone');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  var nb = document.getElementById('btn-next');
+  nb.style.display = 'none';
+
+  var hb = document.getElementById('btn-hint');
+  hb.disabled = (q.indices.length <= 1);
+  hb.style.display = q.indices.length > 1 ? 'inline-block' : 'none';
+
+  // Animation card
+  var card = document.getElementById('qcard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideIn 0.4s ease';
+}
+
+function renderIndices(q) {
+  var zone = document.getElementById('indices-zone');
+  zone.innerHTML = '';
+  for (var i = 0; i < q.indices.length; i++) {
+    var row = document.createElement('div');
+    if (i < state.indiceShown) {
+      row.className = 'indice-row';
+      row.innerHTML = '<div class="indice-icon">I' + (i+1) + '</div>' +
+                      '<div class="indice-text">' + q.indices[i] + '</div>';
+    } else {
+      row.className = 'indice-locked';
+      row.innerHTML = '<span>🔒</span> Indice ' + (i+1) + ' — non révélé';
+    }
+    zone.appendChild(row);
+  }
+}
+
+function showNextIndice() {
+  var q = state.shuffled[state.qIndex];
+  if (state.indiceShown < q.indices.length) {
+    state.indiceShown++;
+    renderIndices(q);
+  }
+  document.getElementById('btn-hint').disabled = (state.indiceShown >= q.indices.length);
+}
+
+function answer(chosen) {
+  if (state.answered) return;
+  state.answered = true;
+
+  var q = state.shuffled[state.qIndex];
+  var correct = (chosen === q.reponse);
+  var pts = 0;
+
+  if (correct) {
+    if (state.indiceShown === 1) pts = 3;
+    else if (state.indiceShown === 2) pts = 2;
+    else pts = 1;
+    state.score += pts;
+    state.correct++;
+  }
+
+  var btns = document.getElementById('options-zone').querySelectorAll('.opt-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    if (btns[i].textContent === q.reponse) {
+      btns[i].className = 'opt-btn correct';
+    } else if (btns[i].textContent === chosen && !correct) {
+      btns[i].className = 'opt-btn wrong';
+    }
+  }
+
+  var fb = document.getElementById('feedback-zone');
+  if (correct) {
+    fb.className = 'feedback correct';
+    fb.innerHTML = '<span class="feedback-emoji">✅</span> Bien joué ! +' + pts + ' point' + (pts > 1 ? 's' : '') +
+                   '<div class="feedback-expl">' + q.explication + '</div>';
+  } else {
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '<span class="feedback-emoji">❌</span> Pas tout à fait !' +
+                   '<div class="feedback-expl">Bonne réponse : <strong>' + q.reponse + '</strong>. ' + q.explication + '</div>';
+  }
+
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  var nb = document.getElementById('btn-next');
+  nb.style.display = 'block';
+  var isLast = (state.qIndex >= state.shuffled.length - 1);
+  nb.textContent = isLast ? '🏁 Voir mes résultats' : 'Question suivante →';
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= state.shuffled.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  var total = state.shuffled.length;
+  var pct = Math.round((state.correct / total) * 100);
+  var note = Math.round((state.score / (total * 3)) * 20);
+
+  document.getElementById('res-score').textContent = note;
+  document.getElementById('res-corr').textContent = state.correct + '/' + total;
+
+  setTimeout(function() {
+    document.getElementById('res-bar').style.width = pct + '%';
+  }, 300);
+
+  var icon, stars, msg, sub, conseil;
+  if (pct >= 80) {
+    icon = '🏆'; stars = '⭐⭐⭐';
+    msg = 'Excellent usager de la route !';
+    sub = 'Tu connais bien le Code de la Route. Continue à appliquer ces règles chaque jour !';
+    conseil = 'Bravo ! Partage ce quiz avec tes camarades pour les sensibiliser à la sécurité routière.';
+  } else if (pct >= 60) {
+    icon = '🚗'; stars = '⭐⭐';
+    msg = 'Bon résultat !';
+    sub = 'Tu maîtrises les bases. Quelques règles restent à revoir.';
+    conseil = 'Revois les panneaux de signalisation et le rôle des agents de circulation pour progresser.';
+  } else if (pct >= 40) {
+    icon = '⚠️'; stars = '⭐';
+    msg = 'Attention !';
+    sub = 'Tu dois mieux connaître les règles de sécurité pour être en sécurité sur la route.';
+    conseil = 'Relis ta leçon sur la sécurité routière. La connaissance du Code de la Route peut sauver des vies, y compris la tienne !';
+  } else {
+    icon = '🛑'; stars = '—';
+    msg = 'La route est dangereuse !';
+    sub = 'Il faut absolument revoir les règles de sécurité routière.';
+    conseil = 'Ne traverse jamais sans regarder des deux côtés. Utilise toujours le passage piéton et écoute les agents de circulation.';
+  }
+
+  document.getElementById('res-icon').textContent = icon;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-sub').textContent = sub;
+  document.getElementById('conseil-txt').textContent = conseil;
+
+  show('screen-result');
+}
+</script>
+</body>
+</html>

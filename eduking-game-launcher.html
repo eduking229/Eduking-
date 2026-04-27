@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eduking 229 — Jeux Éducatifs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg:#070B14;
+    --surface:rgba(255,255,255,0.05);
+    --border:rgba(255,255,255,0.09);
+    --text:#fff;
+    --muted:rgba(255,255,255,0.45);
+    --gold:#FACC15;
+    --orange:#F97316;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;color:var(--text);}
+
+  /* BG ANIMÉ */
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 10%,rgba(249,115,22,0.10) 0%,transparent 60%),
+      radial-gradient(ellipse 60% 40% at 85% 85%,rgba(250,204,21,0.07) 0%,transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%,rgba(124,58,237,0.05) 0%,transparent 70%);
+  }
+  .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px);
+    background-size:24px 24px;
+  }
+
+  .wrapper{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:0 12px 80px;}
+
+  /* ── HEADER ── */
+  .top-header{
+    background:rgba(0,0,0,0.5);
+    border-bottom:2px solid rgba(250,204,21,0.2);
+    padding:12px 16px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(10px);
+  }
+  .logo{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--gold);letter-spacing:1px;}
+  .logo span{color:var(--orange);}
+  .admin-btn{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:#A78BFA;font-size:.7rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:all .2s;}
+  .admin-btn:hover{background:rgba(124,58,237,0.3);}
+
+  /* ── HERO ── */
+  .hero{text-align:center;padding:22px 0 18px;}
+  .hero-icon{font-size:3rem;display:inline-block;animation:float 4s ease-in-out infinite;margin-bottom:8px;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .hero-title{font-family:'Fredoka One',cursive;font-size:1.8rem;line-height:1.1;margin-bottom:6px;
+    background:linear-gradient(135deg,var(--gold),var(--orange),#A78BFA);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .hero-sub{font-size:.82rem;color:var(--muted);line-height:1.5;}
+
+  /* STATS RAPIDES */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0 22px;}
+  .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;}
+  .stat-box .sv{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--gold);line-height:1;}
+  .stat-box .sl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+  /* ── NAV ONGLETS ── */
+  .tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:2px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:.75rem;font-weight:800;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .tab.active{background:rgba(250,204,21,0.12);border-color:rgba(250,204,21,0.4);color:var(--gold);}
+  .tab:hover:not(.active){color:var(--text);}
+
+  /* ── SECTIONS CATÉGORIES ── */
+  .cat-section{display:none;animation:fadeIn .3s ease;}
+  .cat-section.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  .section-label{font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* ── GAME CARD ── */
+  .games-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+
+  .game-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;text-decoration:none;display:block;transition:all .25s;position:relative;}
+  .game-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4);}
+
+  .game-card::before{content:'';position:absolute;inset:0;border-radius:16px;opacity:0;transition:opacity .25s;}
+  .game-card:hover::before{opacity:1;}
+
+  /* couleurs par matière */
+  .gc-civisme{border-color:rgba(249,115,22,.4);}
+  .gc-civisme::before{background:linear-gradient(135deg,rgba(249,115,22,.07),transparent);}
+  .gc-maths{border-color:rgba(124,58,237,.4);}
+  .gc-maths::before{background:linear-gradient(135deg,rgba(124,58,237,.07),transparent);}
+  .gc-est{border-color:rgba(5,150,105,.4);}
+  .gc-est::before{background:linear-gradient(135deg,rgba(5,150,105,.07),transparent);}
+  .gc-ce2{border-color:rgba(250,204,21,.35);}
+  .gc-ce2::before{background:linear-gradient(135deg,rgba(250,204,21,.06),transparent);}
+
+  .card-stripe{height:3px;}
+  .gc-civisme .card-stripe{background:linear-gradient(90deg,#F97316,#FACC15);}
+  .gc-maths .card-stripe{background:linear-gradient(90deg,#7C3AED,#A78BFA);}
+  .gc-est .card-stripe{background:linear-gradient(90deg,#059669,#34D399);}
+  .gc-ce2 .card-stripe{background:linear-gradient(90deg,#FACC15,#F97316);}
+
+  .card-inner{display:flex;align-items:center;gap:12px;padding:13px 14px;}
+
+  .card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;}
+  .gc-civisme .card-icon{background:linear-gradient(135deg,#F97316,#FACC15);}
+  .gc-maths .card-icon{background:linear-gradient(135deg,#7C3AED,#4C1D95);}
+  .gc-est .card-icon{background:linear-gradient(135deg,#059669,#065F46);}
+  .gc-ce2 .card-icon{background:linear-gradient(135deg,#FACC15,#F97316);}
+
+  .card-info{flex:1;min-width:0;}
+  .card-niveau{font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;opacity:.6;}
+  .card-titre{font-family:'Fredoka One',cursive;font-size:.98rem;color:var(--text);line-height:1.2;margin-bottom:4px;}
+  .card-meta{display:flex;gap:5px;flex-wrap:wrap;}
+  .meta-tag{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:8px;}
+  .mt-format{background:rgba(250,204,21,.12);color:var(--gold);}
+  .mt-nb{background:rgba(255,255,255,.07);color:var(--muted);}
+  .mt-sa{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);}
+
+  .card-arrow{color:var(--muted);font-size:1.2rem;flex-shrink:0;transition:transform .2s,color .2s;}
+  .game-card:hover .card-arrow{color:var(--gold);transform:translateX(4px);}
+
+  /* HUB CARD (plus grande) */
+  .hub-card{background:rgba(250,204,21,0.06);border:1.5px solid rgba(250,204,21,0.25);border-radius:16px;padding:16px;margin-bottom:14px;text-decoration:none;display:block;transition:all .25s;}
+  .hub-card:hover{transform:translateY(-3px);border-color:rgba(250,204,21,0.5);box-shadow:0 8px 30px rgba(250,204,21,0.08);}
+  .hub-inner{display:flex;align-items:center;gap:12px;}
+  .hub-icon{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#7C3AED,#2563EB);display:flex;align-items:center;justify-content:center;font-size:1.7rem;flex-shrink:0;}
+  .hub-info{flex:1;}
+  .hub-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gold);opacity:.8;margin-bottom:2px;}
+  .hub-titre{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--text);margin-bottom:4px;}
+  .hub-desc{font-size:.72rem;color:var(--muted);}
+
+  /* ── ADMIN MODAL ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px);}
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:#0F0F1E;border:1px solid rgba(124,58,237,.4);border-radius:22px;padding:24px 20px;width:100%;max-width:380px;animation:popIn .3s ease;}
+  @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+  .modal-title{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--gold);text-align:center;margin-bottom:4px;}
+  .modal-sub{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:20px;}
+
+  .modal-input{width:100%;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:1rem;color:var(--text);outline:none;letter-spacing:4px;margin-bottom:12px;transition:border .2s;}
+  .modal-input:focus{border-color:rgba(124,58,237,.5);}
+  .modal-error{color:#F87171;font-size:.78rem;text-align:center;margin-bottom:10px;display:none;}
+
+  .btn-modal{width:100%;background:linear-gradient(135deg,#7C3AED,#4C1D95);border:none;border-radius:12px;padding:13px;font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold);cursor:pointer;letter-spacing:1px;transition:transform .2s;margin-bottom:8px;}
+  .btn-modal:hover{transform:scale(1.02);}
+  .btn-modal-cancel{width:100%;background:none;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px;color:var(--muted);font-size:.85rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+
+  /* ── ADMIN PANEL ── */
+  .admin-panel{display:none;}
+  .admin-panel.open{display:block;animation:fadeIn .3s ease;}
+
+  .admin-header{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+  .admin-title{font-family:'Fredoka One',cursive;font-size:1rem;color:#A78BFA;}
+  .btn-logout{background:none;border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;color:var(--muted);font-size:.72rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+
+  .admin-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+  .admin-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+  .admin-stat .asv{font-family:'Fredoka One',cursive;font-size:1.6rem;color:#A78BFA;line-height:1;}
+  .admin-stat .asl{font-size:.65rem;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+
+  .admin-links{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .admin-link{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-decoration:none;transition:all .2s;}
+  .admin-link:hover{border-color:rgba(124,58,237,.4);transform:translateY(-1px);}
+  .admin-link .al-icon{font-size:1.3rem;flex-shrink:0;}
+  .admin-link .al-titre{font-weight:800;font-size:.88rem;color:var(--text);}
+  .admin-link .al-desc{font-size:.7rem;color:var(--muted);}
+  .admin-link .al-arrow{margin-left:auto;color:var(--muted);font-size:1rem;}
+
+  .btn-factory{display:block;width:100%;background:linear-gradient(135deg,#F97316,#FACC15);border:none;border-radius:14px;padding:15px;font-family:'Fredoka One',cursive;font-size:1.05rem;color:#0A0812;cursor:pointer;text-align:center;text-decoration:none;letter-spacing:1px;transition:transform .2s;box-shadow:0 4px 20px rgba(249,115,22,.25);}
+  .btn-factory:hover{transform:translateY(-2px);}
+
+  .footer-brand{text-align:center;color:var(--muted);font-size:.62rem;padding:12px 0;text-transform:uppercase;letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grid"></div>
+
+<!-- ══ MODAL LOGIN ADMIN ══ -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal-box">
+    <div style="text-align:center;font-size:2.5rem;margin-bottom:10px;">⚙️</div>
+    <div class="modal-title">Espace Admin</div>
+    <div class="modal-sub">Accès réservé aux administrateurs Eduking 229</div>
+    <input type="password" class="modal-input" id="pwd-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <div class="modal-error" id="login-error">❌ Mot de passe incorrect</div>
+    <button class="btn-modal" onclick="tryLogin()">🔐 ACCÉDER</button>
+    <button class="btn-modal-cancel" onclick="closeModal()">Annuler</button>
+  </div>
+</div>
+
+<!-- ══ HEADER STICKY ══ -->
+<div class="top-header">
+  <div class="logo">EDUKING <span>229</span></div>
+  <button class="admin-btn" onclick="openModal()">⚙️ Admin</button>
+</div>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-icon">🎮</div>
+    <div class="hero-title">Jeux Éducatifs<br>Eduking 229</div>
+    <div class="hero-sub">Tous les jeux en un seul endroit · Bénin</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="sv">11</div><div class="sl">Jeux</div></div>
+    <div class="stat-box"><div class="sv">200+</div><div class="sl">Questions</div></div>
+    <div class="stat-box"><div class="sv">3</div><div class="sl">Matières</div></div>
+    <div class="stat-box"><div class="sv">CE2<br>CM1</div><div class="sl">Niveaux</div></div>
+  </div>
+
+  <!-- NAV ONGLETS -->
+  <div class="tabs">
+    <div class="tab active" onclick="showCat('tous',this)">🎮 Tous</div>
+    <div class="tab" onclick="showCat('civisme',this)">🏛️ Civisme</div>
+    <div class="tab" onclick="showCat('maths',this)">📐 Maths CM1</div>
+    <div class="tab" onclick="showCat('est',this)">🔬 EST Sciences</div>
+    <div class="tab" onclick="showCat('ce2',this)">🎓 CE2</div>
+  </div>
+
+  <!-- ══ SECTION TOUS ══ -->
+  <div class="cat-section active" id="cat-tous">
+
+    <div class="section-label">🏛️ Civisme</div>
+    <div class="games-list">
+      <a class="game-card gc-civisme" href="https://eduking229.github.io/Eduking-/quiz-civisme-institutions.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🏛️</div>
+          <div class="card-info">
+            <div class="card-niveau">Civisme · CM2</div>
+            <div class="card-titre">Qui suis-je ? — Institutions</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🃏 Devinette</span>
+              <span class="meta-tag mt-nb">10 questions</span>
+              <span class="meta-tag mt-sa">SA1</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-civisme" href="https://eduking229.github.io/Eduking-/quiz-civisme-securite-routiere.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🚦</div>
+          <div class="card-info">
+            <div class="card-niveau">Civisme · CM2</div>
+            <div class="card-titre">Code de la Route Junior</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🚦 Panneaux</span>
+              <span class="meta-tag mt-nb">12 questions</span>
+              <span class="meta-tag mt-sa">SA3</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-label">📐 Maths CM1</div>
+    <a class="hub-card" href="https://eduking229.github.io/Eduking-/maths-cm1-hub.html" target="_blank">
+      <div class="hub-inner">
+        <div class="hub-icon">📐</div>
+        <div class="hub-info">
+          <div class="hub-label">Hub — 4 dossiers</div>
+          <div class="hub-titre">Maths CM1 — Accès groupé</div>
+          <div class="hub-desc">Calcul · Division · Géométrie · Numération · 46 questions</div>
+        </div>
+        <div class="card-arrow" style="color:var(--gold);">›</div>
+      </div>
+    </a>
+    <div class="games-list">
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-calcul.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">➕</div>
+          <div class="card-info">
+            <div class="card-niveau">Maths · CM1 · Dossier 1</div>
+            <div class="card-titre">Calcul — Devinette numérique</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🃏 Devinette</span>
+              <span class="meta-tag mt-nb">12 questions</span>
+              <span class="meta-tag mt-sa">+/−/×</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-division-fractions.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">➗</div>
+          <div class="card-info">
+            <div class="card-niveau">Maths · CM1 · Dossier 2</div>
+            <div class="card-titre">Division & Fractions</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">⚡ Course + Timer</span>
+              <span class="meta-tag mt-nb">12 questions</span>
+              <span class="meta-tag mt-sa">÷ ½ ¾</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-geometrie.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">📐</div>
+          <div class="card-info">
+            <div class="card-niveau">Maths · CM1 · Dossier 3</div>
+            <div class="card-titre">Géométrie — Figures & Mesures</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🎯 Quiz + SVG</span>
+              <span class="meta-tag mt-nb">12 questions</span>
+              <span class="meta-tag mt-sa">Formes · Symétrie</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-numeration.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🔢</div>
+          <div class="card-info">
+            <div class="card-niveau">Maths · CM1 · Dossier 4</div>
+            <div class="card-titre">Numération — Grands nombres</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🃏 Tableau numérique</span>
+              <span class="meta-tag mt-nb">12 questions</span>
+              <span class="meta-tag mt-sa">Ordre · Arrondi</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-label">🔬 EST Sciences</div>
+    <div class="games-list">
+      <a class="game-card gc-est" href="https://eduking229.github.io/Eduking-/est-sciences-hub.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🔬</div>
+          <div class="card-info">
+            <div class="card-niveau">EST · CE2/CM1 · Hub</div>
+            <div class="card-titre">EST Sciences — Hub complet</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🔬 2 jeux</span>
+              <span class="meta-tag mt-nb">31 questions</span>
+              <span class="meta-tag mt-sa">SA2·SA4·SA5·SA7→SA10</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-est" href="https://eduking229.github.io/Eduking-/est-devinette-nature-sciences.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🌿</div>
+          <div class="card-info">
+            <div class="card-niveau">EST · CE2/CM1</div>
+            <div class="card-titre">Devinette — Nature & Sciences</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🃏 Devinette</span>
+              <span class="meta-tag mt-nb">16 questions</span>
+              <span class="meta-tag mt-sa">Eau·Aimants·Thermomètre</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-label">🎓 CE2</div>
+    <div class="games-list">
+      <a class="game-card gc-ce2" href="https://eduking229.github.io/Eduking-/civisme-ce2-droits-devoirs.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon" style="background:linear-gradient(135deg,#5F27CD,#A29BFE);">⚖️</div>
+          <div class="card-info">
+            <div class="card-niveau">Civisme · CE2 · SA1→SA14</div>
+            <div class="card-titre">Droits & Devoirs du Citoyen</div>
+            <div class="card-meta">
+              <span class="meta-tag mt-format">🧠 Quiz + 🔍 Devinette</span>
+              <span class="meta-tag mt-nb">42 questions</span>
+              <span class="meta-tag mt-sa">14 séquences</span>
+            </div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ══ SECTION CIVISME ══ -->
+  <div class="cat-section" id="cat-civisme">
+    <div class="section-label">Civisme CM2</div>
+    <div class="games-list">
+      <a class="game-card gc-civisme" href="https://eduking229.github.io/Eduking-/quiz-civisme-institutions.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🏛️</div>
+          <div class="card-info">
+            <div class="card-niveau">CM2 · SA1</div>
+            <div class="card-titre">Qui suis-je ? — Institutions du Bénin</div>
+            <div class="card-meta"><span class="meta-tag mt-format">🃏 Devinette à indices</span><span class="meta-tag mt-nb">10 questions</span></div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+      <a class="game-card gc-civisme" href="https://eduking229.github.io/Eduking-/quiz-civisme-securite-routiere.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon">🚦</div>
+          <div class="card-info">
+            <div class="card-niveau">CM2 · SA3</div>
+            <div class="card-titre">Code de la Route Junior</div>
+            <div class="card-meta"><span class="meta-tag mt-format">🚦 Panneaux visuels</span><span class="meta-tag mt-nb">12 questions</span></div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+    <div class="section-label">Civisme CE2</div>
+    <div class="games-list">
+      <a class="game-card gc-ce2" href="https://eduking229.github.io/Eduking-/civisme-ce2-droits-devoirs.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner">
+          <div class="card-icon" style="background:linear-gradient(135deg,#5F27CD,#A29BFE);">⚖️</div>
+          <div class="card-info">
+            <div class="card-niveau">CE2 · SA1 à SA14</div>
+            <div class="card-titre">Droits & Devoirs du Citoyen</div>
+            <div class="card-meta"><span class="meta-tag mt-format">🧠 Quiz + 🔍 Devinette</span><span class="meta-tag mt-nb">42 questions</span></div>
+          </div>
+          <div class="card-arrow">›</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ SECTION MATHS ══ -->
+  <div class="cat-section" id="cat-maths">
+    <a class="hub-card" href="https://eduking229.github.io/Eduking-/maths-cm1-hub.html" target="_blank">
+      <div class="hub-inner">
+        <div class="hub-icon">📐</div>
+        <div class="hub-info">
+          <div class="hub-label">Accès groupé — 4 jeux</div>
+          <div class="hub-titre">Maths CM1 — Hub complet</div>
+          <div class="hub-desc">46 questions · 4 dossiers en un seul lien</div>
+        </div>
+        <div class="card-arrow" style="color:var(--gold);">›</div>
+      </div>
+    </a>
+    <div class="games-list">
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-calcul.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">➕</div><div class="card-info"><div class="card-niveau">Dossier 1</div><div class="card-titre">Calcul — +/−/×</div><div class="card-meta"><span class="meta-tag mt-format">🃏 Devinette numérique</span><span class="meta-tag mt-nb">12 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-division-fractions.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">➗</div><div class="card-info"><div class="card-niveau">Dossier 2</div><div class="card-titre">Division & Fractions</div><div class="card-meta"><span class="meta-tag mt-format">⚡ Course + Timer</span><span class="meta-tag mt-nb">12 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-geometrie.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">📐</div><div class="card-info"><div class="card-niveau">Dossier 3</div><div class="card-titre">Géométrie — Figures & Mesures</div><div class="card-meta"><span class="meta-tag mt-format">🎯 Quiz + SVG</span><span class="meta-tag mt-nb">12 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-maths" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-numeration.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">🔢</div><div class="card-info"><div class="card-niveau">Dossier 4</div><div class="card-titre">Numération — Grands nombres</div><div class="card-meta"><span class="meta-tag mt-format">🃏 Tableau numérique</span><span class="meta-tag mt-nb">12 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ SECTION EST ══ -->
+  <div class="cat-section" id="cat-est">
+    <div class="games-list">
+      <a class="game-card gc-est" href="https://eduking229.github.io/Eduking-/est-sciences-hub.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">🔬</div><div class="card-info"><div class="card-niveau">EST · Hub CE2/CM1</div><div class="card-titre">EST Sciences — Hub complet</div><div class="card-meta"><span class="meta-tag mt-format">2 jeux groupés</span><span class="meta-tag mt-nb">31 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-est" href="https://eduking229.github.io/Eduking-/est-quiz-corps-animaux.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">🫀</div><div class="card-info"><div class="card-niveau">EST · SA2·SA4·SA5</div><div class="card-titre">Quiz — Corps & Animaux</div><div class="card-meta"><span class="meta-tag mt-format">🎯 Quiz classique</span><span class="meta-tag mt-nb">15 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-est" href="https://eduking229.github.io/Eduking-/est-devinette-nature-sciences.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon">🌿</div><div class="card-info"><div class="card-niveau">EST · SA7→SA10</div><div class="card-titre">Devinette — Nature & Sciences</div><div class="card-meta"><span class="meta-tag mt-format">🃏 Devinette</span><span class="meta-tag mt-nb">16 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ SECTION CE2 ══ -->
+  <div class="cat-section" id="cat-ce2">
+    <div class="games-list">
+      <a class="game-card gc-ce2" href="https://eduking229.github.io/Eduking-/civisme-ce2-droits-devoirs.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon" style="background:linear-gradient(135deg,#5F27CD,#A29BFE);">⚖️</div><div class="card-info"><div class="card-niveau">Civisme CE2 · 14 séquences</div><div class="card-titre">Droits & Devoirs du Citoyen</div><div class="card-meta"><span class="meta-tag mt-format">🧠 Quiz + 🔍 Devinette</span><span class="meta-tag mt-nb">42 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-ce2" href="https://eduking229.github.io/Eduking-/ce2-quiz-aliments-corps.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon" style="background:linear-gradient(135deg,#7C3AED,#4C1D95);">🍎</div><div class="card-info"><div class="card-niveau">EST CE2 · SA1·SA2·SA4</div><div class="card-titre">Quiz — Aliments, Corps & Respiration</div><div class="card-meta"><span class="meta-tag mt-format">🎯 Quiz</span><span class="meta-tag mt-nb">18 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+      <a class="game-card gc-ce2" href="https://eduking229.github.io/Eduking-/ce2-devinette-nature-sciences.html" target="_blank">
+        <div class="card-stripe"></div>
+        <div class="card-inner"><div class="card-icon" style="background:linear-gradient(135deg,#059669,#0369A1);">🌿</div><div class="card-info"><div class="card-niveau">EST CE2 · SA5→SA10</div><div class="card-titre">Devinette — Animaux, Plantes & Nature</div><div class="card-meta"><span class="meta-tag mt-format">🃏 Devinette</span><span class="meta-tag mt-nb">18 questions</span></div></div><div class="card-arrow">›</div></div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ ADMIN PANEL (dans la page) ══ -->
+  <div class="admin-panel" id="admin-panel">
+    <div class="section-label">⚙️ Espace Admin</div>
+
+    <div class="admin-header">
+      <div>
+        <div class="admin-title">⚙️ Tableau de bord Admin</div>
+        <div style="font-size:.7rem;color:var(--muted);">Eduking 229 — Accès autorisé</div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="asv">11</div><div class="asl">Jeux actifs</div></div>
+      <div class="admin-stat"><div class="asv">200+</div><div class="asl">Questions</div></div>
+      <div class="admin-stat"><div class="asv">5</div><div class="asl">Matières</div></div>
+      <div class="admin-stat"><div class="asv">CE2<br>CM1</div><div class="asl">Niveaux</div></div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:10px;">🔗 Gestion des jeux</div>
+    <div class="admin-links">
+      <a class="admin-link" href="https://eduking229.github.io/Eduking-/maths-cm1-hub.html" target="_blank">
+        <span class="al-icon">📐</span>
+        <div><div class="al-titre">Hub Maths CM1</div><div class="al-desc">4 jeux · 46 questions</div></div>
+        <span class="al-arrow">›</span>
+      </a>
+      <a class="admin-link" href="https://eduking229.github.io/Eduking-/est-sciences-hub.html" target="_blank">
+        <span class="al-icon">🔬</span>
+        <div><div class="al-titre">Hub EST Sciences</div><div class="al-desc">2 jeux · 31 questions</div></div>
+        <span class="al-arrow">›</span>
+      </a>
+      <a class="admin-link" href="https://eduking229.github.io/Eduking-/ce2-est-sciences-hub.html" target="_blank">
+        <span class="al-icon">🌿</span>
+        <div><div class="al-titre">Hub EST CE2</div><div class="al-desc">2 jeux · 36 questions</div></div>
+        <span class="al-arrow">›</span>
+      </a>
+      <a class="admin-link" href="https://github.com/eduking229/Eduking-" target="_blank">
+        <span class="al-icon">🐙</span>
+        <div><div class="al-titre">Dépôt GitHub</div><div class="al-desc">Gérer les fichiers en ligne</div></div>
+        <span class="al-arrow">›</span>
+      </a>
+    </div>
+
+    <div class="section-label" style="margin-bottom:10px;">🏭 Créer un nouveau jeu</div>
+    <a class="btn-factory" href="https://eduking229.github.io/Eduking-/eduking-game-factory.html" target="_blank">
+      🚀 Ouvrir la Game Factory (IA)
+    </a>
+
+    <div style="background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.2);border-radius:12px;padding:12px 14px;margin-top:14px;">
+      <div style="font-size:.72rem;font-weight:800;color:var(--orange);margin-bottom:6px;">📋 URL principale du launcher</div>
+      <div style="font-size:.72rem;color:var(--muted);font-family:monospace;word-break:break-all;line-height:1.6;">https://eduking229.github.io/Eduking-/eduking-launcher.html</div>
+    </div>
+  </div>
+
+  <div class="footer-brand">Eduking 229 · Plateforme éducative du Bénin · CE2 &amp; CM1</div>
+</div>
+
+<script>
+// ── NAVIGATION ONGLETS ──
+function showCat(cat, el) {
+  document.querySelectorAll('.cat-section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  var sec = document.getElementById('cat-' + cat);
+  if (sec) sec.classList.add('active');
+  if (el) el.classList.add('active');
+
+  // Masquer admin panel si on change d'onglet
+  if (cat !== 'admin') document.getElementById('admin-panel').classList.remove('open');
+}
+
+// ── ADMIN ──
+var ADMIN_PWD = 'eduking229';
+var isAdmin = false;
+
+function openModal() {
+  if (isAdmin) {
+    showAdminPanel();
+    return;
+  }
+  document.getElementById('modal-login').classList.add('open');
+  setTimeout(function(){ document.getElementById('pwd-input').focus(); }, 200);
+}
+
+function closeModal() {
+  document.getElementById('modal-login').classList.remove('open');
+  document.getElementById('pwd-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function tryLogin() {
+  var pwd = document.getElementById('pwd-input').value;
+  if (pwd === ADMIN_PWD) {
+    isAdmin = true;
+    closeModal();
+    showAdminPanel();
+    document.querySelector('.admin-btn').textContent = '⚙️ Admin ✓';
+    document.querySelector('.admin-btn').style.background = 'rgba(124,58,237,0.35)';
+    document.querySelector('.admin-btn').style.borderColor = 'rgba(124,58,237,0.6)';
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('pwd-input').focus();
+  }
+}
+
+function showAdminPanel() {
+  // Scroll vers le bas
+  document.querySelectorAll('.cat-section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('admin-panel').classList.add('open');
+  setTimeout(function(){
+    document.getElementById('admin-panel').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 100);
+}
+
+function logout() {
+  isAdmin = false;
+  document.getElementById('admin-panel').classList.remove('open');
+  document.querySelector('.admin-btn').textContent = '⚙️ Admin';
+  document.querySelector('.admin-btn').style.background = 'rgba(124,58,237,0.15)';
+  document.querySelector('.admin-btn').style.borderColor = 'rgba(124,58,237,0.4)';
+  // Réafficher l'onglet tous
+  showCat('tous', document.querySelector('.tab'));
+  document.querySelector('.tab').classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths CM1 — Jeux Éducatifs | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+  :root {
+    --gold: #FACC15;
+    --orange: #F97316;
+    --dark: #0A0812;
+    --card-bg: rgba(255,255,255,0.05);
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family:'Nunito',sans-serif;
+    background:#0A0812;
+    min-height:100vh;
+    overflow-x:hidden;
+    color:#fff;
+  }
+
+  /* Fond animé */
+  .bg-mesh {
+    position:fixed; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(249,115,22,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 50% 50%, rgba(250,204,21,0.06) 0%, transparent 70%),
+      #0A0812;
+  }
+
+  /* Grille de points */
+  .bg-dots {
+    position:fixed; inset:0; z-index:0;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .wrapper { position:relative; z-index:1; max-width:500px; margin:0 auto; padding:0 12px 60px; }
+
+  /* HEADER */
+  .header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 0 10px;
+    border-bottom:1px solid rgba(250,204,21,0.2);
+    margin-bottom:20px;
+  }
+  .logo { font-family:'Fredoka One',cursive; font-size:1.3rem; color:#FACC15; letter-spacing:1px; }
+  .logo span { color:#F97316; }
+  .header-badge {
+    background:rgba(250,204,21,0.12);
+    border:1px solid rgba(250,204,21,0.3);
+    color:#FACC15;
+    font-size:.65rem; font-weight:800;
+    padding:4px 10px; border-radius:20px;
+    text-transform:uppercase; letter-spacing:1px;
+  }
+
+  /* HERO */
+  .hero { text-align:center; padding:10px 0 24px; }
+  .hero-icon {
+    font-size:3rem;
+    display:inline-block;
+    animation:float 4s ease-in-out infinite;
+    margin-bottom:10px;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .hero-title {
+    font-family:'Fredoka One',cursive;
+    font-size:1.9rem; line-height:1.15;
+    background:linear-gradient(135deg,#FACC15,#F97316,#A78BFA);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:8px;
+  }
+  .hero-sub { font-size:.88rem; color:rgba(255,255,255,.6); line-height:1.5; }
+
+  /* STATS RAPIDES */
+  .stats-row {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:8px; margin-bottom:24px;
+  }
+  .stat-box {
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:12px 8px; text-align:center;
+  }
+  .stat-box .sv { font-family:'Fredoka One',cursive; font-size:1.6rem; color:#FACC15; line-height:1; }
+  .stat-box .sl { font-size:.6rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.5px; margin-top:2px; }
+
+  /* SECTION TITRE */
+  .section-title {
+    font-family:'Fredoka One',cursive;
+    font-size:.9rem; color:rgba(255,255,255,.5);
+    text-transform:uppercase; letter-spacing:2px;
+    margin-bottom:12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .section-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.1); }
+
+  /* CARTES JEUX */
+  .games-grid { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
+
+  .game-card {
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:18px; overflow:hidden;
+    transition:all .3s ease;
+    text-decoration:none;
+    display:block;
+    position:relative;
+  }
+  .game-card:hover { transform:translateY(-3px); border-color:rgba(255,255,255,0.25); box-shadow:0 10px 40px rgba(0,0,0,.4); }
+  .game-card::before {
+    content:''; position:absolute; inset:0;
+    border-radius:18px; opacity:0;
+    transition:opacity .3s;
+  }
+  .game-card:hover::before { opacity:1; }
+
+  .game-card.c1 { border-color:rgba(124,58,237,0.4); }
+  .game-card.c1::before { background:linear-gradient(135deg,rgba(124,58,237,0.08),transparent); }
+  .game-card.c2 { border-color:rgba(5,150,105,0.4); }
+  .game-card.c2::before { background:linear-gradient(135deg,rgba(5,150,105,0.08),transparent); }
+  .game-card.c3 { border-color:rgba(8,145,178,0.4); }
+  .game-card.c3::before { background:linear-gradient(135deg,rgba(8,145,178,0.08),transparent); }
+  .game-card.c4 { border-color:rgba(124,58,237,0.4); }
+  .game-card.c4::before { background:linear-gradient(135deg,rgba(124,58,237,0.08),transparent); }
+
+  .card-inner { display:flex; align-items:center; gap:14px; padding:16px; }
+
+  .card-icon-wrap {
+    width:56px; height:56px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.8rem; flex-shrink:0;
+  }
+  .c1 .card-icon-wrap { background:linear-gradient(135deg,#7C3AED,#4C1D95); }
+  .c2 .card-icon-wrap { background:linear-gradient(135deg,#059669,#065F46); }
+  .c3 .card-icon-wrap { background:linear-gradient(135deg,#0891B2,#0F766E); }
+  .c4 .card-icon-wrap { background:linear-gradient(135deg,#7C3AED,#1D4ED8); }
+
+  .card-info { flex:1; min-width:0; }
+  .card-dossier {
+    font-size:.6rem; font-weight:800; text-transform:uppercase;
+    letter-spacing:1px; opacity:.6; margin-bottom:3px;
+  }
+  .card-title { font-family:'Fredoka One',cursive; font-size:1.05rem; color:#fff; margin-bottom:4px; line-height:1.2; }
+  .card-tags { display:flex; gap:5px; flex-wrap:wrap; }
+  .tag {
+    font-size:.6rem; font-weight:700; padding:2px 7px;
+    border-radius:10px; text-transform:uppercase; letter-spacing:.5px;
+  }
+  .tag.format { background:rgba(250,204,21,0.15); color:#FACC15; }
+  .tag.nb { background:rgba(255,255,255,0.08); color:rgba(255,255,255,.6); }
+
+  .card-arrow {
+    color:rgba(255,255,255,.3); font-size:1.2rem; flex-shrink:0;
+    transition:transform .3s, color .3s;
+  }
+  .game-card:hover .card-arrow { color:#FACC15; transform:translateX(4px); }
+
+  /* BARRE PROGRESSION */
+  .card-prog {
+    height:3px;
+    background:rgba(255,255,255,0.06);
+    position:relative; overflow:hidden;
+  }
+  .c1 .card-prog-fill { background:linear-gradient(90deg,#7C3AED,#A78BFA); }
+  .c2 .card-prog-fill { background:linear-gradient(90deg,#059669,#34D399); }
+  .c3 .card-prog-fill { background:linear-gradient(90deg,#0891B2,#06B6D4); }
+  .c4 .card-prog-fill { background:linear-gradient(90deg,#7C3AED,#FACC15); }
+  .card-prog-fill { height:100%; border-radius:0 3px 3px 0; }
+
+  /* SEPARATOR */
+  .or-divider {
+    text-align:center; color:rgba(255,255,255,.25);
+    font-size:.7rem; letter-spacing:2px;
+    margin:4px 0;
+    position:relative;
+  }
+
+  /* BOUTON JOUER TOUT */
+  .btn-all {
+    display:block; width:100%;
+    background:linear-gradient(135deg,#FACC15,#F97316);
+    border:none; border-radius:16px; padding:16px;
+    font-family:'Fredoka One',cursive; font-size:1.1rem;
+    color:#0A0812; cursor:pointer; text-align:center;
+    text-decoration:none; letter-spacing:1px;
+    transition:transform .2s, box-shadow .2s;
+    box-shadow:0 4px 20px rgba(250,204,21,0.25);
+    margin-bottom:28px;
+  }
+  .btn-all:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(250,204,21,0.35); }
+
+  /* INFO BOX */
+  .info-box-url {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .info-box-url .ib-label { font-size:.65rem; font-weight:800; color:rgba(255,255,255,.45); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .url-pill {
+    background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.12);
+    border-radius:10px; padding:8px 12px;
+    font-size:.72rem; color:#A78BFA;
+    font-family:monospace; word-break:break-all; line-height:1.5;
+    margin-bottom:6px;
+  }
+
+  /* FOOTER */
+  .footer { text-align:center; color:rgba(255,255,255,.25); font-size:.65rem; padding:10px 0; text-transform:uppercase; letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="bg-dots"></div>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="logo">EDUKING <span>229</span></div>
+    <div class="header-badge">CM1 — Maths</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">🎮</div>
+    <div class="hero-title">Jeux Éducatifs<br>Maths CM1</div>
+    <div class="hero-sub">4 jeux interactifs couvrant tout le programme de mathématiques CM1 du Bénin</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="sv">4</div><div class="sl">Jeux</div></div>
+    <div class="stat-box"><div class="sv">46</div><div class="sl">Questions</div></div>
+    <div class="stat-box"><div class="sv">4</div><div class="sl">Dossiers</div></div>
+  </div>
+
+  <div class="section-title">Les 4 dossiers</div>
+
+  <div class="games-grid">
+
+    <a class="game-card c1" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-calcul.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">➕</div>
+        <div class="card-info">
+          <div class="card-dossier">Dossier 1</div>
+          <div class="card-title">Calcul</div>
+          <div class="card-tags">
+            <span class="tag format">🃏 Devinette</span>
+            <span class="tag nb">12 questions</span>
+            <span class="tag nb">+/−/×</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+
+    <a class="game-card c2" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-division-fractions.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">➗</div>
+        <div class="card-info">
+          <div class="card-dossier">Dossier 2</div>
+          <div class="card-title">Division & Fractions</div>
+          <div class="card-tags">
+            <span class="tag format">⚡ Course + Timer</span>
+            <span class="tag nb">12 questions</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+
+    <a class="game-card c3" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-geometrie.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">📐</div>
+        <div class="card-info">
+          <div class="card-dossier">Dossier 3</div>
+          <div class="card-title">Géométrie</div>
+          <div class="card-tags">
+            <span class="tag format">🎯 Quiz + Figures SVG</span>
+            <span class="tag nb">12 questions</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+
+    <a class="game-card c4" href="https://eduking229.github.io/Eduking-/quiz-maths-cm1-numeration.html" target="_blank">
+      <div class="card-prog"><div class="card-prog-fill" style="width:100%"></div></div>
+      <div class="card-inner">
+        <div class="card-icon-wrap">🔢</div>
+        <div class="card-info">
+          <div class="card-dossier">Dossier 4</div>
+          <div class="card-title">Numération</div>
+          <div class="card-tags">
+            <span class="tag format">🃏 Devinette + Tableau</span>
+            <span class="tag nb">12 questions</span>
+          </div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-title">Accès direct</div>
+
+  <div class="info-box-url">
+    <div class="ib-label">🌐 URL de ce hub</div>
+    <div class="url-pill">https://eduking229.github.io/Eduking-/maths-cm1-hub.html</div>
+    <div class="ib-label" style="margin-top:8px;">📁 Fichiers à déposer sur GitHub</div>
+    <div class="url-pill">maths-cm1-hub.html<br>quiz-maths-cm1-calcul.html<br>quiz-maths-cm1-division-fractions.html<br>quiz-maths-cm1-geometrie.html<br>quiz-maths-cm1-numeration.html</div>
+  </div>
+
+  <div class="footer">Eduking 229 — Plateforme éducative du Bénin · CM1 Mathématiques</div>
+</div>
+
+</body>
+</html>

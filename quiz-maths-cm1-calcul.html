@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devinette Numérique — Maths CM1 | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --orange: #F97316;
+    --vert: #16A34A;
+    --bleu: #2563EB;
+    --violet: #7C3AED;
+    --jaune: #FACC15;
+    --dark: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(150deg, #0F172A 0%, #1E3A5F 60%, #0F172A 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Éléments déco flottants */
+  .deco {
+    position: fixed;
+    font-size: 1.8rem;
+    opacity: 0.06;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .deco:nth-child(1) { top: 8%;  left: 5%;  animation-delay: 0s; }
+  .deco:nth-child(2) { top: 20%; right: 8%; animation-delay: 1.5s; }
+  .deco:nth-child(3) { top: 50%; left: 3%;  animation-delay: 3s; }
+  .deco:nth-child(4) { top: 70%; right: 5%; animation-delay: 4.5s; }
+  .deco:nth-child(5) { top: 85%; left: 50%; animation-delay: 2s; }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(0,0,0,0.4);
+    border-bottom: 2px solid rgba(250,204,21,0.3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo { font-family: 'Fredoka One', cursive; color: #FACC15; font-size: 1.2rem; letter-spacing: 1px; }
+  .logo span { color: #F97316; }
+  .subject-tag {
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 16px;
+    gap: 8px;
+  }
+  .score-item { text-align: center; color: #fff; }
+  .score-item .val { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #FACC15; line-height: 1; }
+  .score-item .lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+  .progress-wrap { flex: 1; max-width: 160px; }
+  .progress-track { background: rgba(255,255,255,0.15); border-radius: 10px; height: 8px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7C3AED, #2563EB, #FACC15);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-txt { font-size: 0.6rem; color: rgba(255,255,255,0.6); text-align: center; margin-top: 2px; }
+
+  /* MAIN */
+  .main { padding: 14px 12px 80px; max-width: 480px; margin: 0 auto; }
+
+  /* NOMBRE MYSTÈRE */
+  .mystere-zone {
+    text-align: center;
+    margin-bottom: 12px;
+    animation: popIn 0.5s ease;
+  }
+  .mystere-cercle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    box-shadow: 0 0 30px rgba(124,58,237,0.5), 0 4px 20px rgba(0,0,0,0.3);
+    border: 3px solid rgba(250,204,21,0.4);
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #FACC15;
+    position: relative;
+  }
+  .mystere-cercle.revealed {
+    background: linear-gradient(135deg, #16A34A, #065F46);
+    box-shadow: 0 0 30px rgba(22,163,74,0.5);
+  }
+  .mystere-label {
+    display: block;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  /* CARD */
+  .question-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+    overflow: hidden;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #0F172A, #1E3A5F);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .q-num {
+    background: #7C3AED;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.85rem;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-title { font-family: 'Fredoka One', cursive; font-size: 1rem; color: #FACC15; }
+  .q-sub { font-size: 0.7rem; color: rgba(255,255,255,0.65); }
+
+  /* CONTEXTE (mise en situation) */
+  .contexte {
+    background: #FFF7ED;
+    border-left: 4px solid #F97316;
+    margin: 12px 14px 4px;
+    padding: 9px 12px;
+    border-radius: 0 10px 10px 0;
+    font-size: 0.84rem;
+    color: #7C2D12;
+    font-weight: 600;
+    line-height: 1.5;
+    animation: fadeIn 0.4s ease;
+    display: none;
+  }
+  .contexte.visible { display: block; }
+
+  /* INDICES */
+  .indices { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; }
+  .indice-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .indice-icon {
+    background: #7C3AED;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .indice-text { font-size: 0.88rem; color: #0F172A; font-weight: 600; line-height: 1.4; }
+  .indice-locked { display: flex; align-items: center; gap: 8px; color: #ccc; font-size: 0.8rem; margin-bottom: 6px; font-style: italic; }
+
+  /* HINT */
+  .hint-wrap { padding: 6px 16px 10px; text-align: center; }
+  .btn-hint {
+    background: none;
+    border: 1.5px dashed #7C3AED;
+    color: #7C3AED;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-hint:hover { background: #F5F3FF; }
+  .btn-hint:disabled { opacity: 0.3; cursor: default; }
+
+  /* OPÉRATION affichée */
+  .operation-display {
+    text-align: center;
+    margin: 4px 14px 10px;
+    background: #F5F3FF;
+    border-radius: 12px;
+    padding: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    color: #4C1D95;
+    letter-spacing: 2px;
+    display: none;
+  }
+  .operation-display.visible { display: block; animation: popIn 0.3s ease; }
+
+  /* OPTIONS */
+  .options {
+    padding: 10px 14px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .opt-btn {
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 12px 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    color: #0F172A;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 56px;
+  }
+  .opt-btn:hover:not(:disabled) { background: #EEF2FF; border-color: #7C3AED; transform: translateY(-2px); }
+  .opt-btn.correct { background: #DCFCE7; border-color: #16A34A; color: #14532D; }
+  .opt-btn.wrong   { background: #FEE2E2; border-color: #DC2626; color: #7F1D1D; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin: 0 14px 14px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: none;
+    animation: popIn 0.3s ease;
+  }
+  .feedback.correct { background: #DCFCE7; color: #14532D; border-left: 4px solid #16A34A; display: block; }
+  .feedback.wrong   { background: #FEE2E2; color: #7F1D1D; border-left: 4px solid #DC2626; display: block; }
+  .feedback-emoji { font-size: 1.2rem; margin-right: 6px; }
+  .feedback-expl { font-weight: 400; font-size: 0.78rem; margin-top: 4px; opacity: 0.85; line-height: 1.5; }
+
+  /* NEXT */
+  .btn-next {
+    width: calc(100% - 28px);
+    margin: 0 14px 14px;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    border: none;
+    border-radius: 12px;
+    padding: 13px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #FACC15;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); }
+
+  /* ÉCRANS */
+  .screen { display: none; animation: slideIn 0.4s ease; }
+  .screen.active { display: block; }
+
+  /* ACCUEIL */
+  .welcome-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+  }
+  .welcome-icon { font-size: 3.5rem; margin-bottom: 8px; }
+  .welcome-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: #0F172A; margin-bottom: 6px; }
+  .welcome-sub { font-size: 0.88rem; color: #475569; margin-bottom: 16px; line-height: 1.5; }
+  .themes-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .theme-tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .theme-tag.add  { background: #DCFCE7; color: #14532D; }
+  .theme-tag.sub  { background: #FEE2E2; color: #7F1D1D; }
+  .theme-tag.mult { background: #EEF2FF; color: #3730A3; }
+  .welcome-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .info-box { background: #F8FAFC; border-radius: 12px; padding: 10px 6px; text-align: center; }
+  .info-box .ib-val { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #7C3AED; }
+  .info-box .ib-lbl { font-size: 0.65rem; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+  .btn-start {
+    width: 100%;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #FACC15;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+  .btn-start:hover { transform: scale(1.02); }
+
+  /* RÉSULTAT */
+  .result-card {
+    background: rgba(255,255,255,0.97);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+  }
+  .result-icon { font-size: 4rem; margin-bottom: 8px; }
+  .result-score-big { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #7C3AED; line-height: 1; }
+  .result-total { font-size: 1rem; color: #64748B; margin-bottom: 10px; }
+  .result-msg { font-size: 1rem; font-weight: 700; color: #0F172A; margin-bottom: 6px; }
+  .result-sub { font-size: 0.82rem; color: #64748B; margin-bottom: 20px; }
+  .stars { font-size: 1.8rem; margin-bottom: 14px; letter-spacing: 4px; }
+  .result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat-box { background: #F8FAFC; border-radius: 12px; padding: 10px 6px; text-align: center; }
+  .stat-box .sv { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: #0F172A; }
+  .stat-box.s-add .sv  { color: #16A34A; }
+  .stat-box.s-sub .sv  { color: #DC2626; }
+  .stat-box.s-mult .sv { color: #7C3AED; }
+  .stat-box .sl { font-size: 0.65rem; color: #64748B; text-transform: uppercase; }
+  .result-bar-wrap { background: #F1F5F9; border-radius: 12px; padding: 12px; margin-bottom: 16px; }
+  .result-bar-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748B; margin-bottom: 6px; }
+  .result-bar-track { background: #E2E8F0; border-radius: 10px; height: 10px; overflow: hidden; }
+  .result-bar-fill { height: 100%; border-radius: 10px; transition: width 1s ease; background: linear-gradient(90deg, #7C3AED, #2563EB, #FACC15); }
+  .btn-retry {
+    width: 100%;
+    background: linear-gradient(135deg, #7C3AED, #2563EB);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #FACC15;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s;
+  }
+  .btn-retry:hover { transform: scale(1.02); }
+
+  .footer-brand { text-align: center; color: rgba(255,255,255,0.3); font-size: 0.65rem; padding: 10px; text-transform: uppercase; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+
+<!-- Déco flottante -->
+<div class="deco">➕</div>
+<div class="deco">✖️</div>
+<div class="deco">➖</div>
+<div class="deco">🔢</div>
+<div class="deco">🎯</div>
+
+<div class="header">
+  <div class="logo">EDUKING <span>229</span></div>
+  <div class="subject-tag">🔢 Maths CM1</div>
+</div>
+
+<!-- ACCUEIL -->
+<div id="screen-welcome" class="screen active">
+  <div class="main">
+    <div class="welcome-card">
+      <div class="welcome-icon">🔢</div>
+      <div class="welcome-title">Devinette Numérique</div>
+      <div class="welcome-sub">Des indices te guident vers un nombre mystère. Lis bien chaque indice et trouve le résultat !</div>
+      <div class="themes-row">
+        <span class="theme-tag add">➕ Addition</span>
+        <span class="theme-tag sub">➖ Soustraction</span>
+        <span class="theme-tag mult">✖️ Multiplication</span>
+      </div>
+      <div class="welcome-info">
+        <div class="info-box"><div class="ib-val">12</div><div class="ib-lbl">Questions</div></div>
+        <div class="info-box"><div class="ib-val">3</div><div class="ib-lbl">Indices max</div></div>
+        <div class="info-box"><div class="ib-val">20</div><div class="ib-lbl">Points max</div></div>
+      </div>
+      <button class="btn-start" onclick="startGame()">🎯 COMMENCER</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Maths CM1 — Calcul</div>
+</div>
+
+<!-- JEU -->
+<div id="screen-game" class="screen">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="disp-score">0</div><div class="lbl">Score</div></div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="progress-txt" id="prog-txt">0 / 12</div>
+    </div>
+    <div class="score-item"><div class="val" id="disp-correct">0</div><div class="lbl">Bonnes rép.</div></div>
+  </div>
+
+  <div class="main">
+    <div class="mystere-zone">
+      <div class="mystere-cercle" id="mystere-cercle">❓</div>
+      <span class="mystere-label" id="mystere-label">Nombre mystère</span>
+    </div>
+
+    <div class="question-card" id="qcard">
+      <div class="card-header">
+        <div class="q-num" id="q-num">1</div>
+        <div>
+          <div class="q-title" id="q-title">🔢 Qui suis-je ?</div>
+          <div class="q-sub" id="q-sub">Lis les indices et trouve le nombre</div>
+        </div>
+      </div>
+
+      <div class="contexte" id="contexte-zone"></div>
+      <div class="operation-display" id="operation-display"></div>
+      <div class="indices" id="indices-zone"></div>
+      <div class="hint-wrap">
+        <button class="btn-hint" id="btn-hint" onclick="showNextIndice()">💡 Indice suivant</button>
+      </div>
+
+      <div class="options" id="options-zone"></div>
+      <div class="feedback" id="feedback-zone"></div>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RÉSULTAT -->
+<div id="screen-result" class="screen">
+  <div class="main">
+    <div class="result-card">
+      <div class="result-icon" id="res-icon">🏆</div>
+      <div class="result-score-big" id="res-score">0</div>
+      <div class="result-total">points sur 20</div>
+      <div class="stars" id="res-stars">⭐⭐⭐</div>
+      <div class="result-msg" id="res-msg">Excellent !</div>
+      <div class="result-sub" id="res-sub"></div>
+      <div class="result-stats">
+        <div class="stat-box s-add"><div class="sv" id="st-add">0</div><div class="sl">Additions</div></div>
+        <div class="stat-box s-sub"><div class="sv" id="st-sub">0</div><div class="sl">Soustractions</div></div>
+        <div class="stat-box s-mult"><div class="sv" id="st-mult">0</div><div class="sl">Multiplications</div></div>
+      </div>
+      <div class="result-bar-wrap">
+        <div class="result-bar-row"><span>Réussite globale</span><span id="res-corr">0/12</span></div>
+        <div class="result-bar-track"><div class="result-bar-fill" id="res-bar" style="width:0%"></div></div>
+      </div>
+      <button class="btn-retry" onclick="startGame()">🔄 Rejouer</button>
+    </div>
+  </div>
+  <div class="footer-brand">Eduking 229 — Maths CM1 — Calcul</div>
+</div>
+
+<script>
+var questions = [
+  // ===== ADDITIONS =====
+  {
+    type: "add",
+    titre: "➕ Addition",
+    mystere: "82",
+    contexte: "Kofi a 45 billes. Son ami Dossa lui donne 37 billes de plus.",
+    operation: "45 + 37 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre supérieur à 80.",
+      "Mon chiffre des unités est 2. Mon chiffre des dizaines est 8.",
+      "Je suis le résultat de 45 + 37."
+    ],
+    options: ["72", "82", "92", "80"],
+    reponse: "82",
+    explication: "45 + 37 = 82. On pose : 5 + 7 = 12 (on écrit 2, on retient 1). Puis 4 + 3 + 1 = 8. Résultat : 82."
+  },
+  {
+    type: "add",
+    titre: "➕ Addition",
+    mystere: "563",
+    contexte: "Le marché de Parakou a vendu 324 pagnes le matin et 239 pagnes l'après-midi.",
+    operation: "324 + 239 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre compris entre 500 et 600.",
+      "Mon chiffre des unités est 3, mes dizaines sont 6.",
+      "Je suis la somme de 324 et 239."
+    ],
+    options: ["553", "563", "573", "543"],
+    reponse: "563",
+    explication: "324 + 239 = 563. Unités : 4+9=13 (écrit 3, retenue 1). Dizaines : 2+3+1=6. Centaines : 3+2=5. Résultat : 563."
+  },
+  {
+    type: "add",
+    titre: "➕ Addition",
+    mystere: "1 248",
+    contexte: "L'école de Bohicon compte 756 filles et 492 garçons.",
+    operation: "756 + 492 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre à 4 chiffres, supérieur à 1 200.",
+      "Mes centaines valent 2, mes dizaines valent 4.",
+      "Je suis la somme de 756 et 492."
+    ],
+    options: ["1 148", "1 238", "1 248", "1 258"],
+    reponse: "1 248",
+    explication: "756 + 492 = 1 248. Unités : 6+2=8. Dizaines : 5+9=14 (écrit 4, retenue 1). Centaines : 7+4+1=12 (écrit 2, retenue 1). Milliers : 1. Résultat : 1 248."
+  },
+  // ===== SOUSTRACTIONS =====
+  {
+    type: "sub",
+    titre: "➖ Soustraction",
+    mystere: "28",
+    contexte: "Adjoua avait 63 cahiers. Elle en a distribué 35 à ses camarades.",
+    operation: "63 - 35 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre inférieur à 30.",
+      "Mon chiffre des unités est 8, mes dizaines sont 2.",
+      "Je suis la différence entre 63 et 35."
+    ],
+    options: ["18", "28", "38", "22"],
+    reponse: "28",
+    explication: "63 - 35 = 28. Unités : 3 < 5, on emprunte : 13-5=8. Dizaines : 6-1-3=2. Résultat : 28."
+  },
+  {
+    type: "sub",
+    titre: "➖ Soustraction",
+    mystere: "147",
+    contexte: "La cantine de l'école avait préparé 352 repas. Les élèves ont consommé 205 repas.",
+    operation: "352 - 205 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre compris entre 100 et 200.",
+      "Mon chiffre des dizaines est 4, mes unités sont 7.",
+      "Je suis la différence entre 352 et 205."
+    ],
+    options: ["137", "157", "147", "167"],
+    reponse: "147",
+    explication: "352 - 205 = 147. Unités : 2-5, on emprunte : 12-5=7. Dizaines : 4-1-0=4. Centaines : 3-2=1. Résultat : 147."
+  },
+  {
+    type: "sub",
+    titre: "➖ Soustraction",
+    mystere: "368",
+    contexte: "Un éleveur de Natitingou possédait 1 000 poulets. Une maladie a emporté 632 poulets.",
+    operation: "1 000 - 632 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre à 3 chiffres, entre 300 et 400.",
+      "La somme de mes chiffres est 17. Mes centaines sont 3.",
+      "Je suis le complément de 632 à 1 000."
+    ],
+    options: ["348", "358", "368", "378"],
+    reponse: "368",
+    explication: "1 000 - 632 = 368. On peut vérifier : 632 + 368 = 1 000. ✓"
+  },
+  // ===== MULTIPLICATIONS =====
+  {
+    type: "mult",
+    titre: "✖️ Multiplication",
+    mystere: "72",
+    contexte: "Une classe a 8 rangées de tables. Chaque rangée compte 9 tables.",
+    operation: "8 × 9 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre pair entre 70 et 80.",
+      "Je suis dans la table de 8 et aussi dans la table de 9.",
+      "Je suis le produit de 8 par 9."
+    ],
+    options: ["63", "72", "81", "64"],
+    reponse: "72",
+    explication: "8 × 9 = 72. Table de 8 : 8×9=72. Vérification : 9×8=72. ✓"
+  },
+  {
+    type: "mult",
+    titre: "✖️ Multiplication",
+    mystere: "186",
+    contexte: "Un camion transporte 6 sacs de riz. Chaque sac pèse 31 kg.",
+    operation: "6 × 31 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre compris entre 180 et 200.",
+      "Mon chiffre des unités est 6, mes dizaines sont 8.",
+      "Je suis le produit de 6 par 31."
+    ],
+    options: ["176", "196", "186", "168"],
+    reponse: "186",
+    explication: "6 × 31 = 186. On pose : 6×1=6. 6×3=18. Résultat : 186."
+  },
+  {
+    type: "mult",
+    titre: "✖️ Multiplication",
+    mystere: "324",
+    contexte: "Chaque élève de CM1 doit planter 4 arbres. La classe compte 81 élèves.",
+    operation: "4 × 81 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre à 3 chiffres. Mes centaines sont 3.",
+      "Je suis dans la table de 4. La somme de mes chiffres est 9.",
+      "Je suis le produit de 4 par 81."
+    ],
+    options: ["314", "324", "334", "344"],
+    reponse: "324",
+    explication: "4 × 81 = 324. On pose : 4×1=4. 4×8=32. Résultat : 324."
+  },
+  {
+    type: "mult",
+    titre: "✖️ Multiplication",
+    mystere: "504",
+    contexte: "Une ferme produit 7 caisses de tomates par semaine. Chaque caisse contient 72 tomates.",
+    operation: "7 × 72 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un multiple de 7 et de 72.",
+      "Mon chiffre des centaines est 5, mes dizaines sont 0.",
+      "Je suis le produit de 7 par 72."
+    ],
+    options: ["494", "514", "504", "524"],
+    reponse: "504",
+    explication: "7 × 72 = 504. On pose : 7×2=14 (écrit 4, retenue 1). 7×7=49+1=50. Résultat : 504."
+  },
+  {
+    type: "add",
+    titre: "➕ Addition",
+    mystere: "2 015",
+    contexte: "Un commerçant de Cotonou a gagné 1 348 F un jour et 667 F le lendemain.",
+    operation: "1 348 + 667 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre à 4 chiffres entre 2 000 et 2 100.",
+      "Mes dizaines sont 1, mes unités sont 5.",
+      "Je suis la somme de 1 348 et 667."
+    ],
+    options: ["2 005", "2 015", "2 025", "1 915"],
+    reponse: "2 015",
+    explication: "1 348 + 667 = 2 015. Unités : 8+7=15 (écrit 5, retenue 1). Dizaines : 4+6+1=11 (écrit 1, retenue 1). Centaines : 3+6+1=10 (écrit 0, retenue 1). Milliers : 1+1=2. Résultat : 2 015."
+  },
+  {
+    type: "sub",
+    titre: "➖ Soustraction",
+    mystere: "235",
+    contexte: "Mensah avait économisé 500 F. Il achète un cahier à 265 F.",
+    operation: "500 - 265 = ?",
+    showOp: true,
+    indices: [
+      "Je suis un nombre compris entre 200 et 300.",
+      "La somme de mes chiffres est 10. Mes centaines sont 2.",
+      "Je suis la monnaie rendue à Mensah."
+    ],
+    options: ["225", "245", "235", "215"],
+    reponse: "235",
+    explication: "500 - 265 = 235. On peut vérifier : 265 + 235 = 500. ✓"
+  }
+];
+
+// ÉTAT
+var state = {
+  qIndex: 0, score: 0, correct: 0,
+  indiceShown: 1, answered: false,
+  shuffled: [],
+  stats: { add: 0, sub: 0, mult: 0 }
+};
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function show(id) {
+  var sc = document.querySelectorAll('.screen');
+  for (var i = 0; i < sc.length; i++) sc[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  state.qIndex = 0; state.score = 0; state.correct = 0;
+  state.stats = { add: 0, sub: 0, mult: 0 };
+  state.shuffled = shuffle(questions);
+  show('screen-game');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  state.indiceShown = 1;
+  state.answered = false;
+
+  var q = state.shuffled[state.qIndex];
+  var total = state.shuffled.length;
+
+  // Header
+  document.getElementById('q-num').textContent = state.qIndex + 1;
+  document.getElementById('q-title').textContent = q.titre;
+  document.getElementById('q-sub').textContent = 'Lis les indices et trouve le nombre mystère';
+
+  // Mystère
+  var mc = document.getElementById('mystere-cercle');
+  mc.textContent = '❓';
+  mc.className = 'mystere-cercle';
+  document.getElementById('mystere-label').textContent = 'Nombre mystère';
+
+  // Contexte
+  var cz = document.getElementById('contexte-zone');
+  cz.textContent = q.contexte;
+  cz.className = 'contexte visible';
+
+  // Opération (cachée au départ)
+  var od = document.getElementById('operation-display');
+  od.textContent = q.operation;
+  od.className = 'operation-display';
+
+  // Progress
+  var pct = Math.round((state.qIndex / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = state.qIndex + ' / ' + total;
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  renderIndices(q);
+
+  // Options
+  var opts = shuffle(q.options);
+  var zone = document.getElementById('options-zone');
+  zone.innerHTML = '';
+  for (var i = 0; i < opts.length; i++) {
+    (function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.onclick = function() { answer(opt); };
+      zone.appendChild(btn);
+    })(opts[i]);
+  }
+
+  var fb = document.getElementById('feedback-zone');
+  fb.className = 'feedback'; fb.innerHTML = '';
+  document.getElementById('btn-next').style.display = 'none';
+
+  var hb = document.getElementById('btn-hint');
+  hb.disabled = false;
+  hb.style.display = 'inline-block';
+
+  // Animation
+  var card = document.getElementById('qcard');
+  card.style.animation = 'none'; card.offsetHeight;
+  card.style.animation = 'slideIn 0.4s ease';
+
+  var mz = document.getElementById('mystere-cercle').parentNode;
+  mz.style.animation = 'none'; mz.offsetHeight;
+  mz.style.animation = 'popIn 0.5s ease';
+}
+
+function renderIndices(q) {
+  var zone = document.getElementById('indices-zone');
+  zone.innerHTML = '';
+  for (var i = 0; i < q.indices.length; i++) {
+    var row = document.createElement('div');
+    if (i < state.indiceShown) {
+      row.className = 'indice-row';
+      row.innerHTML = '<div class="indice-icon">I' + (i+1) + '</div>' +
+                      '<div class="indice-text">' + q.indices[i] + '</div>';
+    } else {
+      row.className = 'indice-locked';
+      row.innerHTML = '<span>🔒</span> Indice ' + (i+1) + ' non révélé';
+    }
+    zone.appendChild(row);
+  }
+  // Afficher l'opération au 3ème indice
+  var od = document.getElementById('operation-display');
+  if (state.indiceShown >= 3) {
+    od.className = 'operation-display visible';
+  }
+}
+
+function showNextIndice() {
+  var q = state.shuffled[state.qIndex];
+  if (state.indiceShown < q.indices.length) {
+    state.indiceShown++;
+    renderIndices(q);
+  }
+  document.getElementById('btn-hint').disabled = (state.indiceShown >= q.indices.length);
+}
+
+function answer(chosen) {
+  if (state.answered) return;
+  state.answered = true;
+
+  var q = state.shuffled[state.qIndex];
+  var correct = (chosen === q.reponse);
+  var pts = 0;
+
+  if (correct) {
+    if (state.indiceShown === 1) pts = 3;
+    else if (state.indiceShown === 2) pts = 2;
+    else pts = 1;
+    state.score += pts;
+    state.correct++;
+    state.stats[q.type]++;
+  }
+
+  // Révéler le nombre mystère
+  var mc = document.getElementById('mystere-cercle');
+  mc.textContent = q.mystere;
+  mc.className = 'mystere-cercle revealed';
+  document.getElementById('mystere-label').textContent = correct ? '✅ Trouvé !' : '❌ C\'était ' + q.mystere;
+
+  // Afficher l'opération
+  document.getElementById('operation-display').className = 'operation-display visible';
+
+  // Colorer boutons
+  var btns = document.getElementById('options-zone').querySelectorAll('.opt-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    if (btns[i].textContent === q.reponse) {
+      btns[i].className = 'opt-btn correct';
+    } else if (btns[i].textContent === chosen && !correct) {
+      btns[i].className = 'opt-btn wrong';
+    }
+  }
+
+  var fb = document.getElementById('feedback-zone');
+  if (correct) {
+    fb.className = 'feedback correct';
+    fb.innerHTML = '<span class="feedback-emoji">✅</span> Bravo ! +' + pts + ' point' + (pts > 1 ? 's' : '') +
+                   '<div class="feedback-expl">' + q.explication + '</div>';
+  } else {
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '<span class="feedback-emoji">❌</span> Le nombre mystère était <strong>' + q.mystere + '</strong>' +
+                   '<div class="feedback-expl">' + q.explication + '</div>';
+  }
+
+  document.getElementById('disp-score').textContent = state.score;
+  document.getElementById('disp-correct').textContent = state.correct;
+
+  var nb = document.getElementById('btn-next');
+  nb.style.display = 'block';
+  nb.textContent = (state.qIndex >= state.shuffled.length - 1) ? '🏁 Voir mes résultats' : 'Question suivante →';
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= state.shuffled.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  var total = state.shuffled.length;
+  var pct = Math.round((state.correct / total) * 100);
+  var note = Math.round((state.score / (total * 3)) * 20);
+
+  document.getElementById('res-score').textContent = note;
+  document.getElementById('res-corr').textContent = state.correct + '/' + total;
+  document.getElementById('st-add').textContent = state.stats.add;
+  document.getElementById('st-sub').textContent = state.stats.sub;
+  document.getElementById('st-mult').textContent = state.stats.mult;
+
+  setTimeout(function() {
+    document.getElementById('res-bar').style.width = pct + '%';
+  }, 300);
+
+  var icon, stars, msg, sub;
+  if (pct >= 80) {
+    icon = '🏆'; stars = '⭐⭐⭐';
+    msg = 'Excellent mathématicien !';
+    sub = 'Tu maîtrises très bien le calcul. Continue comme ça !';
+  } else if (pct >= 60) {
+    icon = '😊'; stars = '⭐⭐';
+    msg = 'Bon résultat !';
+    sub = 'Encore quelques opérations à revoir. Tu y es presque !';
+  } else if (pct >= 40) {
+    icon = '📚'; stars = '⭐';
+    msg = 'Peut mieux faire.';
+    sub = 'Révise bien les tables de multiplication et la technique opératoire.';
+  } else {
+    icon = '💪'; stars = '—';
+    msg = 'Courage !';
+    sub = 'Relis ta leçon de calcul et entraîne-toi avec ta fiche de calcul mental.';
+  }
+
+  document.getElementById('res-icon').textContent = icon;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-sub').textContent = sub;
+  show('screen-result');
+}
+</script>
+</body>
+</html>

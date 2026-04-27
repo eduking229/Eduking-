@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civisme CE2 — Droits & Devoirs | Eduking 229</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);min-height:100vh;overflow-x:hidden;}
+
+  .screen{display:none;} .screen.active{display:block;}
+
+  /* ── HEADER ── */
+  .top-bar{background:rgba(0,0,0,.45);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .top-logo{font-family:'Fredoka One',cursive;color:#FACC15;font-size:1.15rem;letter-spacing:1px;}
+  .top-logo span{color:#F97316;}
+  .top-right{display:flex;align-items:center;gap:10px;}
+  .top-score{color:#fff;font-weight:800;font-size:.9rem;}
+  .top-prog{color:rgba(255,255,255,.55);font-size:.82rem;}
+  .top-emoji{font-size:1.2rem;}
+
+  .prog-bar-wrap{height:5px;background:rgba(255,255,255,.1);}
+  .prog-bar-fill{height:100%;background:linear-gradient(90deg,#F97316,#FACC15);transition:width .5s;}
+
+  /* ── MAIN ── */
+  .main{padding:14px 12px 60px;max-width:480px;margin:0 auto;}
+
+  /* ── ACCUEIL ── */
+  .hero{text-align:center;padding:30px 0 24px;}
+  .hero-icon{font-size:60px;margin-bottom:10px;display:block;}
+  .hero-title{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff;margin-bottom:4px;}
+  .hero-sub{color:#a0c4ff;font-size:.85rem;margin-bottom:12px;}
+  .hero-pill{display:inline-block;background:rgba(255,255,255,.08);border-radius:12px;padding:7px 18px;color:#FFD700;font-size:.82rem;font-weight:700;}
+
+  .menu-btns{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+  .menu-btn{display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;border-radius:16px;cursor:pointer;text-align:left;width:100%;font-family:'Nunito',sans-serif;transition:transform .15s;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+  .menu-btn:hover{transform:translateY(-2px);}
+  .menu-btn .mb-icon{font-size:1.8rem;flex-shrink:0;}
+  .menu-btn .mb-titre{font-weight:800;font-size:.95rem;color:#fff;}
+  .menu-btn .mb-desc{font-size:.72rem;color:rgba(255,255,255,.8);}
+  .menu-btn.rouge{background:#FF6B6B;}
+  .menu-btn.vert{background:#00B894;}
+  .menu-btn.violet{background:#5F27CD;}
+
+  .footer-note{text-align:center;color:rgba(255,255,255,.25);font-size:.65rem;padding:16px 0;text-transform:uppercase;letter-spacing:1px;}
+
+  /* ── LISTE SÉQUENCES ── */
+  .page-header{display:flex;align-items:center;gap:10px;padding:14px 12px 10px;}
+  .btn-retour{background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.1rem;cursor:pointer;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+  .page-titre{font-family:'Fredoka One',cursive;color:#fff;font-size:1.1rem;}
+
+  .seq-list{display:flex;flex-direction:column;gap:10px;}
+  .seq-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;border:none;border-radius:14px;cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;transition:all .2s;}
+  .seq-btn:hover{transform:translateY(-2px);}
+  .seq-btn .sb-emoji{font-size:1.4rem;min-width:32px;}
+  .seq-btn .sb-num{color:rgba(255,255,255,.6);font-size:.68rem;font-weight:800;text-transform:uppercase;}
+  .seq-btn .sb-titre{color:#fff;font-weight:700;font-size:.9rem;}
+  .seq-arrow{margin-left:auto;font-size:1.2rem;}
+
+  /* ── CHOIX SOUS ── */
+  .choix-card{background:rgba(255,255,255,.97);border-radius:20px;padding:24px 18px;margin-top:10px;}
+  .choix-card-icon{font-size:2.5rem;text-align:center;margin-bottom:8px;}
+  .choix-card-titre{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#0f0f23;text-align:center;margin-bottom:4px;}
+  .choix-card-sub{font-size:.8rem;color:#64748b;text-align:center;margin-bottom:20px;}
+  .choix-btns{display:flex;flex-direction:column;gap:12px;}
+  .choix-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-radius:14px;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform .15s;width:100%;}
+  .choix-btn:hover{transform:translateY(-2px);}
+  .choix-btn .cb-icon{font-size:1.5rem;}
+  .choix-btn .cb-titre{font-weight:800;font-size:.9rem;color:#fff;}
+  .choix-btn .cb-desc{font-size:.72rem;color:rgba(255,255,255,.85);}
+
+  /* ── SA BADGE ── */
+  .sa-badge-zone{text-align:center;margin-bottom:10px;}
+  .sa-badge{display:inline-block;border-radius:20px;padding:5px 16px;font-size:.82rem;font-weight:700;border:1.5px solid;}
+
+  /* ── CARTE QUESTION ── */
+  .question-card{background:#fff;border-radius:20px;box-shadow:0 6px 30px rgba(0,0,0,.35);overflow:hidden;animation:slideIn .4s ease;}
+  @keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .qcard-header{padding:12px 16px;display:flex;align-items:center;gap:10px;}
+  .qcard-num{color:#fff;font-family:'Fredoka One',cursive;font-size:.85rem;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .qcard-label{font-family:'Fredoka One',cursive;font-size:.95rem;color:#FACC15;}
+  .qcard-sub{font-size:.68rem;color:rgba(255,255,255,.65);}
+  .qcard-body{padding:16px 16px 10px;font-size:.97rem;font-weight:800;color:#0f0f23;line-height:1.5;}
+
+  /* ── OPTIONS ── */
+  .options-grid{padding:10px 14px 14px;display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .opt{background:#F8FAFC;border:2.5px solid #E2E8F0;border-radius:14px;padding:13px 8px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:#0f0f23;cursor:pointer;text-align:center;min-height:54px;display:flex;align-items:center;justify-content:center;line-height:1.3;transition:all .15s;}
+  .opt:hover:not(:disabled){transform:translateY(-2px);}
+  .opt.correct{background:#DCFCE7;border-color:#16A34A;color:#14532D;}
+  .opt.wrong{background:#FEE2E2;border-color:#DC2626;color:#7F1D1D;}
+  .opt:disabled{cursor:default;}
+
+  /* ── FEEDBACK ── */
+  .feedback{margin:0 14px 12px;border-radius:12px;padding:10px 14px;font-size:.88rem;font-weight:700;display:none;}
+  .feedback.ok{background:#DCFCE7;border-left:4px solid #16A34A;color:#14532D;display:block;}
+  .feedback.ko{background:#FEE2E2;border-left:4px solid #DC2626;color:#7F1D1D;display:block;}
+  .feedback-expl{font-weight:400;font-size:.78rem;margin-top:3px;line-height:1.4;}
+
+  /* ── BTN NEXT ── */
+  .btn-next{width:calc(100% - 28px);margin:0 14px 14px;border:none;border-radius:12px;padding:14px;font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;cursor:pointer;letter-spacing:.5px;transition:transform .2s;display:none;}
+  .btn-next:hover{transform:translateY(-2px);}
+
+  /* ── MYSTÈRE ── */
+  .mystere-zone{text-align:center;margin-bottom:10px;}
+  .mystere-cercle{display:inline-flex;align-items:center;justify-content:center;min-width:130px;height:60px;padding:0 20px;border-radius:30px;font-family:'Fredoka One',cursive;font-size:1.3rem;letter-spacing:1.5px;transition:all .4s;border:3px solid rgba(255,255,255,.3);}
+  .mystere-cercle.cache{background:linear-gradient(135deg,#1a1a2e,#0f3460);color:rgba(255,255,255,.4);}
+  .mystere-cercle.revele{color:#FACC15;}
+  .mystere-label{display:block;color:rgba(255,255,255,.5);font-size:.68rem;text-transform:uppercase;letter-spacing:1px;margin-top:5px;}
+
+  /* ── DEVINETTE TEXTE ── */
+  .dev-texte{padding:16px;font-size:.97rem;font-weight:700;color:#0f0f23;line-height:1.6;background:#FFFBF0;border-bottom:1px solid #f0f0f0;}
+  .dev-indice{margin:10px 14px 4px;border-left:4px solid;border-radius:0 10px 10px 0;padding:9px 12px;font-size:.82rem;font-weight:600;line-height:1.5;display:none;}
+  .dev-actions{padding:10px 14px 14px;display:flex;flex-direction:column;gap:9px;}
+  .btn-indice{background:none;border:2px dashed;border-radius:12px;padding:11px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;}
+  .btn-revele{border:none;border-radius:12px;padding:13px;font-family:'Fredoka One',cursive;font-size:.95rem;color:#fff;cursor:pointer;transition:transform .2s;letter-spacing:.5px;}
+  .btn-revele:hover{transform:translateY(-2px);}
+  .dev-reponse-box{border-left:4px solid #16A34A;border-radius:12px;padding:11px 14px;background:#DCFCE7;font-size:.9rem;font-weight:800;color:#14532D;display:none;}
+
+  /* ── RÉSULTATS ── */
+  .result-card{background:rgba(255,255,255,.97);border-radius:22px;padding:28px 20px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.4);animation:slideIn .4s ease;}
+  .res-icon{font-size:4rem;margin-bottom:8px;}
+  .res-note{font-family:'Fredoka One',cursive;font-size:3.5rem;line-height:1;}
+  .res-sur{font-size:1rem;color:#64748b;margin-bottom:8px;}
+  .res-stars{font-size:1.8rem;margin-bottom:10px;letter-spacing:5px;}
+  .res-msg{font-size:1rem;font-weight:800;color:#0f0f23;margin-bottom:4px;}
+  .res-sub{font-size:.82rem;color:#64748b;margin-bottom:20px;}
+  .res-bar-wrap{background:#f1f5f9;border-radius:12px;padding:12px;margin-bottom:20px;}
+  .res-bar-row{display:flex;justify-content:space-between;font-size:.8rem;color:#64748b;margin-bottom:6px;}
+  .res-bar-track{background:#e2e8f0;border-radius:10px;height:10px;overflow:hidden;}
+  .res-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#5F27CD,#A29BFE,#FACC15);transition:width 1s ease;}
+  .res-btns{display:flex;flex-direction:column;gap:10px;}
+  .btn-rejouer{border:none;border-radius:14px;padding:14px;font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;cursor:pointer;transition:transform .2s;}
+  .btn-rejouer:hover{transform:scale(1.02);}
+  .btn-menu{background:none;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px;color:#64748b;cursor:pointer;font-weight:700;font-size:.9rem;}
+</style>
+</head>
+<body>
+
+<!-- ─────────── ACCUEIL ─────────── -->
+<div id="sc-accueil" class="screen active">
+  <div class="main">
+    <div class="hero">
+      <span class="hero-icon">🎓</span>
+      <div class="hero-title">EDUKING 229</div>
+      <div class="hero-sub">Éducation Sociale — CE2</div>
+      <div class="hero-pill">🎯 14 Séquences — Droits &amp; Devoirs</div>
+    </div>
+    <div class="menu-btns">
+      <button class="menu-btn rouge" onclick="goMode('choix_quiz')">
+        <span class="mb-icon">🧠</span>
+        <div><div class="mb-titre">Quiz à Choix Multiples</div><div class="mb-desc">4 propositions, 1 bonne réponse</div></div>
+      </button>
+      <button class="menu-btn vert" onclick="goMode('choix_dev')">
+        <span class="mb-icon">🔍</span>
+        <div><div class="mb-titre">Jeu de Devinettes</div><div class="mb-desc">Trouve la réponse par toi-même !</div></div>
+      </button>
+      <button class="menu-btn violet" onclick="goMode('choix_seq')">
+        <span class="mb-icon">📘</span>
+        <div><div class="mb-titre">Par Séquence</div><div class="mb-desc">Choisir un thème précis</div></div>
+      </button>
+    </div>
+  </div>
+  <div class="footer-note">Eduking 229 · S.A. N°2 · Droits et Devoirs du Citoyen</div>
+</div>
+
+<!-- ─────────── CHOIX QUIZ ─────────── -->
+<div id="sc-choix_quiz" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('accueil')">←</button>
+    <div class="page-titre">Quiz – Mode</div>
+  </div>
+  <div class="main" style="padding-top:6px;">
+    <div class="choix-card">
+      <div class="choix-card-icon">🧠</div>
+      <div class="choix-card-titre">Choisir le mode Quiz</div>
+      <div class="choix-card-sub">Questions à choix multiples</div>
+      <div class="choix-btns">
+        <button class="choix-btn" style="background:#FF6B6B;" onclick="demarrerQuiz(null)">
+          <span class="cb-icon">🎲</span>
+          <div><div class="cb-titre">10 Questions Aléatoires</div><div class="cb-desc">Toutes séquences mélangées</div></div>
+        </button>
+        <button class="choix-btn" style="background:#5F27CD;" onclick="goMode('choix_seq_quiz')">
+          <span class="cb-icon">📘</span>
+          <div><div class="cb-titre">Choisir une séquence</div><div class="cb-desc">Quiz ciblé sur un thème</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── CHOIX DEV ─────────── -->
+<div id="sc-choix_dev" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('accueil')">←</button>
+    <div class="page-titre">Devinettes – Mode</div>
+  </div>
+  <div class="main" style="padding-top:6px;">
+    <div class="choix-card">
+      <div class="choix-card-icon">🔍</div>
+      <div class="choix-card-titre">Choisir le mode Devinette</div>
+      <div class="choix-card-sub">Trouve le bon terme !</div>
+      <div class="choix-btns">
+        <button class="choix-btn" style="background:#00B894;" onclick="demarrerDevinette(null)">
+          <span class="cb-icon">🔍</span>
+          <div><div class="cb-titre">Toutes les devinettes</div><div class="cb-desc">14 devinettes complètes</div></div>
+        </button>
+        <button class="choix-btn" style="background:#E17055;" onclick="goMode('choix_seq_dev')">
+          <span class="cb-icon">📘</span>
+          <div><div class="cb-titre">Choisir une séquence</div><div class="cb-desc">Devinette ciblée sur un thème</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── LISTE SÉQUENCES ─────────── -->
+<div id="sc-choix_seq" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('accueil')">←</button>
+    <div class="page-titre">Choisir une séquence</div>
+  </div>
+  <div class="main" style="padding-top:4px;" id="seq-list-accueil"></div>
+</div>
+
+<div id="sc-choix_seq_quiz" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('choix_quiz')">←</button>
+    <div class="page-titre">Quiz par séquence</div>
+  </div>
+  <div class="main" style="padding-top:4px;" id="seq-list-quiz"></div>
+</div>
+
+<div id="sc-choix_seq_dev" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('choix_dev')">←</button>
+    <div class="page-titre">Devinette par séquence</div>
+  </div>
+  <div class="main" style="padding-top:4px;" id="seq-list-dev"></div>
+</div>
+
+<!-- ─────────── CHOIX SOUS (quiz ou dev) ─────────── -->
+<div id="sc-choix_sous" class="screen">
+  <div class="page-header">
+    <button class="btn-retour" onclick="goMode('choix_seq')">←</button>
+    <div class="page-titre" id="sous-titre">Séquence</div>
+  </div>
+  <div class="main" style="padding-top:4px;">
+    <div class="choix-card" id="sous-card"></div>
+  </div>
+</div>
+
+<!-- ─────────── JEU QUIZ ─────────── -->
+<div id="sc-quiz" class="screen">
+  <div class="top-bar" id="quiz-top">
+    <button class="btn-retour" onclick="retourDepuisJeu()">←</button>
+    <div class="top-right">
+      <span class="top-score" id="quiz-score">✅ 0</span>
+      <span class="top-prog" id="quiz-prog">1/10</span>
+      <span class="top-emoji" id="quiz-emoji">🏳️</span>
+    </div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="quiz-bar" style="width:0%"></div></div>
+
+  <div class="main">
+    <div class="sa-badge-zone">
+      <div class="sa-badge" id="quiz-sa-badge">SA1</div>
+    </div>
+    <div class="question-card" id="quiz-card">
+      <div class="qcard-header" id="quiz-header">
+        <div class="qcard-num" id="quiz-num">1</div>
+        <div>
+          <div class="qcard-label" id="quiz-label">Question</div>
+          <div class="qcard-sub">Choisis la bonne réponse</div>
+        </div>
+      </div>
+      <div class="qcard-body" id="quiz-question"></div>
+      <div class="options-grid" id="quiz-options"></div>
+      <div class="feedback" id="quiz-feedback"></div>
+      <button class="btn-next" id="quiz-next" onclick="suivantQuiz()">Question suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── JEU DEVINETTE ─────────── -->
+<div id="sc-dev" class="screen">
+  <div class="top-bar" id="dev-top">
+    <button class="btn-retour" onclick="retourDepuisJeu()">←</button>
+    <div class="top-right">
+      <span class="top-score" id="dev-score">✅ 0</span>
+      <span class="top-prog" id="dev-prog">1/14</span>
+      <span class="top-emoji" id="dev-emoji">🔍</span>
+    </div>
+  </div>
+  <div class="prog-bar-wrap"><div class="prog-bar-fill" id="dev-bar" style="width:0%"></div></div>
+
+  <div class="main">
+    <div class="mystere-zone">
+      <div class="mystere-cercle cache" id="dev-mystere">❓ ???</div>
+      <span class="mystere-label" id="dev-mystere-label">Terme mystère</span>
+    </div>
+    <div class="sa-badge-zone">
+      <div class="sa-badge" id="dev-sa-badge">SA1</div>
+    </div>
+    <div class="question-card" id="dev-card">
+      <div class="qcard-header" id="dev-header">
+        <div class="qcard-num" id="dev-num">1</div>
+        <div>
+          <div class="qcard-label">🔍 Devinette</div>
+          <div class="qcard-sub">Trouve le bon terme !</div>
+        </div>
+      </div>
+      <div class="dev-texte" id="dev-texte"></div>
+      <div class="dev-indice" id="dev-indice"></div>
+      <div class="dev-actions">
+        <button class="btn-indice" id="btn-indice" onclick="voirIndice()">💡 Voir l'indice</button>
+        <div class="dev-reponse-box" id="dev-reponse-box"></div>
+        <button class="btn-revele" id="btn-revele" onclick="revelerDev()">✅ Révéler la réponse</button>
+        <button class="btn-next" id="dev-next" onclick="suivantDev()" style="display:none;width:100%;margin:0;">Devinette suivante →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────── RÉSULTATS ─────────── -->
+<div id="sc-resultats" class="screen">
+  <div class="main" style="padding-top:24px;">
+    <div class="result-card">
+      <div class="res-icon" id="res-icon">🏆</div>
+      <div class="res-note" id="res-note" style="color:#5F27CD;">20</div>
+      <div class="res-sur">points sur 20</div>
+      <div class="res-stars" id="res-stars">⭐⭐⭐</div>
+      <div class="res-msg" id="res-msg">Excellent citoyen !</div>
+      <div class="res-sub" id="res-sub">Bravo pour ce travail !</div>
+      <div class="res-bar-wrap">
+        <div class="res-bar-row">
+          <span>Réussite</span><span id="res-pct">100%</span>
+        </div>
+        <div class="res-bar-track">
+          <div class="res-bar-fill" id="res-bar" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="res-btns">
+        <button class="btn-rejouer" id="btn-rejouer" style="background:linear-gradient(135deg,#5F27CD,#A29BFE);">🔄 Rejouer</button>
+        <button class="btn-menu" onclick="goMode('accueil')">← Retour au menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DONNÉES
+// ═══════════════════════════════════════════════════════════
+var SEQUENCES = [
+  {id:1, titre:"Droit à une nationalité",    emoji:"🏳️", couleur:"#FF6B6B"},
+  {id:2, titre:"Droit à la sécurité",        emoji:"🛡️",  couleur:"#FF9F43"},
+  {id:3, titre:"Droit à la santé",           emoji:"🏥",  couleur:"#54A0FF"},
+  {id:4, titre:"Droit à l'instruction",      emoji:"📚",  couleur:"#5F27CD"},
+  {id:5, titre:"Droit au vote",              emoji:"🗳️",  couleur:"#00B894"},
+  {id:6, titre:"Liberté d'association",      emoji:"🤝",  couleur:"#E17055"},
+  {id:7, titre:"Sécurité au foyer",          emoji:"🏠",  couleur:"#FDCB6E"},
+  {id:8, titre:"Sécurité au travail",        emoji:"⚙️",  couleur:"#6C5CE7"},
+  {id:9, titre:"Droit à l'égalité",          emoji:"⚖️",  couleur:"#00CEC9"},
+  {id:10,titre:"Carte nationale d'identité", emoji:"🪪",  couleur:"#FD79A8"},
+  {id:11,titre:"Se faire recenser",          emoji:"📋",  couleur:"#A29BFE"},
+  {id:12,titre:"Payer son impôt",            emoji:"💰",  couleur:"#55EFC4"},
+  {id:13,titre:"Se faire vacciner",          emoji:"💉",  couleur:"#74B9FF"},
+  {id:14,titre:"Protéger l'environnement",   emoji:"🌿",  couleur:"#00B894"}
+];
+
+var DEVINETTES = [
+  {seq:1, texte:"Je suis ce qui te rattache à ton pays. Sans moi, tu n'appartiens à aucune nation. Qui suis-je ?", reponse:"La nationalité", indice:"Elle est inscrite sur ta carte d'identité."},
+  {seq:2, texte:"Je suis ce que font la police et l'armée pour protéger les citoyens. Grâce à moi, tu peux vivre sans peur. Qui suis-je ?", reponse:"La sécurité", indice:"C'est aussi un droit fondamental du citoyen."},
+  {seq:3, texte:"Je suis le lieu où tu vas quand tu es malade. Je soigne les malades et protège ta vie. Qui suis-je ?", reponse:"Le centre de santé / l'hôpital", indice:"Les médecins et infirmières y travaillent."},
+  {seq:4, texte:"Chaque matin tu portes ton cartable pour venir me rejoindre. Je t'apprends à lire, écrire et calculer. Qui suis-je ?", reponse:"L'école", indice:"Sans moi, tu resterais dans l'ignorance."},
+  {seq:5, texte:"Je suis l'acte par lequel les citoyens choisissent leurs dirigeants. Grâce à moi, chacun exprime son avis librement. Qui suis-je ?", reponse:"Le vote", indice:"On le fait lors des élections."},
+  {seq:6, texte:"Je suis le droit qui permet aux gens de se réunir et de former des groupes pour défendre leurs intérêts. Qui suis-je ?", reponse:"La liberté d'association", indice:"Les syndicats et clubs en sont des exemples."},
+  {seq:7, texte:"Je suis l'endroit où tu vis avec ta famille. Si on ne fait pas attention, des accidents peuvent m'arriver. Qui suis-je ?", reponse:"Le foyer (la maison)", indice:"Le feu, l'électricité et les produits chimiques peuvent y être dangereux."},
+  {seq:8, texte:"Je suis l'ensemble des règles qui protègent les travailleurs contre les accidents dans leur travail. Qui suis-je ?", reponse:"La sécurité au travail", indice:"Les casques et gants font partie de mes moyens."},
+  {seq:9, texte:"Je signifie que tous les citoyens ont les mêmes droits, qu'ils soient riches ou pauvres, hommes ou femmes. Qui suis-je ?", reponse:"L'égalité", indice:"La balance est mon symbole."},
+  {seq:10,texte:"Je suis un document officiel qui prouve qui tu es. Sans moi, tu ne peux pas voyager ni voter. Qui suis-je ?", reponse:"La carte nationale d'identité", indice:"On la renouvelle régulièrement à la mairie."},
+  {seq:11,texte:"Je suis l'opération par laquelle l'État compte tous les habitants du pays. Grâce à moi, il sait combien de gens ont besoin de services. Qui suis-je ?", reponse:"Le recensement", indice:"Des agents viennent noter les informations de chaque famille."},
+  {seq:12,texte:"Je suis une somme d'argent que chaque citoyen verse à l'État pour financer les routes, les écoles et les hôpitaux. Qui suis-je ?", reponse:"L'impôt", indice:"C'est un devoir civique de tout citoyen."},
+  {seq:13,texte:"Je suis une injection que tu reçois pour te protéger contre certaines maladies dangereuses. Qui suis-je ?", reponse:"Le vaccin", indice:"Les enfants en reçoivent plusieurs dès la naissance."},
+  {seq:14,texte:"Je suis tout ce qui nous entoure : les arbres, l'eau, l'air et la terre. Si tu me pollues, tout le monde souffre. Qui suis-je ?", reponse:"L'environnement", indice:"Planter des arbres, c'est me protéger."}
+];
+
+var QUIZ = [
+  {seq:1, question:"Qu'est-ce que la nationalité ?", choix:["Le nom de ta famille","Le lien qui rattache une personne à son pays","La langue que tu parles","Le nom de ton village"], correct:1},
+  {seq:1, question:"Lequel de ces documents prouve ta nationalité béninoise ?", choix:["Un cahier d'école","Une ordonnance médicale","Un acte de naissance","Une facture d'eau"], correct:2},
+  {seq:2, question:"Quelle institution assure principalement la sécurité des citoyens ?", choix:["L'école","La police et l'armée","Le marché","La bibliothèque"], correct:1},
+  {seq:2, question:"Que doit faire un bon citoyen pour contribuer à sa propre sécurité ?", choix:["Ignorer les règles","Signaler les dangers et respecter les lois","Se battre avec ses voisins","Rester chez lui tout le temps"], correct:1},
+  {seq:3, question:"Le droit à la santé signifie que chaque citoyen peut :", choix:["Aller à l'école gratuitement","Voter lors des élections","Accéder aux soins médicaux","Voyager librement"], correct:2},
+  {seq:3, question:"Que se passe-t-il si on ne se soigne pas ?", choix:["On devient plus fort","La maladie peut s'aggraver et contaminer d'autres","On économise de l'argent","Rien de grave"], correct:1},
+  {seq:4, question:"Quel est l'avantage principal d'aller à l'école ?", choix:["Jouer avec ses amis uniquement","Apprendre à lire, écrire et avoir un meilleur avenir","Éviter de travailler","Gagner de l'argent tout de suite"], correct:1},
+  {seq:4, question:"Quelle est une conséquence de ne pas aller à l'école ?", choix:["On devient célèbre","On a du mal à trouver un bon emploi","On voyage beaucoup","On est toujours heureux"], correct:1},
+  {seq:5, question:"Qui peut voter au Bénin ?", choix:["Tous les enfants à partir de 10 ans","Tous les citoyens âgés de 18 ans et plus","Seulement les hommes","Seulement les riches"], correct:1},
+  {seq:5, question:"À quoi sert le vote ?", choix:["À choisir ses dirigeants librement","À gagner de l'argent","À obtenir une carte d'identité","À payer ses impôts"], correct:0},
+  {seq:6, question:"La liberté d'association permet aux citoyens de :", choix:["Se battre librement","Former des groupes pour défendre leurs intérêts","Refuser de payer les impôts","Prendre les biens des autres"], correct:1},
+  {seq:6, question:"Un syndicat est un exemple de :", choix:["Une maladie","Une liberté d'association","Un document officiel","Un instrument de musique"], correct:1},
+  {seq:7, question:"Lequel de ces dangers peut arriver dans une maison ?", choix:["Un tremblement de terre dans la cour","Un incendie causé par une bougie mal éteinte","Une inondation dans un bureau","Un accident de voiture en forêt"], correct:1},
+  {seq:7, question:"Comment prévenir les accidents domestiques ?", choix:["Laisser les produits chimiques à portée des enfants","Éteindre le feu et ranger les objets dangereux","Jouer avec les prises électriques","Laisser les portes ouvertes la nuit"], correct:1},
+  {seq:8, question:"Lequel de ces équipements protège un travailleur sur un chantier ?", choix:["Une tenue de sport","Un casque de protection","Un livre scolaire","Des lunettes de soleil ordinaires"], correct:1},
+  {seq:8, question:"La sécurité au travail sert à :", choix:["Gagner plus d'argent","Prévenir les accidents et protéger la santé des travailleurs","Finir le travail plus vite","Éviter de payer les impôts"], correct:1},
+  {seq:9, question:"L'égalité entre les citoyens signifie que :", choix:["Les riches ont plus de droits","Tous ont les mêmes droits, quelle que soit leur origine","Les hommes ont plus de droits","Seuls les adultes ont des droits"], correct:1},
+  {seq:9, question:"La discrimination est :", choix:["Le respect de tout le monde","Un traitement injuste basé sur la race, le sexe ou la religion","Un document officiel","Une loi de protection"], correct:1},
+  {seq:10,question:"La carte nationale d'identité est délivrée par :", choix:["L'école","L'hôpital","L'État (mairie ou préfecture)","Le marché"], correct:2},
+  {seq:10,question:"À quoi sert la carte nationale d'identité ?", choix:["À acheter des médicaments","À prouver son identité pour voter, voyager et signer des documents","À payer ses impôts uniquement","À s'inscrire à l'école"], correct:1},
+  {seq:11,question:"Le recensement permet à l'État de :", choix:["Vendre des terres","Connaître le nombre d'habitants pour mieux planifier les services","Construire des marchés","Organiser des fêtes"], correct:1},
+  {seq:11,question:"Participer au recensement est :", choix:["Inutile et facultatif","Un devoir civique important de tout citoyen","Réservé aux riches","Seulement pour les adultes de plus de 60 ans"], correct:1},
+  {seq:12,question:"L'impôt payé par les citoyens sert à financer :", choix:["Les achats personnels du chef de l'État","Les routes, les hôpitaux, les écoles et les services publics","Les voyages des touristes","Les salaires des enseignants seulement"], correct:1},
+  {seq:12,question:"Ne pas payer ses impôts est :", choix:["Un droit du citoyen","Un manquement à ses devoirs civiques qui pénalise toute la société","Une bonne action","Sans conséquence"], correct:1},
+  {seq:13,question:"Le vaccin protège :", choix:["Uniquement les adultes","L'individu vacciné et toute la communauté contre les maladies","Seulement les animaux","Uniquement contre le paludisme"], correct:1},
+  {seq:13,question:"Refuser de se faire vacciner peut :", choix:["Nous rendre plus forts","Favoriser la propagation de maladies graves dans la communauté","Économiser du temps","Améliorer la santé"], correct:1},
+  {seq:14,question:"Laquelle de ces actions PROTÈGE l'environnement ?", choix:["Jeter les ordures dans la rivière","Planter des arbres et trier ses déchets","Brûler les poubelles en pleine ville","Utiliser beaucoup de produits chimiques"], correct:1},
+  {seq:14,question:"La pollution de l'environnement provoque :", choix:["De belles fleurs partout","Des maladies, la mort des animaux et le dérèglement du climat","Plus de pluie bénéfique","Une meilleure qualité de l'air"], correct:1}
+];
+
+// ═══════════════════════════════════════════════════════════
+// ÉTAT
+// ═══════════════════════════════════════════════════════════
+var state = {
+  mode: 'accueil',
+  dernierMode: 'accueil',
+  seqId: null,
+  questions: [], devinettes: [],
+  index: 0, score: 0, total: 0,
+  answered: false,
+  devRevele: false,
+  indiceVisible: false
+};
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function goMode(m) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById('sc-'+m);
+  if (el) el.classList.add('active');
+  state.mode = m;
+
+  if (m === 'choix_seq' || m === 'choix_seq_quiz' || m === 'choix_seq_dev') {
+    buildSeqList(m);
+  }
+}
+
+function seqDe(id) {
+  return SEQUENCES.find(function(s){ return s.id === id; }) || SEQUENCES[0];
+}
+
+// ═══════════════════════════════════════════════════════════
+// LISTE SÉQUENCES
+// ═══════════════════════════════════════════════════════════
+function buildSeqList(mode) {
+  var ids = { choix_seq:'seq-list-accueil', choix_seq_quiz:'seq-list-quiz', choix_seq_dev:'seq-list-dev' };
+  var zone = document.getElementById(ids[mode]);
+  if (!zone) return;
+  var html = '<div class="seq-list">';
+  SEQUENCES.forEach(function(s) {
+    html += '<button class="seq-btn" style="background:'+s.couleur+'22;border:1.5px solid '+s.couleur+'55;" onclick="clicSeq('+s.id+',\''+mode+'\')">';
+    html += '<span class="sb-emoji">'+s.emoji+'</span>';
+    html += '<div><div class="sb-num">Séquence '+s.id+'</div><div class="sb-titre">'+s.titre+'</div></div>';
+    html += '<span class="seq-arrow" style="color:'+s.couleur+'">›</span>';
+    html += '</button>';
+  });
+  html += '</div>';
+  zone.innerHTML = html;
+}
+
+function clicSeq(id, mode) {
+  state.seqId = id;
+  if (mode === 'choix_seq') {
+    buildChoixSous(id);
+    goMode('choix_sous');
+  } else if (mode === 'choix_seq_quiz') {
+    demarrerQuiz(id);
+  } else {
+    demarrerDevinette(id);
+  }
+}
+
+function buildChoixSous(id) {
+  var s = seqDe(id);
+  document.getElementById('sous-titre').textContent = s.emoji + ' Séquence ' + id;
+  document.getElementById('sous-card').innerHTML =
+    '<div class="choix-card-icon">'+s.emoji+'</div>'+
+    '<div class="choix-card-titre">'+s.titre+'</div>'+
+    '<div class="choix-card-sub">Séquence '+id+' — Choisir le jeu</div>'+
+    '<div class="choix-btns">'+
+      '<button class="choix-btn" style="background:'+s.couleur+';" onclick="demarrerQuiz('+id+')">'+
+        '<span class="cb-icon">🧠</span>'+
+        '<div><div class="cb-titre">Quiz</div><div class="cb-desc">Questions à choix multiples</div></div>'+
+      '</button>'+
+      '<button class="choix-btn" style="background:#00B894;" onclick="demarrerDevinette('+id+')">'+
+        '<span class="cb-icon">🔍</span>'+
+        '<div><div class="cb-titre">Devinette</div><div class="cb-desc">Trouve la réponse par toi-même</div></div>'+
+      '</button>'+
+    '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function retourDepuisJeu() {
+  goMode(state.dernierMode);
+}
+
+// ═══════════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════════
+function demarrerQuiz(seqId) {
+  var pool = seqId ? QUIZ.filter(function(q){ return q.seq === seqId; }) : shuffle(QUIZ).slice(0, 10);
+  state.questions = shuffle(pool);
+  state.index = 0; state.score = 0;
+  state.total = state.questions.length;
+  state.answered = false;
+  state.dernierMode = seqId ? 'choix_seq_quiz' : 'choix_quiz';
+  goMode('quiz');
+  renderQuiz();
+}
+
+function renderQuiz() {
+  var q = state.questions[state.index];
+  var s = seqDe(q.seq);
+  var pct = Math.round((state.index / state.total) * 100);
+
+  // top bar
+  document.getElementById('quiz-score').textContent = '✅ ' + state.score;
+  document.getElementById('quiz-prog').textContent = (state.index + 1) + '/' + state.total;
+  document.getElementById('quiz-emoji').textContent = s.emoji;
+  document.getElementById('quiz-bar').style.width = pct + '%';
+  document.getElementById('quiz-bar').style.background = 'linear-gradient(90deg,' + s.couleur + ',#FACC15)';
+
+  // badge
+  var badge = document.getElementById('quiz-sa-badge');
+  badge.textContent = 'Séquence ' + q.seq + ' — ' + s.titre;
+  badge.style.background = s.couleur + '22';
+  badge.style.borderColor = s.couleur + '66';
+  badge.style.color = s.couleur;
+
+  // header
+  document.getElementById('quiz-header').style.background = 'linear-gradient(135deg,#0f0f23,#1a1a2e)';
+  document.getElementById('quiz-header').style.borderBottom = '3px solid ' + s.couleur;
+  var numEl = document.getElementById('quiz-num');
+  numEl.textContent = state.index + 1;
+  numEl.style.background = s.couleur;
+  document.getElementById('quiz-label').textContent = 'Question ' + (state.index + 1);
+
+  // question
+  document.getElementById('quiz-question').textContent = q.question;
+
+  // options
+  var opts = shuffle(q.choix.map(function(c, i){ return {txt: c, orig: i}; }));
+  var html = '';
+  opts.forEach(function(o, i) {
+    html += '<button class="opt" id="qopt-'+i+'" onclick="choisirQuiz('+i+','+o.orig+','+q.correct+')">' + o.txt + '</button>';
+  });
+  document.getElementById('quiz-options').innerHTML = html;
+
+  // feedback & next
+  var fb = document.getElementById('quiz-feedback');
+  fb.className = 'feedback'; fb.innerHTML = '';
+  document.getElementById('quiz-next').style.display = 'none';
+  document.getElementById('quiz-next').style.background = s.couleur;
+
+  state.answered = false;
+  state._optMap = opts; // sauvegarde pour coloration
+}
+
+function choisirQuiz(btnIdx, origIdx, correct) {
+  if (state.answered) return;
+  state.answered = true;
+  var q = state.questions[state.index];
+  var s = seqDe(q.seq);
+  var isOk = (origIdx === correct);
+  if (isOk) state.score++;
+
+  // colorer les boutons
+  state._optMap.forEach(function(o, i) {
+    var btn = document.getElementById('qopt-' + i);
+    if (!btn) return;
+    btn.disabled = true;
+    if (o.orig === correct) btn.className = 'opt correct';
+    else if (i === btnIdx && !isOk) btn.className = 'opt wrong';
+  });
+
+  // feedback
+  var fb = document.getElementById('quiz-feedback');
+  if (isOk) {
+    fb.className = 'feedback ok';
+    fb.innerHTML = '✅ Bravo ! Bonne réponse !';
+  } else {
+    fb.className = 'feedback ko';
+    fb.innerHTML = '❌ Réponse : <strong>' + q.choix[correct] + '</strong>';
+  }
+
+  document.getElementById('quiz-score').textContent = '✅ ' + state.score;
+
+  var nb = document.getElementById('quiz-next');
+  nb.style.display = 'block';
+  nb.style.background = s.couleur;
+  nb.textContent = (state.index + 1 >= state.total) ? '🏁 Voir mes résultats' : 'Question suivante →';
+}
+
+function suivantQuiz() {
+  state.index++;
+  if (state.index >= state.total) { showResultats(); return; }
+  renderQuiz();
+  // animation
+  var card = document.getElementById('quiz-card');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'slideIn .4s ease';
+}
+
+// ═══════════════════════════════════════════════════════════
+// DEVINETTE
+// ═══════════════════════════════════════════════════════════
+function demarrerDevinette(seqId) {
+  var pool = seqId ? DEVINETTES.filter(function(d){ return d.seq === seqId; }) : shuffle(DEVINETTES);
+  state.devinettes = pool;
+  state.index = 0; state.score = 0;
+  state.total = state.devinettes.length;
+  state.devRevele = false; state.indiceVisible = false;
+  state.dernierMode = seqId ? 'choix_seq_dev' : 'choix_dev';
+  goMode('dev');
+  renderDev();
+}
+
+function renderDev() {
+  var d = state.devinettes[state.index];
+  var s = seqDe(d.seq);
+  var pct = Math.round((state.index / state.total) * 100);
+
+  document.getElementById('dev-score').textContent = '✅ ' + state.score;
+  document.getElementById('dev-prog').textContent = (state.index + 1) + '/' + state.total;
+  document.getElementById('dev-emoji').textContent = s.emoji;
+  document.getElementById('dev-bar').style.width = pct + '%';
+  document.getElementById('dev-bar').style.background = 'linear-gradient(90deg,' + s.couleur + ',#FACC15)';
+
+  // mystère
+  var mc = document.getElementById('dev-mystere');
+  mc.textContent = '❓ ???';
+  mc.className = 'mystere-cercle cache';
+  mc.style.background = 'linear-gradient(135deg,#1a1a2e,#0f3460)';
+  mc.style.borderColor = s.couleur + '66';
+  document.getElementById('dev-mystere-label').textContent = 'Terme mystère';
+
+  // badge
+  var badge = document.getElementById('dev-sa-badge');
+  badge.textContent = s.emoji + ' Séquence ' + d.seq + ' — ' + s.titre;
+  badge.style.background = s.couleur + '22';
+  badge.style.borderColor = s.couleur + '66';
+  badge.style.color = s.couleur;
+
+  // header
+  var numEl = document.getElementById('dev-num');
+  numEl.textContent = state.index + 1;
+  numEl.style.background = s.couleur;
+
+  // texte
+  document.getElementById('dev-texte').textContent = d.texte;
+
+  // indice
+  var indiceEl = document.getElementById('dev-indice');
+  indiceEl.style.display = 'none';
+  indiceEl.textContent = '💡 Indice : ' + d.indice;
+  indiceEl.style.borderColor = s.couleur;
+  indiceEl.style.background = s.couleur + '18';
+  indiceEl.style.color = '#7C2D12';
+
+  // boutons
+  var btnInd = document.getElementById('btn-indice');
+  btnInd.style.display = 'block';
+  btnInd.style.borderColor = s.couleur;
+  btnInd.style.color = s.couleur;
+
+  var repBox = document.getElementById('dev-reponse-box');
+  repBox.style.display = 'none'; repBox.textContent = '';
+
+  var btnRev = document.getElementById('btn-revele');
+  btnRev.style.display = 'block';
+  btnRev.style.background = s.couleur;
+  btnRev.textContent = '✅ Révéler la réponse';
+
+  document.getElementById('dev-next').style.display = 'none';
+
+  state.devRevele = false; state.indiceVisible = false;
+
+  // animation
+  var card = document.getElementById('dev-card');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'slideIn .4s ease';
+}
+
+function voirIndice() {
+  if (state.indiceVisible) return;
+  state.indiceVisible = true;
+  document.getElementById('dev-indice').style.display = 'block';
+  document.getElementById('btn-indice').style.display = 'none';
+}
+
+function revelerDev() {
+  if (state.devRevele) return;
+  state.devRevele = true;
+  state.score++;
+  document.getElementById('dev-score').textContent = '✅ ' + state.score;
+
+  var d = state.devinettes[state.index];
+  var s = seqDe(d.seq);
+
+  var mc = document.getElementById('dev-mystere');
+  mc.textContent = d.reponse;
+  mc.className = 'mystere-cercle revele';
+  mc.style.background = 'linear-gradient(135deg,' + s.couleur + ',' + s.couleur + 'AA)';
+  document.getElementById('dev-mystere-label').textContent = '✅ Réponse révélée !';
+
+  var repBox = document.getElementById('dev-reponse-box');
+  repBox.innerHTML = '✅ Réponse : <em>' + d.reponse + '</em>';
+  repBox.style.display = 'block';
+
+  document.getElementById('btn-revele').style.display = 'none';
+
+  var nb = document.getElementById('dev-next');
+  nb.style.display = 'block';
+  nb.style.background = s.couleur;
+  nb.textContent = (state.index + 1 >= state.total) ? '🏁 Voir mes résultats' : 'Devinette suivante →';
+}
+
+function suivantDev() {
+  state.index++;
+  if (state.index >= state.total) { showResultats(); return; }
+  renderDev();
+}
+
+// ═══════════════════════════════════════════════════════════
+// RÉSULTATS
+// ═══════════════════════════════════════════════════════════
+function showResultats() {
+  var pct = Math.round((state.score / state.total) * 100);
+  var note = Math.round((state.score / state.total) * 20);
+  var emoji, stars, msg, sub;
+
+  if (pct >= 80) { emoji = '🏆'; stars = '⭐⭐⭐'; msg = 'Excellent citoyen !'; sub = 'Tu maîtrises très bien tes droits et devoirs. Bravo !'; }
+  else if (pct >= 60) { emoji = '😊'; stars = '⭐⭐'; msg = 'Bon résultat !'; sub = 'Continue à réviser, tu y es presque !'; }
+  else if (pct >= 40) { emoji = '📚'; stars = '⭐'; msg = 'Peut mieux faire.'; sub = 'Relis tes leçons sur les droits et devoirs du citoyen.'; }
+  else { emoji = '💪'; stars = ''; msg = 'Courage !'; sub = 'Ces notions sont importantes. Demande de l\'aide et réessaie !'; }
+
+  document.getElementById('res-icon').textContent = emoji;
+  document.getElementById('res-note').textContent = note;
+  document.getElementById('res-stars').textContent = stars;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('res-sub').textContent = state.score + ' bonne' + (state.score > 1 ? 's' : '') + ' réponse' + (state.score > 1 ? 's' : '') + ' sur ' + state.total;
+  document.getElementById('res-pct').textContent = pct + '%';
+
+  goMode('resultats');
+  setTimeout(function() {
+    document.getElementById('res-bar').style.width = pct + '%';
+  }, 300);
+
+  // bouton rejouer
+  var btnR = document.getElementById('btn-rejouer');
+  btnR.onclick = function() {
+    if (state.dernierMode.includes('quiz')) {
+      demarrerQuiz(state.seqId && state.dernierMode.includes('seq') ? state.seqId : null);
+    } else {
+      demarrerDevinette(state.seqId && state.dernierMode.includes('seq') ? state.seqId : null);
+    }
+  };
+}
+</script>
+</body>
+</html>
